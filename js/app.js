@@ -518,14 +518,11 @@
       let popupImgHtml = '';
 
       if (isTypeB) {
-        // ① ビデオ（動画カメラ）UI
-        popupImgHtml = `
-          <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 6px; padding: 10px 8px; text-align: center; margin: 4px 0 6px 0;">
-            <div style="font-size: 12px; color: #c4b5fd; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 5px;">
-              <i class="fa-solid fa-video"></i> ライブ動画配信中
-            </div>
-            <div style="font-size: 11px; color: #e2e8f0; line-height: 1.4; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
-              <i class="fa-solid fa-video"></i> タップ／クリックで配信元サイトで映像を表示
+        // ① ビデオ（動画カメラ）UI -> 超ミニ名札に変更
+        popupContent = `
+          <div class="hover-popup" style="padding: 6px 10px; min-width: auto; background: rgba(30, 41, 59, 0.95); border: 1px solid #8b5cf6;">
+            <div style="font-weight: 700; font-size: 13px; color: #ffffff; text-align: center; line-height: 1.2; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              ${camera.name} <span style="font-size: 11px; color: #c4b5fd;"><i class="fa-solid fa-arrow-up-right-from-square"></i> 動画</span>
             </div>
           </div>
         `;
@@ -539,24 +536,24 @@
             </div>
           </div>
         `;
+        popupContent = `
+          <div class="hover-popup">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 5px;">
+              <div style="font-weight: 700; font-size: 13px; color: #ffffff; text-align: left; line-height: 1.3;">
+                ${camera.name}
+              </div>
+              <span class="category-badge badge-${category}" style="flex-shrink: 0; font-size: 10px; padding: 2px 6px;">
+                ${categoryLabel}
+              </span>
+            </div>
+            ${popupImgHtml}
+            <div style="font-size: 10px; color: #94a3b8; margin-top: 6px; display: flex; align-items: center; gap: 4px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 4px;">
+              <i class="fa-solid fa-user-shield"></i> ${camera.operator || '管理者情報'}
+            </div>
+          </div>
+        `;
       }
 
-      const popupContent = `
-        <div class="hover-popup">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 5px;">
-            <div style="font-weight: 700; font-size: 13px; color: #ffffff; text-align: left; line-height: 1.3;">
-              ${camera.name}
-            </div>
-            <span class="category-badge badge-${category}" style="flex-shrink: 0; font-size: 10px; padding: 2px 6px;">
-              ${categoryLabel}
-            </span>
-          </div>
-          ${popupImgHtml}
-          <div style="font-size: 10px; color: #94a3b8; margin-top: 6px; display: flex; align-items: center; gap: 4px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 4px;">
-            <i class="fa-solid fa-user-shield"></i> ${camera.operator || '管理者情報'}
-          </div>
-        </div>
-      `;
       // 初期化時に1度だけTooltipをバインド（DOM要素を解体・破壊しない）
       const tooltip = L.tooltip({
         direction: 'top',
@@ -1486,9 +1483,10 @@
     });
 
     // マウスホバー時（PC）
-    marker.on('mouseover', () => {
-      // スマホのタップ時に発生する疑似mouseoverによる即時遷移を防ぐため、PC環境のみアクティブ化する
-      if (!L.Browser.touch && !L.Browser.mobile) {
+    marker.on('mouseover', (e) => {
+      // スマホのタップ時に発生する疑似mouseoverによる即時遷移を防ぐため、PCの純粋なマウス操作時のみアクティブ化する
+      const isMousePointer = e && e.originalEvent && (e.originalEvent.pointerType === 'mouse' || (e.originalEvent.pointerType === undefined && e.originalEvent.type === 'mouseover'));
+      if (isMousePointer && !L.Browser.mobile) {
         state.activeMarkerId = markerId;
       }
       smartOpenTooltip();
