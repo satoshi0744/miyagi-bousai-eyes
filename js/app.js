@@ -516,6 +516,7 @@
       const categoryLabel = CONFIG.CATEGORY_LABELS[category] || 'その他';
       const isTypeB = camera.streamType === 'youtube' || camera.streamType === 'stream' || !camera.imageUrl;
       let popupImgHtml = '';
+      let popupContent = '';
 
       if (isTypeB) {
         // ① ビデオ（動画カメラ）UI -> 超ミニ名札に変更
