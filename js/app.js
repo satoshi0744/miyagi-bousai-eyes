@@ -668,7 +668,7 @@
           ${camera.description ? `<span class="card-desc">${camera.description}</span>` : ''}
         </div>
         <div class="card-actions">
-          <a href="${camera.sourceUrl}" target="_blank" rel="noopener noreferrer" class="btn-source" onclick="event.stopPropagation();">
+          <a href="${camera.sourceUrl}" target="${isFav ? '_blank' : 'bousai_camera_preview'}" class="btn-source" onclick="event.stopPropagation();">
             配信元を開く <i class="fa-solid fa-external-link"></i>
           </a>
         </div>
@@ -929,7 +929,13 @@
     // ストリーム動画、または画像がないカメラの場合は、モーダルを開かず直接サイトに飛ぶ（2度手間の排除）
     const isStream = camera.streamType === 'stream' || camera.streamType === 'youtube';
     if ((isStream || !camera.imageUrl) && camera.sourceUrl) {
-      window.open(camera.sourceUrl, '_blank', 'noopener,noreferrer');
+      const isFav = state.favorites.has(camera.id);
+      // お気に入りカメラは独立した新タブ(_blank)、通常カメラは共通タブ(bousai_camera_preview)で開く（タブ無限増殖の防止）
+      const targetWindow = isFav ? '_blank' : 'bousai_camera_preview';
+      const previewWin = window.open(camera.sourceUrl, targetWindow);
+      if (previewWin) {
+        try { previewWin.focus(); } catch (e) {}
+      }
       return;
     }
 
@@ -1026,7 +1032,7 @@
     const actions = document.getElementById('modal-actions');
     if (actions) {
       actions.innerHTML = `
-        <a href="${camera.sourceUrl}" target="_blank" rel="noopener noreferrer" class="btn-modal-source">
+        <a href="${camera.sourceUrl}" target="${isFav ? '_blank' : 'bousai_camera_preview'}" class="btn-modal-source">
           <i class="fa-solid fa-external-link"></i> 配信元サイトを開く
         </a>
       `;
