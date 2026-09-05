@@ -614,15 +614,30 @@
     let previewHtml = '';
     const isTypeB = camera.streamType === 'youtube' || camera.streamType === 'stream' || !camera.imageUrl;
     
+    // ビデオ（動画配信型）カメラは画像がないため、1行のコンパクトなリンクカードとして表示（無駄なスペースを削減）
+    if (isTypeB && camera.status !== 'maintenance') {
+      return `
+        <div class="camera-card camera-card-compact" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" style="padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1;">
+            <button class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.stopPropagation();" style="flex-shrink: 0;">
+              <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
+            </button>
+            <span class="card-name" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${camera.name}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+            <span class="category-badge badge-${category}" style="font-size: 10px; padding: 2px 6px;">${categoryLabel}</span>
+            <span style="font-size: 11px; color: #c4b5fd; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 4px; padding: 2px 6px;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> 動画
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
     if (camera.status === 'maintenance') {
       previewHtml = `<div class="card-placeholder" style="color: #9ca3af;">
         <i class="fa-solid fa-wrench"></i>
         <span>現在調整中・休止中</span>
-      </div>`;
-    } else if (isTypeB) {
-      previewHtml = `<div class="card-placeholder" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
-        <i class="fa-solid fa-video" style="color: #8b5cf6; font-size: 1.2rem;"></i>
-        <span style="font-weight: bold; margin-top: 4px;">ライブ動画配信中</span>
       </div>`;
     } else if (camera.imageUrl) {
       previewHtml = `<img src="${camera.imageUrl}" class="live-image" data-base-src="${camera.imageUrl}" alt="${camera.name}" onerror="this.onerror=null; this.outerHTML='<div class=\\'card-placeholder\\' style=\\'color: #ef4444;\\'><i class=\\'fa-solid fa-triangle-exclamation\\'></i><span>画像取得エラー</span></div>';">`;
