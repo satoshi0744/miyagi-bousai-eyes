@@ -19,6 +19,10 @@
 
   <style>
     /* ========== お気に入りダッシュボード専用スタイル ========== */
+    html, body {
+      overflow-y: auto !important;
+      height: auto !important;
+    }
     body {
       background-color: var(--bg-main, #0f172a);
       color: var(--text-primary, #f8fafc);
@@ -555,6 +559,16 @@
       if (updateTimeEl) updateTimeEl.textContent = `最終更新: ${timeStr}`;
 
       const favCameras = CAMERA_DATA.filter(c => favorites.has(c.id));
+      
+      // 静止画（imageUrlあり）を優先し、動画配信（stream/youtube）を下にする
+      favCameras.sort((a, b) => {
+        const isTypeA_stream = a.streamType === 'youtube' || a.streamType === 'stream' || !a.imageUrl;
+        const isTypeB_stream = b.streamType === 'youtube' || b.streamType === 'stream' || !b.imageUrl;
+        if (isTypeA_stream && !isTypeB_stream) return 1;
+        if (!isTypeA_stream && isTypeB_stream) return -1;
+        return 0;
+      });
+
       countBadge.textContent = `${favCameras.length} 台`;
 
       if (favCameras.length === 0) {
