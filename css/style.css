@@ -858,7 +858,6 @@ body {
 }
 
 .marker-icon:hover {
-  transform: scale(1.35);
   border-color: #f59e0b;
 }
 
@@ -972,7 +971,6 @@ body {
 
 .leaflet-container.zoom-low .marker-icon:hover,
 .leaflet-container.zoom-low .water-level-marker-icon:hover {
-  transform: scale(1.4) !important;
 }
 
 /* ==========================================================================
@@ -983,7 +981,6 @@ body {
 }
 
 .marker-favorite .marker-icon {
-  transform: none !important;
   border-color: #f59e0b !important;
   box-shadow: 0 0 12px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.4) !important;
 }
@@ -993,7 +990,6 @@ body {
 }
 
 .leaflet-container.zoom-low .marker-favorite .marker-icon {
-  transform: none !important;
   border-color: #f59e0b !important;
   box-shadow: 0 0 10px #f59e0b !important;
 }
@@ -1010,7 +1006,6 @@ body {
 }
 
 .marker-active .marker-icon {
-  transform: none !important;
   border-color: #f59e0b !important;
   box-shadow: 0 0 15px #f59e0b, 0 0 25px #ef4444 !important;
 }
@@ -1108,7 +1103,6 @@ body {
 }
 
 .water-level-marker-icon:hover {
-  transform: scale(1.35);
   box-shadow: 0 0 18px #10b981, 0 0 25px #047857;
   border-color: #f59e0b;
 }
@@ -1432,30 +1426,24 @@ body {
 @keyframes station-pulse-danger {
   0% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9), 0 0 8px #ef4444;
-    transform: scale(1);
   }
   50% {
     box-shadow: 0 0 0 14px rgba(239, 68, 68, 0), 0 0 20px #ef4444;
-    transform: scale(1.25);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(239, 68, 68, 0), 0 0 8px #ef4444;
-    transform: scale(1);
   }
 }
 
 @keyframes station-pulse-warning {
   0% {
     box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.9), 0 0 8px #f59e0b;
-    transform: scale(1);
   }
   50% {
     box-shadow: 0 0 0 12px rgba(245, 158, 11, 0), 0 0 18px #f59e0b;
-    transform: scale(1.2);
   }
   100% {
     box-shadow: 0 0 0 0 rgba(245, 158, 11, 0), 0 0 8px #f59e0b;
-    transform: scale(1);
   }
 }
 
