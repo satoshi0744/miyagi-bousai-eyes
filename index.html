@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- スタイルシート -->
-  <link rel="stylesheet" href="css/style.css?v=20260906_1315">
+  <link rel="stylesheet" href="css/style.css?v=20260907_0745">
 </head>
 <body>
   <div class="app-container">
@@ -103,6 +103,33 @@
       <!-- 地図エリア -->
       <div class="map-wrapper" id="map-wrapper">
         <div id="map"></div>
+
+        <!-- ハザードマップ重ね合わせコントロール -->
+        <div class="hazard-floating-control" id="hazard-floating-control">
+          <button class="hazard-toggle-btn" id="hazard-toggle-btn" title="国土地理院ハザードマップ（浸水・土砂・津波）を地図に重ねる">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>
+            <span class="hazard-btn-label" id="hazard-btn-label">ハザード</span>
+            <i class="fa-solid fa-chevron-down hazard-arrow-icon" id="hazard-arrow-icon"></i>
+          </button>
+          <div class="hazard-menu-dropdown" id="hazard-menu-dropdown" style="display: none;">
+            <div class="hazard-menu-item active" data-hazard="none">
+              <i class="fa-solid fa-ban"></i> 重ね合わせなし（通常）
+            </div>
+            <div class="hazard-menu-item" data-hazard="flood">
+              <i class="fa-solid fa-water" style="color: #38bdf8;"></i> 🌊 洪水浸水想定（最大規模）
+            </div>
+            <div class="hazard-menu-item" data-hazard="debris">
+              <i class="fa-solid fa-mountain" style="color: #f59e0b;"></i> ⛰️ 土砂災害警戒区域
+            </div>
+            <div class="hazard-menu-item" data-hazard="tsunami">
+              <i class="fa-solid fa-water-ladder" style="color: #ec4899;"></i> 🌊 津波浸水想定
+            </div>
+          </div>
+        </div>
+
+        <!-- ハザードマップ凡例パネル -->
+        <div class="hazard-legend-panel" id="hazard-legend-panel" style="display: none;"></div>
+
         <button class="sidebar-toggle" id="sidebar-toggle" title="カメラリストの開閉">
           <i class="fa-solid fa-chevron-right" id="toggle-icon"></i>
         </button>
@@ -273,7 +300,7 @@
   <script src="js/cameras.js?v=20260813_1407"></script>
   <!-- メインアプリケーション -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/app.js?v=20260906_1315"></script>
+  <script src="js/app.js?v=20260907_0745"></script>
 
 </body>
 </html>
