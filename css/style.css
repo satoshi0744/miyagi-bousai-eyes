@@ -302,9 +302,31 @@ body {
 }
 
 .sidebar.collapsed {
-  width: 0;
+  width: 0 !important;
   min-width: 0;
   border-left: none;
+}
+
+/* サイドバーリサイザー */
+.sidebar-resizer {
+  width: 12px;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: ew-resize;
+  flex-shrink: 0;
+  z-index: 1000;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-resizer:hover, .sidebar-resizer.is-resizing {
+  background: var(--accent);
+  color: #fff;
+}
+.sidebar-resizer.collapsed {
+  display: none;
 }
 
 .main-content.map-is-collapsed .sidebar {
@@ -1107,6 +1129,11 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* スマホ版ではリサイザーを非表示 */
+  .sidebar-resizer {
+    display: none !important;
+  }
+
   /* スマホ版: サイドバーを全幅に */
   .sidebar {
     width: 100%;

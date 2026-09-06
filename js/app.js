@@ -128,6 +128,7 @@
     initMap();
     initMarkers();
     initSidebarAccordion();
+    initSidebarResizer();
     initFavoriteFilterBar(); // お気に入り切り替えバーの初期化
     initMapToggle();
     initBottomTabs();
@@ -712,9 +713,12 @@
     const toggleBtn = document.getElementById('sidebar-toggle');
     const toggleIcon = document.getElementById('toggle-icon');
     const sidebar = document.querySelector('.sidebar');
+    const resizer = document.getElementById('sidebar-resizer');
+    
     if (toggleBtn && toggleIcon && sidebar) {
       toggleBtn.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
+        if (resizer) resizer.classList.toggle('collapsed');
         if (sidebar.classList.contains('collapsed')) {
           toggleIcon.classList.remove('fa-chevron-right');
           toggleIcon.classList.add('fa-chevron-left');
@@ -1701,5 +1705,56 @@
     return { direction: 'top', offset: [0, -10] };
   }
 
+  // サイドバーのリサイズ機能
+  function initSidebarResizer() {
+    const resizer = document.getElementById('sidebar-resizer');
+    const sidebar = document.getElementById('sidebar');
+    if (!resizer || !sidebar) return;
+
+    let isResizing = false;
+
+    resizer.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      document.body.style.cursor = 'ew-resize';
+      resizer.classList.add('is-resizing');
+      
+      // サイドバーのtransitionを一時的に無効化してスムーズに追従させる
+      sidebar.style.transition = 'none';
+      
+      // 地図のポインターイベントを無効化してドラッグ中の誤操作を防ぐ
+      const mapWrapper = document.getElementById('map-wrapper');
+      if (mapWrapper) mapWrapper.style.pointerEvents = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      
+      // 画面右端からの距離を計算してサイドバーの幅とする
+      let newWidth = document.body.clientWidth - e.clientX;
+      
+      // 最小幅・最大幅の制限
+      if (newWidth < 280) newWidth = 280;
+      if (newWidth > 800) newWidth = 800;
+      
+      sidebar.style.width = `${newWidth}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        document.body.style.cursor = '';
+        resizer.classList.remove('is-resizing');
+        sidebar.style.transition = ''; // CSSのtransitionを元に戻す
+        
+        const mapWrapper = document.getElementById('map-wrapper');
+        if (mapWrapper) mapWrapper.style.pointerEvents = '';
+        
+        // リサイズ完了時にLeaflet地図を再描画（表示崩れ防止）
+        if (state.map) {
+          state.map.invalidateSize();
+        }
+      }
+    });
+  }
 
 })();
