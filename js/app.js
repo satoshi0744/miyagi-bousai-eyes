@@ -638,11 +638,13 @@
   }
 
   // ■ サイドバーカードHTML生成
-  function renderCameraCard(camera) {
+  function renderCameraCard(camera, isFavMode = false) {
     const category = camera.category || 'other';
     const categoryLabel = CONFIG.CATEGORY_LABELS[category] || 'その他';
     const categoryIcon = CONFIG.CATEGORY_ICONS[category] || 'fa-video';
     const isFav = state.favorites.has(camera.id);
+    const dragHandleHtml = isFavMode ? `<span class="fav-drag-handle" title="ドラッグして並べ替え" onclick="event.stopPropagation();"><i class="fa-solid fa-grip-vertical"></i></span>` : '';
+    const draggableAttr = isFavMode ? 'draggable="true"' : '';
     
     let previewHtml = '';
     const isTypeB = camera.streamType === 'youtube' || camera.streamType === 'stream' || !camera.imageUrl;
@@ -650,8 +652,9 @@
     // ビデオ（動画配信型）カメラは画像がないため、1行のコンパクトなリンクカードとして表示（無駄なスペースを削減）
     if (isTypeB && camera.status !== 'maintenance') {
       return `
-        <div class="camera-card camera-card-compact" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" style="padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-          <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1;">
+        <div class="camera-card camera-card-compact ${isFavMode ? 'fav-sortable-card' : ''}" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" ${draggableAttr} style="padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1;">
+            ${dragHandleHtml}
             <button class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.stopPropagation();" style="flex-shrink: 0;">
               <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
             </button>
@@ -682,9 +685,12 @@
     }
 
     return `
-      <div class="camera-card ${camera.status === 'maintenance' ? 'maintenance' : ''}" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}">
+      <div class="camera-card ${camera.status === 'maintenance' ? 'maintenance' : ''} ${isFavMode ? 'fav-sortable-card' : ''}" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" ${draggableAttr}>
         <div class="card-header">
-          <span class="card-name">${camera.name}</span>
+          <div style="display: flex; align-items: center; gap: 4px; overflow: hidden; flex: 1;">
+            ${dragHandleHtml}
+            <span class="card-name">${camera.name}</span>
+          </div>
           <button class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録">
             <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
           </button>
@@ -810,17 +816,87 @@
     });
   }
 
+  // ■ お気に入りカードのドラッグ＆ドロップ並べ替えイベントバインド
+  function bindFavDragAndDrop(container) {
+    let draggedCard = null;
+
+    container.querySelectorAll('.fav-sortable-card').forEach(card => {
+      card.addEventListener('dragstart', (e) => {
+        draggedCard = card;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', card.getAttribute('data-camera-id'));
+        setTimeout(() => card.classList.add('is-dragging'), 0);
+      });
+
+      card.addEventListener('dragend', () => {
+        if (draggedCard) {
+          draggedCard.classList.remove('is-dragging');
+          draggedCard = null;
+        }
+        container.querySelectorAll('.fav-sortable-card').forEach(c => {
+          c.classList.remove('drag-over-top', 'drag-over-bottom');
+        });
+      });
+
+      card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (!draggedCard || draggedCard === card) return;
+
+        const rect = card.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (e.clientY < midY) {
+          card.classList.add('drag-over-top');
+          card.classList.remove('drag-over-bottom');
+        } else {
+          card.classList.add('drag-over-bottom');
+          card.classList.remove('drag-over-top');
+        }
+      });
+
+      card.addEventListener('dragleave', () => {
+        card.classList.remove('drag-over-top', 'drag-over-bottom');
+      });
+
+      card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (!draggedCard || draggedCard === card) return;
+
+        const isTop = card.classList.contains('drag-over-top');
+        card.classList.remove('drag-over-top', 'drag-over-bottom');
+
+        if (isTop) {
+          card.parentNode.insertBefore(draggedCard, card);
+        } else {
+          card.parentNode.insertBefore(draggedCard, card.nextSibling);
+        }
+
+        // 新しい並び順を取得して保存
+        const newOrder = Array.from(container.querySelectorAll('.fav-sortable-card'))
+          .map(c => c.getAttribute('data-camera-id'))
+          .filter(Boolean);
+
+        // state.favorites を新しい順序で再構築
+        state.favorites = new Set(newOrder);
+        saveFavorites();
+      });
+    });
+  }
+
 
   // ■ サイドバーリストの描画（アコーディオン構造 / お気に入り優先提示）
   function renderSidebarList() {
     const listContainer = document.getElementById('camera-list');
     if (!listContainer || typeof CAMERA_DATA === 'undefined') return;
 
-    // お気に入りフィルターが有効な場合：お気に入りカメラのみを最上部から直接提示
+    // お気に入りフィルターが有効な場合：お気に入りカメラのみを最上部から直接提示（ドラッグ並べ替え対応）
     if (state.favoriteOnlyFilter) {
-      const favCameras = CAMERA_DATA.filter(camera => {
-        if (!state.favorites.has(camera.id)) return false;
-        const q = state.searchQuery.toLowerCase();
+      const favOrder = Array.from(state.favorites);
+      const favMap = new Map(CAMERA_DATA.map(c => [c.id, c]));
+      const q = state.searchQuery.toLowerCase();
+
+      const favCameras = favOrder.map(id => favMap.get(id)).filter(camera => {
+        if (!camera) return false;
         if (q === '') return true;
         const operator = camera.operator || '';
         return camera.name.toLowerCase().includes(q) ||
@@ -849,11 +925,12 @@
 
       listContainer.innerHTML = `
         <div class="fav-direct-list" style="padding-top: 4px;">
-          ${favCameras.map(c => renderCameraCard(c)).join('')}
+          ${favCameras.map(c => renderCameraCard(c, true)).join('')}
         </div>
       `;
 
       bindCameraListEvents(listContainer);
+      bindFavDragAndDrop(listContainer);
       updateSidebarCount(favCameras.length);
       return;
     }
@@ -905,6 +982,11 @@
       }
       groups[gMeta.id].cameras.push(camera);
     });
+
+    if (groups['group_fav'] && groups['group_fav'].cameras.length > 0) {
+      const favOrder = Array.from(state.favorites);
+      groups['group_fav'].cameras.sort((a, b) => favOrder.indexOf(a.id) - favOrder.indexOf(b.id));
+    }
 
     const sortedGroupKeys = Object.keys(groups).sort((a, b) => groups[a].order - groups[b].order);
 

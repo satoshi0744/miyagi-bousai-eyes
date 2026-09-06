@@ -188,6 +188,38 @@
       box-shadow: 0 6px 16px rgba(0,0,0,0.4);
     }
 
+    /* ドラッグ＆ドロップスタイル */
+    .fav-drag-handle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 6px;
+      color: var(--text-secondary, #94a3b8);
+      cursor: grab;
+      user-select: none;
+      font-size: 14px;
+      opacity: 0.6;
+      transition: opacity 0.2s, color 0.2s;
+      margin-right: 2px;
+      flex-shrink: 0;
+    }
+    .fav-drag-handle:hover {
+      opacity: 1;
+      color: #f59e0b;
+    }
+    .fav-drag-handle:active {
+      cursor: grabbing;
+    }
+    .fav-card.is-dragging {
+      opacity: 0.45;
+      border: 1px dashed #f59e0b !important;
+      background: rgba(245, 158, 11, 0.05);
+    }
+    .fav-card.drag-over {
+      border: 2px solid #f59e0b !important;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5) !important;
+    }
+
     .fav-card-header {
       padding: 10px 12px;
       display: flex;
@@ -558,16 +590,9 @@
       const updateTimeEl = document.getElementById('board-update-time');
       if (updateTimeEl) updateTimeEl.textContent = `最終更新: ${timeStr}`;
 
-      const favCameras = CAMERA_DATA.filter(c => favorites.has(c.id));
-      
-      // 静止画（imageUrlあり）を優先し、動画配信（stream/youtube）を下にする
-      favCameras.sort((a, b) => {
-        const isTypeA_stream = a.streamType === 'youtube' || a.streamType === 'stream' || !a.imageUrl;
-        const isTypeB_stream = b.streamType === 'youtube' || b.streamType === 'stream' || !b.imageUrl;
-        if (isTypeA_stream && !isTypeB_stream) return 1;
-        if (!isTypeA_stream && isTypeB_stream) return -1;
-        return 0;
-      });
+      const favOrder = Array.from(favorites);
+      const favMap = new Map(CAMERA_DATA.map(c => [c.id, c]));
+      const favCameras = favOrder.map(id => favMap.get(id)).filter(Boolean);
 
       countBadge.textContent = `${favCameras.length} 台`;
 
@@ -615,8 +640,11 @@
         }
 
         return `
-          <div class="fav-card" id="card-${camera.id}">
+          <div class="fav-card" id="card-${camera.id}" data-camera-id="${camera.id}" draggable="true">
             <div class="fav-card-header">
+              <span class="fav-drag-handle" title="ドラッグして並べ替え" onclick="event.stopPropagation();">
+                <i class="fa-solid fa-grip-vertical"></i>
+              </span>
               <div class="fav-card-title-group">
                 <h3 class="fav-card-name" title="${camera.name}">${camera.name}</h3>
                 <div class="fav-card-sub">
@@ -641,6 +669,62 @@
           </div>
         `;
       }).join('');
+
+      bindBoardDragAndDrop(grid);
+    }
+
+    // お気に入りボードのドラッグ＆ドロップ並べ替え
+    function bindBoardDragAndDrop(grid) {
+      let draggedCard = null;
+
+      grid.querySelectorAll('.fav-card').forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+          draggedCard = card;
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', card.getAttribute('data-camera-id'));
+          setTimeout(() => card.classList.add('is-dragging'), 0);
+        });
+
+        card.addEventListener('dragend', () => {
+          if (draggedCard) {
+            draggedCard.classList.remove('is-dragging');
+            draggedCard = null;
+          }
+          grid.querySelectorAll('.fav-card').forEach(c => c.classList.remove('drag-over'));
+        });
+
+        card.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          if (!draggedCard || draggedCard === card) return;
+          card.classList.add('drag-over');
+        });
+
+        card.addEventListener('dragleave', () => {
+          card.classList.remove('drag-over');
+        });
+
+        card.addEventListener('drop', (e) => {
+          e.preventDefault();
+          card.classList.remove('drag-over');
+          if (!draggedCard || draggedCard === card) return;
+
+          const rect = card.getBoundingClientRect();
+          const midX = rect.left + rect.width / 2;
+          if (e.clientX < midX) {
+            grid.insertBefore(draggedCard, card);
+          } else {
+            grid.insertBefore(draggedCard, card.nextSibling);
+          }
+
+          const newOrder = Array.from(grid.querySelectorAll('.fav-card'))
+            .map(c => c.getAttribute('data-camera-id'))
+            .filter(Boolean);
+
+          favorites = new Set(newOrder);
+          saveFavorites();
+        });
+      });
     }
 
     // 全画像の再取得（手動更新）

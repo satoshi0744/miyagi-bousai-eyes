@@ -1578,3 +1578,43 @@ body {
   border-color: #f59e0b;
 }
 
+/* ==========================================================================
+   お気に入りカード ドラッグ＆ドロップ並べ替えスタイル
+   ========================================================================== */
+.fav-drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  color: var(--text-secondary);
+  cursor: grab;
+  user-select: none;
+  font-size: 13px;
+  opacity: 0.6;
+  transition: opacity 0.2s, color 0.2s;
+  margin-right: 4px;
+}
+
+.fav-drag-handle:hover {
+  opacity: 1;
+  color: #f59e0b;
+}
+
+.fav-drag-handle:active {
+  cursor: grabbing;
+}
+
+.camera-card.is-dragging {
+  opacity: 0.45;
+  border: 1px dashed #f59e0b !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+}
+
+.camera-card.drag-over-top {
+  border-top: 2px solid #f59e0b !important;
+}
+
+.camera-card.drag-over-bottom {
+  border-bottom: 2px solid #f59e0b !important;
+}
+
