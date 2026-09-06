@@ -192,7 +192,21 @@
         btn.innerHTML = '<i class="fa-regular fa-star"></i>';
       }
     });
+
+    // 地図上のピン（マーカー）をお気に入りスタイルに連動
+    const marker = state.markers[cameraId];
+    if (marker) {
+      const el = marker.getElement();
+      if (el) {
+        if (isFav) {
+          el.classList.add('marker-favorite');
+        } else {
+          el.classList.remove('marker-favorite');
+        }
+      }
+    }
   }
+
 
   // ■ 地図の初期化
   function initMap() {
@@ -478,8 +492,11 @@
       color = '#9ca3af'; // グレー
     }
     
+    // お気に入り登録済みかどうかの判定
+    const isFav = state.favorites && state.favorites.has(camera.id);
+
     return L.divIcon({
-      className: 'custom-marker',
+      className: `custom-marker ${isFav ? 'marker-favorite' : ''}`,
       html: `<div class="marker-wrapper">
                <div class="marker-icon marker-${category}" style="background-color: ${color};" title="${isTypeB ? '📹 ライブ動画・参照' : '📷 静止画（即時写真）'}">
                  <i class="fa-solid ${iconClass}" style="color: white; font-size: 10px;"></i>

@@ -954,6 +954,25 @@ body {
 }
 
 /* ==========================================================================
+   お気に入りカメラピン用スタイル（カメラアイコン左45度傾き・オレンジ色・サイズ通常維持）
+   ========================================================================== */
+.marker-favorite {
+  z-index: 5000 !important;
+}
+
+.marker-favorite .marker-icon {
+  transform: rotate(-45deg) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 12px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.4) !important;
+}
+
+.leaflet-container.zoom-low .marker-favorite .marker-icon {
+  transform: rotate(-45deg) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 10px #f59e0b !important;
+}
+
+/* ==========================================================================
    双方向連動用 ハイライト＆ネオン拡大スタイル
    ========================================================================== */
 .marker-active {
