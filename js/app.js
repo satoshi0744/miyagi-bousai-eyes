@@ -97,6 +97,7 @@
     activeOperatorFilter: 'all',
     activeAreaFilter: localStorage.getItem('ishinomaki_area_filter') || 'all',
     favorites: new Set(),
+    favoriteOnlyFilter: false, // お気に入りカメラのみ表示フラグ
     searchQuery: '',
     accordionStates: {},
     isMapCollapsed: false,
@@ -127,6 +128,7 @@
     initMap();
     initMarkers();
     initSidebarAccordion();
+    initFavoriteFilterBar(); // お気に入り切り替えバーの初期化
     initMapToggle();
     initBottomTabs();
     initAreaFilter();
@@ -159,6 +161,7 @@
       console.warn('お気に入りデータの読み込みに失敗しました:', e);
       state.favorites = new Set();
     }
+    updateFavoriteBadge();
   }
 
   function saveFavorites() {
@@ -166,6 +169,15 @@
       localStorage.setItem(CONFIG.FAV_STORAGE_KEY, JSON.stringify(Array.from(state.favorites)));
     } catch (e) {
       console.warn('お気に入りデータの保存に失敗しました:', e);
+    }
+    updateFavoriteBadge();
+  }
+
+  // お気に入り件数バッジの更新
+  function updateFavoriteBadge() {
+    const badge = document.getElementById('fav-badge-count');
+    if (badge) {
+      badge.textContent = state.favorites.size;
     }
   }
 
@@ -717,10 +729,130 @@
     }
   }
 
-  // ■ サイドバーリストの描画（アコーディオン構造）
+  // ■ お気に入りフィルター切り替えバーの初期化
+  function initFavoriteFilterBar() {
+    const btnAll = document.getElementById('fav-filter-all');
+    const btnOnly = document.getElementById('fav-filter-only');
+
+    if (btnAll) {
+      btnAll.addEventListener('click', () => {
+        if (!state.favoriteOnlyFilter) return;
+        state.favoriteOnlyFilter = false;
+        btnAll.classList.add('active');
+        if (btnOnly) btnOnly.classList.remove('active');
+        renderSidebarList();
+      });
+    }
+
+    if (btnOnly) {
+      btnOnly.addEventListener('click', () => {
+        if (state.favoriteOnlyFilter) return;
+        state.favoriteOnlyFilter = true;
+        btnOnly.classList.add('active');
+        if (btnAll) btnAll.classList.remove('active');
+        renderSidebarList();
+      });
+    }
+
+    updateFavoriteBadge();
+
+    // 別タブ（favorites.html等）でのお気に入り更新をリアルタイム同期
+    window.addEventListener('storage', (e) => {
+      if (e.key === CONFIG.FAV_STORAGE_KEY) {
+        loadFavorites();
+        updateFavoriteBadge();
+        if (typeof CAMERA_DATA !== 'undefined') {
+          CAMERA_DATA.forEach(camera => updateFavoriteUI(camera.id));
+        }
+        renderSidebarList();
+      }
+    });
+  }
+
+  // ■ カメラカード・お気に入りボタンの共通イベントバインド
+  function bindCameraListEvents(container) {
+    container.querySelectorAll('.fav-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.getAttribute('data-camera-id');
+        toggleFavorite(id, e);
+      });
+    });
+
+    container.querySelectorAll('.camera-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.getAttribute('data-camera-id');
+        openModal(id);
+      });
+
+      card.addEventListener('mouseenter', () => {
+        const id = card.getAttribute('data-camera-id');
+        const marker = state.markers[id];
+        if (marker) {
+          marker.setZIndexOffset(2000);
+          const el = marker.getElement();
+          if (el) el.classList.add('marker-active');
+        }
+      });
+
+      card.addEventListener('mouseleave', () => {
+        const id = card.getAttribute('data-camera-id');
+        const marker = state.markers[id];
+        if (marker) {
+          marker.setZIndexOffset(0);
+          const el = marker.getElement();
+          if (el) el.classList.remove('marker-active');
+        }
+      });
+    });
+  }
+
+
+  // ■ サイドバーリストの描画（アコーディオン構造 / お気に入り優先提示）
   function renderSidebarList() {
     const listContainer = document.getElementById('camera-list');
     if (!listContainer || typeof CAMERA_DATA === 'undefined') return;
+
+    // お気に入りフィルターが有効な場合：お気に入りカメラのみを最上部から直接提示
+    if (state.favoriteOnlyFilter) {
+      const favCameras = CAMERA_DATA.filter(camera => {
+        if (!state.favorites.has(camera.id)) return false;
+        const q = state.searchQuery.toLowerCase();
+        if (q === '') return true;
+        const operator = camera.operator || '';
+        return camera.name.toLowerCase().includes(q) ||
+          (camera.description && camera.description.toLowerCase().includes(q)) ||
+          operator.toLowerCase().includes(q);
+      });
+
+      const noResults = document.getElementById('no-results');
+      if (noResults) noResults.style.display = 'none';
+
+      if (favCameras.length === 0) {
+        listContainer.innerHTML = `
+          <div class="fav-empty-hint" style="text-align: center; padding: 40px 16px; color: var(--text-secondary);">
+            <i class="fa-regular fa-star" style="font-size: 36px; color: #f59e0b; opacity: 0.6; margin-bottom: 12px; display: block;"></i>
+            <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+              お気に入りカメラがありません
+            </div>
+            <div style="font-size: 12px; line-height: 1.6;">
+              地図上のピンやカメラカードの「★」アイコンをクリックすると、ここにお気に入りのカメラが直接表示されます。
+            </div>
+          </div>
+        `;
+        updateSidebarCount(0);
+        return;
+      }
+
+      listContainer.innerHTML = `
+        <div class="fav-direct-list" style="padding-top: 4px;">
+          ${favCameras.map(c => renderCameraCard(c)).join('')}
+        </div>
+      `;
+
+      bindCameraListEvents(listContainer);
+      updateSidebarCount(favCameras.length);
+      return;
+    }
 
     const groups = {};
     
@@ -807,39 +939,7 @@
     listContainer.innerHTML = html;
 
     // イベントバインド
-    listContainer.querySelectorAll('.fav-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = btn.getAttribute('data-camera-id');
-        toggleFavorite(id, e);
-      });
-    });
-
-    listContainer.querySelectorAll('.camera-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const id = card.getAttribute('data-camera-id');
-        openModal(id);
-      });
-
-      card.addEventListener('mouseenter', () => {
-        const id = card.getAttribute('data-camera-id');
-        const marker = state.markers[id];
-        if (marker) {
-          marker.setZIndexOffset(2000);
-          const el = marker.getElement();
-          if (el) el.classList.add('marker-active');
-        }
-      });
-
-      card.addEventListener('mouseleave', () => {
-        const id = card.getAttribute('data-camera-id');
-        const marker = state.markers[id];
-        if (marker) {
-          marker.setZIndexOffset(0);
-          const el = marker.getElement();
-          if (el) el.classList.remove('marker-active');
-        }
-      });
-    });
+    bindCameraListEvents(listContainer);
 
     const noResults = document.getElementById('no-results');
     if (noResults) {

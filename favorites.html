@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お気に入りカメラ一覧 - みやぎライブEyes</title>
+  <meta name="description" content="みやぎライブEyes お気に入り登録カメラの静止画一括監視ダッシュボード">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- メインスタイルシート（共通変数・テーマ参照） -->
+  <link rel="stylesheet" href="css/style.css?v=20260906_1020">
+
+  <style>
+    /* ========== お気に入りダッシュボード専用スタイル ========== */
+    body {
+      background-color: var(--bg-main, #0f172a);
+      color: var(--text-primary, #f8fafc);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ダッシュボードヘッダー */
+    .board-header {
+      background-color: var(--bg-header, #1e293b);
+      border-bottom: 1px solid var(--border, #334155);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .board-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .board-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary, #ffffff);
+      border: 1px solid var(--border, #334155);
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .board-back-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .board-title {
+      font-size: clamp(16px, 2.5vw, 19px);
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f59e0b; /* お気に入りゴールド */
+    }
+
+    .board-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .board-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .board-timer {
+      color: var(--text-secondary, #94a3b8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .board-refresh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--accent, #0284c7);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .board-refresh-btn:hover {
+      opacity: 0.9;
+    }
+    .board-refresh-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* メインコンテナ */
+    .board-container {
+      flex: 1;
+      padding: 16px;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    /* ガイダンス・注意書き */
+    .board-note {
+      background: rgba(30, 41, 59, 0.6);
+      border-left: 3px solid #f59e0b;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--text-secondary, #94a3b8);
+      margin-bottom: 16px;
+      border-radius: 0 6px 6px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* グリッドレイアウト */
+    .camera-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .camera-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .board-header {
+        padding: 8px 12px;
+      }
+    }
+
+    /* カメラカード */
+    .fav-card {
+      background: var(--bg-card, #1e293b);
+      border: 1px solid var(--border, #334155);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .fav-card:hover {
+      border-color: rgba(245, 158, 11, 0.5);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    .fav-card-header {
+      padding: 10px 12px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.5);
+      border-bottom: 1px solid var(--border, #334155);
+    }
+
+    .fav-card-title-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .fav-card-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary, #f8fafc);
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fav-card-sub {
+      font-size: 11px;
+      color: var(--text-secondary, #94a3b8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .badge-category {
+      background: #0284c7;
+      color: #fff;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .badge-category.road {
+      background: #059669;
+    }
+    .badge-category.stream {
+      background: #8b5cf6;
+    }
+
+    .fav-unstar-btn {
+      background: transparent;
+      border: none;
+      color: #f59e0b;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .fav-unstar-btn:hover {
+      transform: scale(1.15);
+      color: #ef4444;
+    }
+
+    /* 画像プレビュー */
+    .fav-img-wrapper {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9比率 */
+      background: #000;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .fav-card-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.2s;
+    }
+    .fav-img-wrapper:hover .fav-card-img {
+      transform: scale(1.02);
+    }
+
+    .fav-img-zoom-hint {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #ffffff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      pointer-events: none;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* 動画配信型カード */
+    .fav-stream-wrapper {
+      padding: 36px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(15, 23, 42, 0.6));
+      text-align: center;
+    }
+
+    .fav-stream-icon {
+      font-size: 36px;
+      color: #a78bfa;
+    }
+
+    .fav-stream-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #8b5cf6;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .fav-stream-link-btn:hover {
+      background: #7c3aed;
+    }
+
+    /* カードフッター */
+    .fav-card-footer {
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      border-top: 1px solid var(--border, #334155);
+      margin-top: auto;
+    }
+
+    .fav-source-link {
+      color: var(--accent, #38bdf8);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+    }
+    .fav-source-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Empty State (0件表示) */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary, #94a3b8);
+    }
+    .empty-state-icon {
+      font-size: 48px;
+      color: #f59e0b;
+      opacity: 0.5;
+      margin-bottom: 16px;
+    }
+    .empty-state-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary, #f8fafc);
+      margin-bottom: 8px;
+    }
+    .empty-state-desc {
+      font-size: 14px;
+      max-width: 480px;
+      margin: 0 auto 20px auto;
+      line-height: 1.6;
+    }
+
+    /* 画像拡大ライトボックスモーダル */
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 9999;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .lightbox-modal.active {
+      display: flex;
+    }
+    .lightbox-img {
+      max-width: 95vw;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+    .lightbox-header {
+      width: 100%;
+      max-width: 95vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .lightbox-close-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .lightbox-close-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== ヘッダー ========== -->
+  <header class="board-header">
+    <div class="board-header-left">
+      <a href="index.html" class="board-back-btn" title="みやぎライブEyes 地図画面へ戻る">
+        <i class="fa-solid fa-arrow-left"></i> 地図へ戻る
+      </a>
+      <h1 class="board-title">
+        <i class="fa-solid fa-star"></i> お気に入りカメラ監視ボード
+      </h1>
+      <span class="board-badge" id="board-fav-count">0 台</span>
+    </div>
+
+    <div class="board-header-right">
+      <div class="board-timer">
+        <i class="fa-solid fa-clock"></i>
+        <span id="board-update-time">最終更新: --:--:--</span>
+        <span style="opacity: 0.6; margin: 0 4px;">|</span>
+        <span id="board-countdown">次回更新: 10:00</span>
+      </div>
+      <button class="board-refresh-btn" id="board-refresh-btn" title="すべての最新静止画を一括再取得">
+        <i class="fa-solid fa-rotate" id="board-refresh-icon"></i> 今すぐ更新
+      </button>
+    </div>
+  </header>
+
+  <!-- ========== メインコンテンツ ========== -->
+  <main class="board-container">
+    <div class="board-note" id="board-note">
+      <div>
+        <i class="fa-solid fa-circle-info" style="color: #f59e0b; margin-right: 4px;"></i>
+        登録したお気に入りカメラの最新状況を一画面でまとめて監視できます。画像クリックで拡大表示、★クリックで登録解除が可能です。
+      </div>
+      <div style="font-size: 11px; opacity: 0.8; white-space: nowrap;">
+        ※約10分ごとに自動更新
+      </div>
+    </div>
+
+    <!-- カメラ一覧グリッド -->
+    <div class="camera-grid" id="camera-grid">
+      <!-- JavaScript で動的にカード生成 -->
+    </div>
+
+    <!-- 0件時表示 -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <div class="empty-state-icon">
+        <i class="fa-regular fa-star"></i>
+      </div>
+      <div class="empty-state-title">お気に入りに登録されたカメラがありません</div>
+      <div class="empty-state-desc">
+        地図画面やカメラ一覧のカード・ピンにある「★（星）」アイコンをクリックすると、ここにお気に入りのカメラが自動的に一覧表示されます。
+      </div>
+      <a href="index.html" class="board-back-btn" style="background: var(--accent, #0284c7); border: none; padding: 8px 18px; font-size: 14px;">
+        <i class="fa-solid fa-map-location-dot"></i> 地図へ戻ってお気に入りを登録する
+      </a>
+    </div>
+  </main>
+
+  <!-- ========== 画像拡大ライトボックス ========== -->
+  <div class="lightbox-modal" id="lightbox-modal" onclick="closeLightbox(event)">
+    <div class="lightbox-header" onclick="event.stopPropagation()">
+      <span id="lightbox-title" style="font-weight: 600; font-size: 15px;">カメラ名</span>
+      <button class="lightbox-close-btn" onclick="closeLightbox(event)" title="閉じる">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <img src="" alt="" class="lightbox-img" id="lightbox-img" onclick="event.stopPropagation()">
+  </div>
+
+  <!-- カメラデータ読み込み -->
+  <script src="js/cameras.js?v=20260813_1407"></script>
+
+  <script>
+    const FAV_STORAGE_KEY = 'ishinomaki_fav_cameras';
+    let favorites = new Set();
+    let countdownSec = 600; // 10分 (600秒)
+    let countdownTimer = null;
+
+    // 初期化
+    document.addEventListener('DOMContentLoaded', () => {
+      loadFavorites();
+      renderBoard();
+      initEvents();
+      startCountdown();
+    });
+
+    // お気に入り読み込み
+    function loadFavorites() {
+      try {
+        const saved = localStorage.getItem(FAV_STORAGE_KEY);
+        if (saved) {
+          favorites = new Set(JSON.parse(saved));
+        } else {
+          favorites = new Set();
+        }
+      } catch (e) {
+        console.warn('お気に入りデータの読み込みに失敗:', e);
+        favorites = new Set();
+      }
+    }
+
+    // お気に入り保存
+    function saveFavorites() {
+      try {
+        localStorage.setItem(FAV_STORAGE_KEY, JSON.stringify(Array.from(favorites)));
+      } catch (e) {
+        console.warn('お気に入りデータの保存に失敗:', e);
+      }
+    }
+
+    // お気に入り解除
+    function removeFavorite(cameraId) {
+      if (favorites.has(cameraId)) {
+        favorites.delete(cameraId);
+        saveFavorites();
+        renderBoard();
+      }
+    }
+
+    // ボード描画
+    function renderBoard() {
+      const grid = document.getElementById('camera-grid');
+      const emptyState = document.getElementById('empty-state');
+      const countBadge = document.getElementById('board-fav-count');
+
+      if (!grid || typeof CAMERA_DATA === 'undefined') return;
+
+      const timestamp = new Date().getTime();
+      const timeStr = new Date().toLocaleTimeString('ja-JP');
+      const updateTimeEl = document.getElementById('board-update-time');
+      if (updateTimeEl) updateTimeEl.textContent = `最終更新: ${timeStr}`;
+
+      const favCameras = CAMERA_DATA.filter(c => favorites.has(c.id));
+      countBadge.textContent = `${favCameras.length} 台`;
+
+      if (favCameras.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      grid.style.display = 'grid';
+      emptyState.style.display = 'none';
+
+      grid.innerHTML = favCameras.map(camera => {
+        const isTypeB = camera.streamType === 'youtube' || camera.streamType === 'stream' || !camera.imageUrl;
+        const category = camera.category || 'other';
+        const categoryLabel = category === 'river' ? '河川' : (category === 'road' ? '道路' : 'その他');
+        const categoryClass = category === 'road' ? 'road' : (isTypeB ? 'stream' : '');
+
+        let bodyHtml = '';
+        if (isTypeB) {
+          // 動画配信型
+          bodyHtml = `
+            <div class="fav-stream-wrapper">
+              <i class="fa-solid fa-video fav-stream-icon"></i>
+              <div style="font-size: 13px; color: var(--text-secondary, #94a3b8);">
+                リアルタイム動画配信中
+              </div>
+              <a href="${camera.sourceUrl}" target="_blank" class="fav-stream-link-btn">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> 配信サイトを開く
+              </a>
+            </div>
+          `;
+        } else {
+          // 静止画型
+          const sep = camera.imageUrl.includes('?') ? '&' : '?';
+          const imgSrc = `${camera.imageUrl}${sep}t=${timestamp}`;
+          bodyHtml = `
+            <div class="fav-img-wrapper" onclick="openLightbox('${encodeURIComponent(camera.name)}', '${imgSrc}')" title="クリックで拡大表示">
+              <img src="${imgSrc}" alt="${camera.name}" class="fav-card-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22180%22><rect fill=%22%231e293b%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%2364748b%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 font-size=%2213%22>配信元画像準備中 / 取得待機中</text></svg>';">
+              <div class="fav-img-zoom-hint">
+                <i class="fa-solid fa-magnifying-glass-plus"></i> 拡大
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="fav-card" id="card-${camera.id}">
+            <div class="fav-card-header">
+              <div class="fav-card-title-group">
+                <h3 class="fav-card-name" title="${camera.name}">${camera.name}</h3>
+                <div class="fav-card-sub">
+                  <span class="badge-category ${categoryClass}">${categoryLabel}</span>
+                  <span>${camera.operator || ''}</span>
+                  ${camera.headingName ? `<span>・${camera.headingName}</span>` : ''}
+                </div>
+              </div>
+              <button class="fav-unstar-btn" onclick="removeFavorite('${camera.id}')" title="お気に入りから解除">
+                <i class="fa-solid fa-star"></i>
+              </button>
+            </div>
+            ${bodyHtml}
+            <div class="fav-card-footer">
+              <span style="font-size: 11px; color: var(--text-secondary, #94a3b8);">
+                ${camera.description || '定点観測カメラ'}
+              </span>
+              <a href="${camera.sourceUrl}" target="_blank" class="fav-source-link">
+                公式配信ページ <i class="fa-solid fa-external-link"></i>
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 全画像の再取得（手動更新）
+    function refreshAllImages() {
+      const btn = document.getElementById('board-refresh-btn');
+      const icon = document.getElementById('board-refresh-icon');
+      if (btn) btn.disabled = true;
+      if (icon) icon.classList.add('fa-spin');
+
+      countdownSec = 600;
+      renderBoard();
+
+      setTimeout(() => {
+        if (btn) btn.disabled = false;
+        if (icon) icon.classList.remove('fa-spin');
+      }, 600);
+    }
+
+    // カウントダウンタイマー
+    function startCountdown() {
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        countdownSec--;
+        if (countdownSec <= 0) {
+          refreshAllImages();
+        } else {
+          const m = Math.floor(countdownSec / 60);
+          const s = countdownSec % 60;
+          document.getElementById('board-countdown').textContent = `次回更新: ${m}:${s.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+
+    // イベント初期化
+    function initEvents() {
+      document.getElementById('board-refresh-btn').addEventListener('click', refreshAllImages);
+
+      // 他のタブでお気に入りが変更された場合のストレージ連動
+      window.addEventListener('storage', (e) => {
+        if (e.key === FAV_STORAGE_KEY) {
+          loadFavorites();
+          renderBoard();
+        }
+      });
+    }
+
+    // ライトボックス操作
+    function openLightbox(name, imgSrc) {
+      const modal = document.getElementById('lightbox-modal');
+      const img = document.getElementById('lightbox-img');
+      const title = document.getElementById('lightbox-title');
+      if (!modal || !img) return;
+
+      title.textContent = decodeURIComponent(name);
+      img.src = imgSrc;
+      modal.classList.add('active');
+    }
+
+    function closeLightbox(e) {
+      const modal = document.getElementById('lightbox-modal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    // ESCキーでライトボックスを閉じる
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+  </script>
+</body>
+</html>

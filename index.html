@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- スタイルシート -->
-  <link rel="stylesheet" href="css/style.css?v=20260906_0940">
+  <link rel="stylesheet" href="css/style.css?v=20260906_1020">
 </head>
 <body>
   <div class="app-container">
@@ -121,6 +121,18 @@
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" id="search-input" placeholder="カメラ名・場所で検索...">
           </div>
+        </div>
+        <!-- お気に入り切り替え＆新タブ一覧起動バー -->
+        <div class="sidebar-fav-filter-bar">
+          <button class="fav-tab-btn active" id="fav-filter-all" title="全カメラを水系別に表示">
+            <i class="fa-solid fa-list-ul"></i> すべて
+          </button>
+          <button class="fav-tab-btn" id="fav-filter-only" title="お気に入り登録カメラのみ表示">
+            <i class="fa-solid fa-star"></i> お気に入り <span class="fav-count-badge" id="fav-badge-count">0</span>
+          </button>
+          <a href="favorites.html" target="_blank" class="fav-open-dashboard-btn" id="fav-open-dashboard" title="お気に入り静止画一覧を新タブで開く">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 一覧新タブ
+          </a>
         </div>
         <div class="camera-list" id="camera-list">
           <!-- JavaScript で動的にアコーディオン生成 -->
@@ -256,7 +268,7 @@
   <script src="js/cameras.js?v=20260813_1407"></script>
   <!-- メインアプリケーション -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/app.js?v=20260906_0940"></script>
+  <script src="js/app.js?v=20260906_1020"></script>
 
 </body>
 </html>
