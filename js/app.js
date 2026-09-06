@@ -1851,10 +1851,15 @@
     const container = document.getElementById('hazard-floating-control');
     const btnLabel = document.getElementById('hazard-btn-label');
     const legendPanel = document.getElementById('hazard-legend-panel');
+    const refreshBtn = document.getElementById('hazard-refresh-btn');
+    const infoBtn = document.getElementById('hazard-info-btn');
+    const infoModal = document.getElementById('hazard-info-modal-overlay');
+    const infoCloseBtn = document.getElementById('hazard-info-modal-close');
 
     if (!toggleBtn || !dropdown || !state.map) return;
 
     let currentHazardLayer = null;
+    let activeHazardType = 'none';
 
     // 開閉トグル
     toggleBtn.addEventListener('click', (e) => {
@@ -1873,6 +1878,53 @@
     dropdown.addEventListener('click', (e) => {
       e.stopPropagation();
     });
+
+    // 利用規約・免責事項モーダルの開閉
+    if (infoBtn && infoModal) {
+      infoBtn.addEventListener('click', () => {
+        dropdown.style.display = 'none';
+        container.classList.remove('open');
+        infoModal.classList.add('active');
+      });
+    }
+
+    if (infoCloseBtn && infoModal) {
+      infoCloseBtn.addEventListener('click', () => {
+        infoModal.classList.remove('active');
+      });
+    }
+
+    if (infoModal) {
+      infoModal.addEventListener('click', (e) => {
+        if (e.target === infoModal) {
+          infoModal.classList.remove('active');
+        }
+      });
+    }
+
+    // 最新タイルの再取得（リフレッシュ）
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        if (currentHazardLayer) {
+          // タイル再描画の実行
+          if (currentHazardLayer.redraw) {
+            currentHazardLayer.redraw();
+          } else if (currentHazardLayer.eachLayer) {
+            currentHazardLayer.eachLayer(l => { if (l.redraw) l.redraw(); });
+          }
+          const origText = refreshBtn.innerHTML;
+          refreshBtn.innerHTML = '<i class="fa-solid fa-check" style="color: #10b981;"></i> 最新化完了';
+          setTimeout(() => {
+            refreshBtn.innerHTML = origText;
+            dropdown.style.display = 'none';
+            container.classList.remove('open');
+          }, 600);
+        } else {
+          dropdown.style.display = 'none';
+          container.classList.remove('open');
+        }
+      });
+    }
 
     // 凡例およびレイヤー定義
     const HAZARD_CONFIG = {
@@ -1894,7 +1946,7 @@
         legendHtml: `
           <div class="hazard-legend-title">
             <span>🌊 洪水浸水想定区域（想定最大規模）</span>
-            <span style="font-size: 10px; opacity: 0.7;">国土地理院</span>
+            <span class="hazard-legend-credit-link" title="利用規約・免責事項を確認">国土地理院 ℹ️</span>
           </div>
           <div class="hazard-legend-items">
             <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fef08a;"></span> 0.5m未満 (床下)</span>
@@ -1927,7 +1979,7 @@
         legendHtml: `
           <div class="hazard-legend-title">
             <span>⛰️ 土砂災害警戒区域（土石流・急傾斜地）</span>
-            <span style="font-size: 10px; opacity: 0.7;">国土地理院</span>
+            <span class="hazard-legend-credit-link" title="利用規約・免責事項を確認">国土地理院 ℹ️</span>
           </div>
           <div class="hazard-legend-items">
             <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #facc15;"></span> 警戒区域 (イエローゾーン)</span>
@@ -1948,7 +2000,7 @@
         legendHtml: `
           <div class="hazard-legend-title">
             <span>🌊 津波浸水想定区域</span>
-            <span style="font-size: 10px; opacity: 0.7;">国土地理院</span>
+            <span class="hazard-legend-credit-link" title="利用規約・免責事項を確認">国土地理院 ℹ️</span>
           </div>
           <div class="hazard-legend-items">
             <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fef08a;"></span> 0.3m未満</span>
@@ -1967,6 +2019,8 @@
         const hazardType = item.getAttribute('data-hazard');
         const conf = HAZARD_CONFIG[hazardType];
         if (!conf) return;
+
+        activeHazardType = hazardType;
 
         // アクティブ表示の切り替え
         dropdown.querySelectorAll('.hazard-menu-item').forEach(i => i.classList.remove('active'));
@@ -1992,6 +2046,15 @@
           currentHazardLayer.addTo(state.map);
           legendPanel.innerHTML = conf.legendHtml;
           legendPanel.style.display = 'block';
+
+          // 凡例内のクレジットクリックでモーダルを開く
+          const creditLink = legendPanel.querySelector('.hazard-legend-credit-link');
+          if (creditLink && infoModal) {
+            creditLink.addEventListener('click', (ev) => {
+              ev.stopPropagation();
+              infoModal.classList.add('active');
+            });
+          }
         } else {
           legendPanel.style.display = 'none';
           legendPanel.innerHTML = '';

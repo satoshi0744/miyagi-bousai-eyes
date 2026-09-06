@@ -1774,3 +1774,44 @@ body {
   }
 }
 
+/* ハザードメニュー アクションアイテム ＆ 区切り線 */
+.hazard-menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.hazard-menu-action-item {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.hazard-menu-action-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--accent);
+}
+
+.hazard-legend-credit-link {
+  font-size: 10px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-decoration: underline;
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+}
+
+.hazard-legend-credit-link:hover {
+  opacity: 1;
+  color: var(--accent);
+}
+
+
