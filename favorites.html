@@ -528,7 +528,7 @@
   </div>
 
   <!-- カメラデータ読み込み -->
-  <script src="js/cameras.js?v=20260907_1345"></script>
+  <script src="js/cameras.js?v=20260907_1535"></script>
 
   <script>
     const FAV_STORAGE_KEY = 'ishinomaki_fav_cameras';
@@ -606,14 +606,28 @@
       emptyState.style.display = 'none';
 
       grid.innerHTML = favCameras.map(camera => {
-        const isTypeB = camera.streamType === 'youtube' || camera.streamType === 'stream' || !camera.imageUrl;
+        const hasImage = Boolean(camera.imageUrl);
+        const isStream = camera.streamType === 'youtube' || camera.streamType === 'stream';
+        const isTypeB = !hasImage; // 画像が全くない場合のみ動画専用カードとする
         const category = camera.category || 'other';
         const categoryLabel = category === 'river' ? '河川' : (category === 'road' ? '道路' : 'その他');
         const categoryClass = category === 'road' ? 'road' : (isTypeB ? 'stream' : '');
 
         let bodyHtml = '';
-        if (isTypeB) {
-          // 動画配信型
+        if (hasImage) {
+          // 静止画・ハイブリッド型（最新画像を表示）
+          const sep = camera.imageUrl.includes('?') ? '&' : '?';
+          const imgSrc = `${camera.imageUrl}${sep}t=${timestamp}`;
+          bodyHtml = `
+            <div class="fav-img-wrapper" onclick="openLightbox('${encodeURIComponent(camera.name)}', '${imgSrc}')" title="クリックで拡大表示">
+              <img src="${imgSrc}" alt="${camera.name}" class="fav-card-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22180%22><rect fill=%22%231e293b%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%2364748b%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 font-size=%2213%22>配信元画像準備中 / 取得待機中</text></svg>';">
+              <div class="fav-img-zoom-hint">
+                <i class="fa-solid fa-magnifying-glass-plus"></i> 拡大
+              </div>
+            </div>
+          `;
+        } else {
+          // 画像なし・完全動画専用型（3台のみ）
           bodyHtml = `
             <div class="fav-stream-wrapper">
               <i class="fa-solid fa-video fav-stream-icon"></i>
@@ -625,19 +639,17 @@
               </a>
             </div>
           `;
-        } else {
-          // 静止画型
-          const sep = camera.imageUrl.includes('?') ? '&' : '?';
-          const imgSrc = `${camera.imageUrl}${sep}t=${timestamp}`;
-          bodyHtml = `
-            <div class="fav-img-wrapper" onclick="openLightbox('${encodeURIComponent(camera.name)}', '${imgSrc}')" title="クリックで拡大表示">
-              <img src="${imgSrc}" alt="${camera.name}" class="fav-card-img" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22320%22 height=%22180%22><rect fill=%22%231e293b%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%2364748b%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22 font-size=%2213%22>配信元画像準備中 / 取得待機中</text></svg>';">
-              <div class="fav-img-zoom-hint">
-                <i class="fa-solid fa-magnifying-glass-plus"></i> 拡大
-              </div>
-            </div>
-          `;
         }
+
+        const streamBadge = isStream ? `<span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.4); font-weight: 600; display: inline-flex; align-items: center; gap: 3px;"><i class="fa-solid fa-video"></i> 動画</span>` : '';
+
+        const sourceLinkHtml = isStream
+          ? `<a href="${camera.sourceUrl}" target="_blank" class="fav-source-link" style="color: #c4b5fd; font-weight: 600;" title="クリックして配信元で動画を再生">
+               🎥 動画配信を見る <i class="fa-solid fa-arrow-up-right-from-square"></i>
+             </a>`
+          : `<a href="${camera.sourceUrl}" target="_blank" class="fav-source-link">
+               公式配信ページ <i class="fa-solid fa-external-link"></i>
+             </a>`;
 
         return `
           <div class="fav-card" id="card-${camera.id}" data-camera-id="${camera.id}" draggable="true">
@@ -649,6 +661,7 @@
                 <h3 class="fav-card-name" title="${camera.name}">${camera.name}</h3>
                 <div class="fav-card-sub">
                   <span class="badge-category ${categoryClass}">${categoryLabel}</span>
+                  ${streamBadge}
                   <span>${camera.operator || ''}</span>
                 </div>
               </div>
@@ -661,9 +674,7 @@
               <span style="font-size: 11px; color: var(--text-secondary, #94a3b8);">
                 ${camera.description || '定点観測カメラ'}
               </span>
-              <a href="${camera.sourceUrl}" target="_blank" class="fav-source-link">
-                公式配信ページ <i class="fa-solid fa-external-link"></i>
-              </a>
+              ${sourceLinkHtml}
             </div>
           </div>
         `;

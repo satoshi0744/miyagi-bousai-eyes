@@ -1134,9 +1134,9 @@
     const camera = CAMERA_DATA.find(c => c.id === cameraId);
     if (!camera) return;
 
-    // ストリーム動画、または画像がないカメラの場合は、モーダルを開かず直接サイトに飛ぶ（2度手間の排除）
     const isStream = camera.streamType === 'stream' || camera.streamType === 'youtube';
-    if ((isStream || !camera.imageUrl) && camera.sourceUrl) {
+    // 画像が全くないカメラ（極少数の例外）のみ、モーダルを開かず直接サイトに飛ぶ
+    if (!camera.imageUrl && camera.sourceUrl) {
       const isFav = state.favorites.has(camera.id);
       // お気に入りカメラは独立した新タブ(_blank)、通常カメラは共通タブ(bousai_camera_preview)で開く（タブ無限増殖の防止）
       const targetWindow = isFav ? '_blank' : 'bousai_camera_preview';
@@ -1177,8 +1177,25 @@
             <i class="fa-solid fa-wrench"></i>
             <span>現在、機器調整中または休止中のため映像を取得できません。</span>
           </div>`;
-      } else if (camera.streamType === 'stream' || camera.streamType === 'youtube') {
-        // タイプB: ライブ動画・参照型（ダミー画像を出さず案内カードを表示）
+      } else if (camera.imageUrl) {
+        const streamNotice = isStream
+          ? `<div style="font-size: 11px; color: #c4b5fd; background: rgba(30, 27, 75, 0.85); padding: 4px 10px; border-radius: 4px; margin-bottom: 6px; border: 1px solid rgba(139, 92, 246, 0.4); display: flex; align-items: center; justify-content: space-between; gap: 8px; width: calc(100% - 20px); max-width: 500px; box-sizing: border-box;">
+               <span><i class="fa-solid fa-camera"></i> 配信元最新画像（現在）</span>
+               <a href="${camera.sourceUrl}" target="${isFav ? '_blank' : 'bousai_camera_preview'}" style="color: #a78bfa; text-decoration: underline; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                 🎥 動画を見る <i class="fa-solid fa-arrow-up-right-from-square"></i>
+               </a>
+             </div>`
+          : `<div style="font-size: 11px; color: var(--accent); background: rgba(15, 23, 42, 0.8); padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; border: 1px solid var(--border);">
+               <i class="fa-solid fa-camera"></i> ピン選択時点の配信元最新画像を表示しています
+             </div>`;
+
+        imageArea.innerHTML = `
+          <div style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;">
+            ${streamNotice}
+            <img src="${camera.imageUrl}" alt="${camera.name}" style="max-height: calc(100% - 32px); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+          </div>`;
+      } else if (isStream) {
+        // タイプB: ライブ動画・参照型（画像がない場合）
         imageArea.innerHTML = `
           <div class="modal-placeholder" style="color: var(--text-primary); display: flex; flex-direction: column; gap: 1rem; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 2rem; background: var(--bg-tertiary);">
             <i class="fa-solid fa-video" style="font-size: 3.5rem; color: #8b5cf6;"></i>
@@ -1188,17 +1205,9 @@
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
               配信元サイト（公式サイト）でリアルタイム映像をご覧いただけます。
             </p>
-            <a href="${camera.sourceUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); margin-top: 10px;">
+            <a href="${camera.sourceUrl}" target="${isFav ? '_blank' : 'bousai_camera_preview'}" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #7c3aed, #8b5cf6); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); margin-top: 10px;">
               <i class="fa-solid fa-arrow-up-right-from-square"></i> 公式サイトでライブ映像を再生する
             </a>
-          </div>`;
-      } else if (camera.imageUrl) {
-        imageArea.innerHTML = `
-          <div style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;">
-            <div style="font-size: 11px; color: var(--accent); background: rgba(15, 23, 42, 0.8); padding: 4px 8px; border-radius: 4px; margin-bottom: 6px; border: 1px solid var(--border);">
-              <i class="fa-solid fa-camera"></i> ピン選択時点の配信元最新画像を表示しています
-            </div>
-            <img src="${camera.imageUrl}" alt="${camera.name}" style="max-height: calc(100% - 28px);">
           </div>`;
       } else {
         imageArea.innerHTML = `
@@ -1239,9 +1248,11 @@
 
     const actions = document.getElementById('modal-actions');
     if (actions) {
+      const btnText = isStream ? '<i class="fa-solid fa-video"></i> 公式動画配信サイトを開く' : '<i class="fa-solid fa-external-link"></i> 配信元サイトを開く';
+      const btnStyle = isStream ? 'background: linear-gradient(135deg, #7c3aed, #8b5cf6);' : '';
       actions.innerHTML = `
-        <a href="${camera.sourceUrl}" target="${isFav ? '_blank' : 'bousai_camera_preview'}" class="btn-modal-source">
-          <i class="fa-solid fa-external-link"></i> 配信元サイトを開く
+        <a href="${camera.sourceUrl}" target="${isFav ? '_blank' : 'bousai_camera_preview'}" class="btn-modal-source" style="${btnStyle}">
+          ${btnText}
         </a>
       `;
     }
