@@ -19,6 +19,7 @@
 
   <!-- メインスタイルシート（共通変数・テーマ参照） -->
   <link rel="stylesheet" href="css/style.css?v=20260907_2210">
+  <link rel="icon" href="data:,">
 
   <style>
     /* ========== お気に入りダッシュボード専用スタイル ========== */
@@ -465,6 +466,11 @@
       top: 72px;
       right: 20px;
       width: 280px;
+      height: 220px;
+      min-width: 220px;
+      min-height: 160px;
+      max-width: 85vw;
+      max-height: 85vh;
       background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
@@ -473,7 +479,9 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
       z-index: 1000;
       overflow: hidden;
-      transition: opacity 0.25s ease, transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.25s ease;
     }
 
     .minimap-header {
@@ -483,8 +491,15 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      cursor: pointer;
+      cursor: grab;
       user-select: none;
+      touch-action: none;
+      flex-shrink: 0;
+    }
+
+    .minimap-header.is-dragging {
+      cursor: grabbing;
+      background: rgba(45, 60, 85, 0.95);
     }
 
     .minimap-title {
@@ -494,6 +509,7 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--text-primary, #f8fafc);
+      pointer-events: none;
     }
 
     .minimap-title i {
@@ -514,27 +530,54 @@
       border: none;
       color: var(--text-secondary, #94a3b8);
       cursor: pointer;
-      padding: 2px 4px;
+      padding: 4px 6px;
       font-size: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: color 0.2s;
+      transition: color 0.2s, transform 0.2s;
+      border-radius: 4px;
     }
 
     .minimap-toggle-btn:hover {
       color: var(--text-primary, #ffffff);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .minimap-body {
       width: 100%;
-      height: 180px;
+      flex: 1;
+      min-height: 120px;
+      position: relative;
+      overflow: hidden;
     }
 
     .minimap-container {
       width: 100%;
       height: 100%;
       background: #0f172a;
+    }
+
+    /* 右下リサイズハンドル */
+    .minimap-resize-handle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 18px;
+      height: 18px;
+      cursor: nwse-resize;
+      user-select: none;
+      touch-action: none;
+      z-index: 1001;
+      background: linear-gradient(135deg, transparent 40%, rgba(245, 158, 11, 0.4) 40%, rgba(245, 158, 11, 0.4) 55%, transparent 55%, transparent 70%, rgba(245, 158, 11, 0.5) 70%, rgba(245, 158, 11, 0.5) 85%, transparent 85%);
+      border-bottom-right-radius: 9px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .minimap-resize-handle:hover,
+    .minimap-resize-handle.is-resizing {
+      background: linear-gradient(135deg, transparent 40%, #f59e0b 40%, #f59e0b 55%, transparent 55%, transparent 70%, #f59e0b 70%, #f59e0b 85%, transparent 85%);
+      transform: scale(1.15);
     }
 
     /* 最小化FABボタン */
@@ -693,8 +736,9 @@
 
   <!-- ========== フロート型ミニマップ（案B） ========== -->
   <div id="floating-minimap" class="floating-minimap">
-    <div class="minimap-header" id="minimap-header" title="クリックで折りたたみ／展開">
+    <div class="minimap-header" id="minimap-header" title="ドラッグして自由に移動（ダブルクリックで位置リセット）">
       <div class="minimap-title">
+        <i class="fa-solid fa-grip-vertical" style="opacity: 0.4; font-size: 11px; margin-right: 2px;"></i>
         <i class="fa-solid fa-map-location-dot"></i>
         <span>現在地マップ</span>
         <span class="minimap-badge" id="minimap-count">0</span>
@@ -705,6 +749,7 @@
     </div>
     <div class="minimap-body" id="minimap-body">
       <div id="minimap-container" class="minimap-container"></div>
+      <div class="minimap-resize-handle" id="minimap-resize-handle" title="ドラッグしてサイズ変更"></div>
     </div>
   </div>
 
@@ -732,6 +777,8 @@
   <script>
     const FAV_STORAGE_KEY = 'ishinomaki_fav_cameras';
     const MINIMAP_STORAGE_KEY = 'miyagi_minimap_minimized';
+    const MINIMAP_POS_KEY = 'miyagi_minimap_pos';
+    const MINIMAP_SIZE_KEY = 'miyagi_minimap_size';
     let favorites = new Set();
     let countdownSec = 600; // 10分 (600秒)
     let countdownTimer = null;
@@ -1028,20 +1075,20 @@
         minZoom: 7
       }).addTo(miniMap);
 
-      // ヘッダー・トグルボタン・FABボタンのクリックイベント
-      const header = document.getElementById('minimap-header');
+      // 保存された位置とサイズを復元
+      applyMiniMapPositionAndSize();
+
+      // ドラッグ移動＆リサイズのイベントをバインド
+      bindMiniMapDrag();
+      bindMiniMapResize();
+
+      // トグルボタン・FABボタンのクリックイベント
       const toggleBtn = document.getElementById('minimap-toggle-btn');
       const fab = document.getElementById('minimap-fab');
 
       if (toggleBtn) {
         toggleBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          setMiniMapMinimized(true);
-        });
-      }
-
-      if (header) {
-        header.addEventListener('click', () => {
           setMiniMapMinimized(true);
         });
       }
@@ -1064,6 +1111,234 @@
       }
     }
 
+    function applyMiniMapPositionAndSize() {
+      const panel = document.getElementById('floating-minimap');
+      if (!panel) return;
+
+      // サイズ復元
+      try {
+        const savedSize = localStorage.getItem(MINIMAP_SIZE_KEY);
+        if (savedSize) {
+          const { width, height } = JSON.parse(savedSize);
+          if (typeof width === 'number' && typeof height === 'number') {
+            const clampedW = Math.min(Math.max(width, 220), window.innerWidth * 0.85);
+            const clampedH = Math.min(Math.max(height, 160), window.innerHeight * 0.85);
+            panel.style.width = `${clampedW}px`;
+            panel.style.height = `${clampedH}px`;
+          }
+        }
+      } catch (e) {
+        console.warn('ミニマップサイズの復元失敗:', e);
+      }
+
+      // 位置復元
+      try {
+        const savedPos = localStorage.getItem(MINIMAP_POS_KEY);
+        if (savedPos) {
+          const { top, left } = JSON.parse(savedPos);
+          if (typeof top === 'number' && typeof left === 'number') {
+            const panelRect = panel.getBoundingClientRect();
+            const panelW = panelRect.width || 280;
+            const panelH = panelRect.height || 220;
+            const maxLeft = Math.max(10, window.innerWidth - panelW - 10);
+            const maxTop = Math.max(10, window.innerHeight - panelH - 10);
+
+            const clampedLeft = Math.min(Math.max(10, left), maxLeft);
+            const clampedTop = Math.min(Math.max(50, top), maxTop);
+
+            panel.style.left = `${clampedLeft}px`;
+            panel.style.top = `${clampedTop}px`;
+            panel.style.right = 'auto';
+            panel.style.bottom = 'auto';
+          }
+        }
+      } catch (e) {
+        console.warn('ミニマップ位置の復元失敗:', e);
+      }
+    }
+
+    function bindMiniMapDrag() {
+      const header = document.getElementById('minimap-header');
+      const panel = document.getElementById('floating-minimap');
+      if (!header || !panel) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let startLeft = 0;
+      let startTop = 0;
+
+      header.addEventListener('pointerdown', (e) => {
+        if (e.target.closest('#minimap-toggle-btn') || e.target.closest('button')) return;
+
+        isDragging = true;
+        try {
+          header.setPointerCapture(e.pointerId);
+        } catch (_) {}
+        header.classList.add('is-dragging');
+
+        const rect = panel.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        panel.style.left = `${startLeft}px`;
+        panel.style.top = `${startTop}px`;
+        panel.style.right = 'auto';
+        panel.style.bottom = 'auto';
+
+        const container = document.getElementById('minimap-container');
+        if (container) container.style.pointerEvents = 'none';
+
+        e.preventDefault();
+      });
+
+      header.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const panelRect = panel.getBoundingClientRect();
+        const maxLeft = Math.max(10, window.innerWidth - panelRect.width - 10);
+        const maxTop = Math.max(10, window.innerHeight - panelRect.height - 10);
+
+        const newLeft = Math.min(Math.max(10, startLeft + dx), maxLeft);
+        const newTop = Math.min(Math.max(50, startTop + dy), maxTop);
+
+        panel.style.left = `${newLeft}px`;
+        panel.style.top = `${newTop}px`;
+      });
+
+      const stopDrag = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        try {
+          header.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+        header.classList.remove('is-dragging');
+
+        const container = document.getElementById('minimap-container');
+        if (container) container.style.pointerEvents = '';
+
+        const rect = panel.getBoundingClientRect();
+        try {
+          localStorage.setItem(MINIMAP_POS_KEY, JSON.stringify({
+            top: Math.round(rect.top),
+            left: Math.round(rect.left)
+          }));
+        } catch (err) {
+          console.warn('ミニマップ位置保存失敗:', err);
+        }
+      };
+
+      header.addEventListener('pointerup', stopDrag);
+      header.addEventListener('pointercancel', stopDrag);
+
+      // ダブルクリックでデフォルト位置にリセット
+      header.addEventListener('dblclick', (e) => {
+        if (e.target.closest('#minimap-toggle-btn')) return;
+        panel.style.left = '';
+        panel.style.top = '72px';
+        panel.style.right = '20px';
+        panel.style.bottom = 'auto';
+        try {
+          localStorage.removeItem(MINIMAP_POS_KEY);
+        } catch (_) {}
+      });
+    }
+
+    function bindMiniMapResize() {
+      const resizeHandle = document.getElementById('minimap-resize-handle');
+      const panel = document.getElementById('floating-minimap');
+      if (!resizeHandle || !panel) return;
+
+      let isResizing = false;
+      let startX = 0;
+      let startY = 0;
+      let startWidth = 0;
+      let startHeight = 0;
+      let resizeRaf = null;
+
+      resizeHandle.addEventListener('pointerdown', (e) => {
+        isResizing = true;
+        try {
+          resizeHandle.setPointerCapture(e.pointerId);
+        } catch (_) {}
+        resizeHandle.classList.add('is-resizing');
+
+        const panelRect = panel.getBoundingClientRect();
+
+        startWidth = panelRect.width;
+        startHeight = panelRect.height;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        if (panel.style.right !== 'auto') {
+          panel.style.left = `${panelRect.left}px`;
+          panel.style.top = `${panelRect.top}px`;
+          panel.style.right = 'auto';
+          panel.style.bottom = 'auto';
+        }
+
+        const container = document.getElementById('minimap-container');
+        if (container) container.style.pointerEvents = 'none';
+
+        e.preventDefault();
+        e.stopPropagation();
+      });
+
+      resizeHandle.addEventListener('pointermove', (e) => {
+        if (!isResizing) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        const panelRect = panel.getBoundingClientRect();
+        const maxWidth = Math.max(240, window.innerWidth - panelRect.left - 15);
+        const maxHeight = Math.max(160, window.innerHeight - panelRect.top - 15);
+
+        const newWidth = Math.min(Math.max(220, startWidth + dx), Math.min(maxWidth, window.innerWidth * 0.85));
+        const newHeight = Math.min(Math.max(160, startHeight + dy), Math.min(maxHeight, window.innerHeight * 0.85));
+
+        panel.style.width = `${newWidth}px`;
+        panel.style.height = `${newHeight}px`;
+
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+          if (miniMap) miniMap.invalidateSize();
+        });
+      });
+
+      const stopResize = (e) => {
+        if (!isResizing) return;
+        isResizing = false;
+        try {
+          resizeHandle.releasePointerCapture(e.pointerId);
+        } catch (_) {}
+        resizeHandle.classList.remove('is-resizing');
+
+        const container = document.getElementById('minimap-container');
+        if (container) container.style.pointerEvents = '';
+
+        if (miniMap) miniMap.invalidateSize();
+
+        const panelRect = panel.getBoundingClientRect();
+        try {
+          localStorage.setItem(MINIMAP_SIZE_KEY, JSON.stringify({
+            width: Math.round(panelRect.width),
+            height: Math.round(panelRect.height)
+          }));
+        } catch (err) {
+          console.warn('ミニマップサイズ保存失敗:', err);
+        }
+      };
+
+      resizeHandle.addEventListener('pointerup', stopResize);
+      resizeHandle.addEventListener('pointercancel', stopResize);
+    }
+
     function setMiniMapMinimized(minimized, saveStorage = true) {
       const panel = document.getElementById('floating-minimap');
       const fab = document.getElementById('minimap-fab');
@@ -1073,8 +1348,9 @@
         panel.style.display = 'none';
         fab.style.display = 'flex';
       } else {
-        panel.style.display = 'block';
+        panel.style.display = 'flex';
         fab.style.display = 'none';
+        applyMiniMapPositionAndSize();
         if (miniMap) {
           setTimeout(() => {
             miniMap.invalidateSize();
