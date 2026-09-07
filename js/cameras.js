@@ -726,7 +726,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 真野川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -742,7 +742,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 皿貝川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -758,7 +758,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 月浜沢川樋門付近左岸-0.6km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -774,7 +774,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 馬籠川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -790,7 +790,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 津谷川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -806,7 +806,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 松川（松川） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -822,7 +822,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 八瀬川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -838,7 +838,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 津谷川（花見橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -854,7 +854,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 面瀬川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -870,7 +870,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 鹿折川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -886,7 +886,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 高田川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -902,7 +902,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 大太郎川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -918,7 +918,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 天津沢川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -934,7 +934,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 谷津川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -950,7 +950,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 児捨川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -966,7 +966,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 斎川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -982,7 +982,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 材木岩警報所 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -998,7 +998,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 白石観測所 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -1014,7 +1014,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 材木岩上流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -1030,7 +1030,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 六本松警報所 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -1046,7 +1046,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 洪水吐 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -1062,7 +1062,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 小原遊歩道 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -1078,7 +1078,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 川内沢川（植松） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1094,7 +1094,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 川内沢川（川内沢橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1110,7 +1110,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 川内沢川（館腰橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1126,7 +1126,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 増田川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1142,7 +1142,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 志賀沢川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1158,7 +1158,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 名取川橋右岸下流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1174,7 +1174,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 名取川橋右岸上流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1190,7 +1190,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 飛鳥警報所 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1206,7 +1206,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 閖上水門１ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1222,7 +1222,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 名取川河口 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1238,7 +1238,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 半田川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1254,7 +1254,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 桜井川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1270,7 +1270,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 新桜井川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1286,7 +1286,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 高倉川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1302,7 +1302,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 内町堀川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1318,7 +1318,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 小田川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1334,7 +1334,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 尾袋川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1350,7 +1350,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 白石川合流部 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1366,7 +1366,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 西小坂 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1382,7 +1382,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 佐倉 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1398,7 +1398,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 角田出張所鉄塔 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1414,7 +1414,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 角田橋上流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1430,7 +1430,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 小田川水門 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1446,7 +1446,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 小坂右岸１７．６ＫＰ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1462,7 +1462,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江尻左岸２０．８ＫＰ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1478,7 +1478,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 平貫右岸１９．３ＫＰ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1494,7 +1494,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 大坊右岸２７．３ＫＰ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1510,7 +1510,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 笠松右岸２８．１ＫＰ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1526,7 +1526,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 前原右岸３１．７ＫＰ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1542,7 +1542,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 東根橋上流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1558,7 +1558,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 佐倉下流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1574,7 +1574,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 沼尻 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1590,7 +1590,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 砂押貞山運河 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1606,7 +1606,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 砂押川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1622,7 +1622,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 砂押川（東田中） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1638,7 +1638,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 五間堀川（藤曽根大師橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1654,7 +1654,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 五間堀川（矢野目橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1670,7 +1670,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 亘理大橋上流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1686,7 +1686,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 寺島 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1702,7 +1702,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 東部道路上流 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1718,7 +1718,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 下流左岸（押分排水機場） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1734,7 +1734,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 阿武隈橋左岸 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1750,7 +1750,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 四日市場樋管 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1766,7 +1766,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 蒲崎海岸0.1k （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1782,7 +1782,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 蒲崎海岸1.4k （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1798,7 +1798,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 新浜水門１ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1814,7 +1814,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 阿武隈川河口左岸 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1830,7 +1830,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 押分水門（押分排水機場） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 仙台河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1846,7 +1846,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 長沼川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1862,7 +1862,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 南沢川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1878,7 +1878,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 夏川（石越町） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1894,7 +1894,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 鱒淵川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1910,7 +1910,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 二股川（昭和橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1926,7 +1926,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 岩之沢川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -1942,7 +1942,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 北上川下流23.9kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1958,7 +1958,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 旧北上川27.3kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1974,7 +1974,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 旧北上川33.5kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -1990,7 +1990,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 北上川下流26.4kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2006,7 +2006,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 北上川下流30.6kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2022,7 +2022,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 北上川下流34.8kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2038,7 +2038,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 北上川下流41.4kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2054,7 +2054,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 北上川下流43.2kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2070,7 +2070,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 北上川下流43.6kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2086,7 +2086,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 二股川0.2kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2102,7 +2102,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 二股川0.8kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2118,7 +2118,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 南沢川水門左岸25.5ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2134,7 +2134,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 登米大橋右岸32.1ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2150,7 +2150,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 米谷大橋左岸37.2ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2166,7 +2166,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 錦桜橋左岸44.0ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2182,7 +2182,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 岩之沢樋門左岸49.0ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2198,7 +2198,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 豊里大橋右岸28.5km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2214,7 +2214,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 瀬峰川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2230,7 +2230,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 三間堀川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2246,7 +2246,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 熊川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2262,7 +2262,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 鉛川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2278,7 +2278,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 荒川（築館） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2294,7 +2294,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 昔川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2310,7 +2310,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 夏川（金成） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2326,7 +2326,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 有馬川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2342,7 +2342,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 熊谷川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2358,7 +2358,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 小山田川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2374,7 +2374,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 小山田川（富橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2390,7 +2390,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 熊谷川（志波姫新橋本） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2406,7 +2406,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 荒川（築館横須賀新曽内） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2422,7 +2422,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 落堀川(若柳川南北谷地) （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2438,7 +2438,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 落堀川(志波姫新間海) （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2454,7 +2454,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 金生川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2470,7 +2470,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 夏川（若柳武鎗） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2486,7 +2486,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 二迫川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2502,7 +2502,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川河口右岸0.0km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2518,7 +2518,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬堰鉄塔左岸4.8ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2534,7 +2534,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 田尻川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2550,7 +2550,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 大江川（可動堰） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -2566,7 +2566,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合川16.6kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2582,7 +2582,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合川30.0kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2598,7 +2598,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 新江合川1.6kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2614,7 +2614,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 新江合川4.2kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2630,7 +2630,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川38.0kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2646,7 +2646,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川39.2kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2662,7 +2662,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 多田川2.8kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2678,7 +2678,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 多田川3.5kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2694,7 +2694,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川13.6kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2710,7 +2710,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川27.1kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2726,7 +2726,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川28.3kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2742,7 +2742,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 新江合川分流右岸26.0ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2758,7 +2758,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 上地地区右岸11.6ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2774,7 +2774,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 木間塚大橋右岸14.3ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2790,7 +2790,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 中流堰右岸21.3ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2806,7 +2806,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 野田橋右岸24.6km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2822,7 +2822,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 志田橋右岸30.1ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2838,7 +2838,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 百間堀排水Ｐ右岸36.7km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2854,7 +2854,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 内浦樋管左岸11.2ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2870,7 +2870,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 桜舘排水樋管右岸40.7ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2886,7 +2886,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合橋左岸27.8km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -2902,7 +2902,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 ダム左岸カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -2918,7 +2918,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 ダム右岸カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -2934,7 +2934,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 ダムゲートカメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -2950,7 +2950,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 ダム下流カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -2966,7 +2966,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 轟カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -2982,7 +2982,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 上鳴子カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -2998,7 +2998,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 中野カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3014,7 +3014,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 川渡カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3030,7 +3030,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 岩出山上流カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3046,7 +3046,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 岩出山下流カメラ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 鳴子ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3062,7 +3062,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 大江川（古川栄町） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "大崎市",
     heading: 0,
     headingName: "不明"
   },
@@ -3078,7 +3078,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 大江川（古川稲葉） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "大崎市",
     heading: 0,
     headingName: "不明"
   },
@@ -3094,7 +3094,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 薮川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3110,7 +3110,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 森の川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3126,7 +3126,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 松川（宮） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3142,7 +3142,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 松川（遠刈田） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3158,7 +3158,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 森の川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3174,7 +3174,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 宮警報所 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3190,7 +3190,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 管理所屋上 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3206,7 +3206,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 ダム左岸 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3222,7 +3222,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 ダム上流右岸 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3238,7 +3238,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 七ヶ宿公園 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 七ヶ宿ダム管理所",
     heading: 0,
     headingName: "不明"
   },
@@ -3254,7 +3254,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 新川（高城） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3270,7 +3270,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 田中川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3286,7 +3286,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 鶴田川（山王江排水樋管） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3302,7 +3302,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川12.3kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3318,7 +3318,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川13.2kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3334,7 +3334,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田鳴瀬合流9.4km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3350,7 +3350,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 竹谷排水樋管右岸7.8ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3366,7 +3366,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 品井沼大橋左岸13.5ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3382,7 +3382,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 砂押川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3398,7 +3398,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 勿来川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3414,7 +3414,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 砂押川（八幡崎橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3430,7 +3430,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 小西川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3446,7 +3446,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 身洗川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3462,7 +3462,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川30.3kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3478,7 +3478,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 善川2.2ｋR （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3494,7 +3494,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川31.3kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3510,7 +3510,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 竹林川0.6kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3526,7 +3526,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川31.5kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3542,7 +3542,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 竹林川2.2kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3558,7 +3558,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 善川2.8kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3574,7 +3574,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 善川0.4kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3590,7 +3590,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 善川1.6kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3606,7 +3606,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川21.0kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3622,7 +3622,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 身洗川水門左岸23.3ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3638,7 +3638,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 桧和田地区左岸25.0km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3654,7 +3654,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 三川合流点左岸28.6km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3670,7 +3670,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 竹林川遊水地内左岸0.3km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3686,7 +3686,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 竹林川遊水地越流堤左岸1.4km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3702,7 +3702,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 新堀川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3718,7 +3718,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 鶴田川（上戸橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3734,7 +3734,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 鶴田川（鶴田崎） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3750,7 +3750,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 滑川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3766,7 +3766,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 味明川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3782,7 +3782,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川16.0kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3798,7 +3798,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川22.0kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3814,7 +3814,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川18.4kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3830,7 +3830,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川20.0kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3846,7 +3846,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 吉田川24.3kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3862,7 +3862,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 大郷大橋左岸17.5ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3878,7 +3878,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 粕川大橋下流左岸19.0ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3894,7 +3894,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 粕川大橋上流左岸20.9ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3910,7 +3910,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 竹林川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3926,7 +3926,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 明石川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3942,7 +3942,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 西川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -3958,7 +3958,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 竹林川2.8kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3974,7 +3974,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 新田橋左岸2.6km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -3990,7 +3990,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 善川3.3kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4006,7 +4006,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 善川遊水地内左岸2.2km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4022,7 +4022,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 農道南側左岸3.0km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4038,7 +4038,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 農道北側左岸3.1km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4054,7 +4054,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 善川遊水地越流提左岸3.9km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4070,7 +4070,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 旧迫川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -4086,7 +4086,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 旧北上川23.6kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4102,7 +4102,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合川1.2kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4118,7 +4118,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合川7.4kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4134,7 +4134,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合川12.2kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4150,7 +4150,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 涌谷大橋右岸11.0km （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4166,7 +4166,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 出来川 （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -4182,7 +4182,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 出来川（上出来川橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -4198,7 +4198,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 美女川（美女川橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -4214,7 +4214,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 出来川（栗島橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -4230,7 +4230,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "宮城県 出来川（笹館橋） （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "宮城県",
     heading: 0,
     headingName: "不明"
   },
@@ -4246,7 +4246,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合川16.6kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4262,7 +4262,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 江合川18.4kＲ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4278,7 +4278,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川12.2kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4294,7 +4294,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 鳴瀬川23.5kＬ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4310,7 +4310,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県 遠田橋右岸19.7ｋｍ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4326,7 +4326,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 130.9キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4342,7 +4342,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 128.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4358,7 +4358,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 130.8キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4374,7 +4374,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 130.3キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4390,7 +4390,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 133.2キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4406,7 +4406,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 137.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4422,7 +4422,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 137.8キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4438,7 +4438,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 142.8キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4454,7 +4454,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 97.0キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4470,7 +4470,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 97.8キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4486,7 +4486,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 98.8キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4502,7 +4502,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 103.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4518,7 +4518,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 104.0キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4534,7 +4534,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 105.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4550,7 +4550,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 107.0キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4566,7 +4566,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 38.0キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4582,7 +4582,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 39.3キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4598,7 +4598,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 40.0キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4614,7 +4614,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 42.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4630,7 +4630,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 47.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4646,7 +4646,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 51.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4662,7 +4662,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 55.2キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4678,7 +4678,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 69.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4694,7 +4694,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "岩手県 北上川上流 左岸 43.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -4710,7 +4710,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "岩手県 北上川上流 右岸 64.4キロ （WGS84公式座標）",
-    operator: "国土交通省・自治体",
+    operator: "国土交通省 岩手河川国道事務所",
     heading: 0,
     headingName: "不明"
   }
