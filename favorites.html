@@ -525,6 +525,25 @@
       border-radius: 8px;
     }
 
+    .minimap-action-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary, #94a3b8);
+      cursor: pointer;
+      padding: 4px 6px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      border-radius: 4px;
+    }
+
+    .minimap-action-btn:hover {
+      color: var(--text-primary, #ffffff);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
     .minimap-toggle-btn {
       background: transparent;
       border: none;
@@ -743,9 +762,14 @@
         <span>現在地マップ</span>
         <span class="minimap-badge" id="minimap-count">0</span>
       </div>
-      <button type="button" class="minimap-toggle-btn" id="minimap-toggle-btn" title="マップを折りたたむ">
-        <i class="fa-solid fa-minus" id="minimap-toggle-icon"></i>
-      </button>
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <button type="button" class="minimap-action-btn" id="minimap-popout-btn" title="別ウィンドウで開く（マルチモニター対応・自由にデスクトップ配置）">
+          <i class="fa-solid fa-up-right-from-square"></i>
+        </button>
+        <button type="button" class="minimap-toggle-btn" id="minimap-toggle-btn" title="マップを折りたたむ">
+          <i class="fa-solid fa-minus" id="minimap-toggle-icon"></i>
+        </button>
+      </div>
     </div>
     <div class="minimap-body" id="minimap-body">
       <div id="minimap-container" class="minimap-container"></div>
@@ -779,16 +803,22 @@
     const MINIMAP_STORAGE_KEY = 'miyagi_minimap_minimized';
     const MINIMAP_POS_KEY = 'miyagi_minimap_pos';
     const MINIMAP_SIZE_KEY = 'miyagi_minimap_size';
+    const MAP_CHANNEL_NAME = 'miyagi_eyes_minimap_channel';
+
     let favorites = new Set();
     let countdownSec = 600; // 10分 (600秒)
     let countdownTimer = null;
     let miniMap = null;
     const miniMapMarkers = new Map();
+    let mapChannel = null;
+    let popupMapWindow = null;
+    let isPoppedOut = false;
 
     // 初期化
     document.addEventListener('DOMContentLoaded', () => {
       loadFavorites();
       initMiniMap();
+      initMapSyncChannel();
       renderBoard();
       initEvents();
       startCountdown();
@@ -1423,6 +1453,12 @@
       } else {
         miniMap.setView([38.4344, 141.3029], 9);
       }
+
+      // 独立ポップアップウィンドウへもお気に入り更新を通知
+      sendToPopup({
+        type: 'FAVORITES_UPDATED',
+        favorites: Array.from(favorites)
+      });
     }
 
     function focusCard(cameraId) {
@@ -1439,6 +1475,13 @@
     }
 
     function highlightMiniMapPin(cameraId, isHighlight) {
+      // 独立ポップアップウィンドウへハイライト状態を通知
+      sendToPopup({
+        type: 'HIGHLIGHT_PIN',
+        cameraId,
+        isHighlight: Boolean(isHighlight)
+      });
+
       const marker = miniMapMarkers.get(cameraId);
       if (!marker) return;
       const el = marker.getElement();
@@ -1473,6 +1516,123 @@
           setTimeout(() => highlightMiniMapPin(cameraId, false), 1500);
         }, { passive: true });
       });
+    }
+
+    // ========== 独立マップウィンドウ（マルチモニター対応）通信制御 ==========
+    function initMapSyncChannel() {
+      try {
+        mapChannel = new BroadcastChannel(MAP_CHANNEL_NAME);
+        mapChannel.onmessage = (e) => {
+          handlePopupMessage(e.data);
+        };
+      } catch (err) {
+        console.warn('BroadcastChannel初期化失敗:', err);
+      }
+
+      window.addEventListener('message', (e) => {
+        handlePopupMessage(e.data);
+      });
+
+      const popoutBtn = document.getElementById('minimap-popout-btn');
+      if (popoutBtn) {
+        popoutBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openMapPopup();
+        });
+      }
+
+      // FABボタンクリック時：ポップアウト中ならウィンドウを前面化、そうでなければ展開
+      const fab = document.getElementById('minimap-fab');
+      if (fab) {
+        fab.addEventListener('click', (e) => {
+          if (isPoppedOut && popupMapWindow && !popupMapWindow.closed) {
+            e.stopPropagation();
+            popupMapWindow.focus();
+          }
+        });
+      }
+    }
+
+    function openMapPopup() {
+      if (popupMapWindow && !popupMapWindow.closed) {
+        popupMapWindow.focus();
+        return;
+      }
+
+      const w = 540;
+      const h = 440;
+      let left = window.screenX + window.outerWidth - w - 40;
+      let top = window.screenY + 70;
+
+      try {
+        const savedPos = localStorage.getItem('miyagi_mapwin_pos');
+        if (savedPos) {
+          const parsed = JSON.parse(savedPos);
+          if (parsed.screenX !== undefined) left = parsed.screenX;
+          if (parsed.screenY !== undefined) top = parsed.screenY;
+        }
+      } catch (_) {}
+
+      const features = `width=${w},height=${h},left=${Math.max(0, left)},top=${Math.max(0, top)},resizable=yes,scrollbars=no,status=no`;
+      popupMapWindow = window.open('favorites_map.html', 'MiyagiBousaiMapWindow', features);
+
+      if (popupMapWindow) {
+        isPoppedOut = true;
+        // 親のフロートマップは非表示にし、FABをポップアウト中スタイルで表示
+        const panel = document.getElementById('floating-minimap');
+        const fab = document.getElementById('minimap-fab');
+        if (panel) panel.style.display = 'none';
+        if (fab) {
+          fab.style.display = 'flex';
+          fab.classList.add('is-popped-out');
+          fab.title = '独立マップウィンドウ表示中（クリックで前面へ）';
+        }
+      }
+    }
+
+    function dockBackMiniMap() {
+      isPoppedOut = false;
+      const fab = document.getElementById('minimap-fab');
+      if (fab) {
+        fab.classList.remove('is-popped-out');
+        fab.title = 'ミニマップを展開';
+      }
+      setMiniMapMinimized(false);
+      updateMiniMapMarkers();
+    }
+
+    function sendToPopup(msg) {
+      if (mapChannel) {
+        try { mapChannel.postMessage(msg); } catch (_) {}
+      }
+      if (popupMapWindow && !popupMapWindow.closed) {
+        try { popupMapWindow.postMessage(msg, '*'); } catch (_) {}
+      }
+    }
+
+    function handlePopupMessage(data) {
+      if (!data || !data.type) return;
+
+      switch (data.type) {
+        case 'POPUP_READY':
+          isPoppedOut = true;
+          sendToPopup({
+            type: 'INIT_STATE',
+            favorites: Array.from(favorites)
+          });
+          break;
+
+        case 'FOCUS_CARD':
+          if (data.cameraId) {
+            focusCard(data.cameraId);
+          }
+          break;
+
+        case 'DOCK_BACK':
+        case 'POPUP_CLOSED':
+          dockBackMiniMap();
+          break;
+      }
     }
   </script>
 </body>

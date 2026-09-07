@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>現在地マップ - みやぎライブEyes（独立ウィンドウ）</title>
+  <link rel="icon" href="data:,">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Leaflet.js v1.9.4 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
+  <!-- メインスタイルシート -->
+  <link rel="stylesheet" href="css/style.css?v=20260907_2210">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0f172a;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 上部ヘッダーバー */
+    .map-window-header {
+      height: 42px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      flex-shrink: 0;
+      z-index: 1000;
+      user-select: none;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-title {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #f8fafc;
+    }
+
+    .header-title i {
+      color: #f59e0b;
+    }
+
+    .fav-count-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .sync-status {
+      font-size: 11px;
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+    }
+
+    .sync-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .header-btn.btn-dock {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #f59e0b;
+    }
+    .header-btn.btn-dock:hover {
+      background: rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+    }
+
+    /* 地図領域 */
+    #map-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      background: #0f172a;
+    }
+
+    /* ピンのスタイル（内部ドット2層構造） */
+    .minimap-marker-wrapper {
+      background: transparent !important;
+      border: none !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      overflow: visible !important;
+    }
+
+    .minimap-pin-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .minimap-pin-dot.category-river {
+      background: #3b82f6;
+    }
+    .minimap-pin-dot.category-road {
+      background: #0284c7;
+    }
+
+    /* カードホバー時の強調ピン（内部ドット拡大 + ゴールド発光） */
+    .minimap-pin-dot.highlighted {
+      transform: scale(2.4) !important;
+      background: #f59e0b !important;
+      border-color: #ffffff !important;
+      box-shadow: 0 0 14px #f59e0b, 0 0 24px rgba(245, 158, 11, 0.95) !important;
+    }
+
+    /* 下部ヒントバー */
+    .map-window-footer {
+      height: 24px;
+      background: rgba(15, 23, 42, 0.9);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      font-size: 11px;
+      color: #94a3b8;
+      user-select: none;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ウィンドウ上部ヘッダー -->
+  <header class="map-window-header">
+    <div class="header-left">
+      <div class="header-title">
+        <i class="fa-solid fa-map-location-dot"></i>
+        <span>現在地マップ</span>
+      </div>
+      <span class="fav-count-badge" id="fav-count-badge">0 台</span>
+      <div class="sync-status" title="親画面と常時リアルタイム双方向同期中">
+        <span class="sync-dot"></span>
+        <span>親画面と連動中</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <button type="button" class="header-btn" id="btn-fit-bounds" title="登録カメラが全画面に収まるよう自動調整">
+        <i class="fa-solid fa-expand"></i> 全体表示
+      </button>
+      <button type="button" class="header-btn btn-dock" id="btn-dock-back" title="独立ウィンドウを閉じて親画面内に戻す">
+        <i class="fa-solid fa-down-left-and-up-right-to-center"></i> 親画面に戻す
+      </button>
+    </div>
+  </header>
+
+  <!-- 地図コンテナ -->
+  <div id="map-container"></div>
+
+  <!-- 下部フッター案内 -->
+  <footer class="map-window-footer">
+    <span>💡 ピンをクリックすると親画面の該当カメラへスクロールします</span>
+    <span>国土地理院淡色地図</span>
+  </footer>
+
+  <!-- カメラデータ読み込み -->
+  <script src="js/cameras.js?v=20260907_1940"></script>
+  <!-- Leaflet.js -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <script>
+    const CHANNEL_NAME = 'miyagi_eyes_minimap_channel';
+    const FAV_STORAGE_KEY = 'ishinomaki_fav_cameras';
+    const WIN_POS_KEY = 'miyagi_mapwin_pos';
+
+    let map = null;
+    const markersMap = new Map(); // cameraId -> Leaflet Marker
+    let currentFavorites = [];
+    let channel = null;
+
+    // 初期化
+    document.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      initBroadcastChannel();
+      loadFavoritesFromStorage();
+      bindWindowPositionPersistence();
+
+      // 親画面に起動完了を通知
+      sendToParent({ type: 'POPUP_READY' });
+    });
+
+    // 地図初期化
+    function initMap() {
+      map = L.map('map-container', {
+        zoomControl: true,
+        attributionControl: false
+      }).setView([38.4344, 141.3029], 9);
+
+      // 国土地理院淡色地図
+      L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+        maxZoom: 16,
+        minZoom: 7
+      }).addTo(map);
+
+      // ボタンイベント
+      document.getElementById('btn-fit-bounds').addEventListener('click', fitMapBounds);
+      document.getElementById('btn-dock-back').addEventListener('click', () => {
+        sendToParent({ type: 'DOCK_BACK' });
+        window.close();
+      });
+
+      // ウィンドウリサイズ連動
+      window.addEventListener('resize', () => {
+        if (map) map.invalidateSize();
+      });
+    }
+
+    // BroadcastChannel初期化
+    function initBroadcastChannel() {
+      try {
+        channel = new BroadcastChannel(CHANNEL_NAME);
+        channel.onmessage = (event) => {
+          handleParentMessage(event.data);
+        };
+      } catch (e) {
+        console.warn('BroadcastChannel非対応または初期化失敗:', e);
+      }
+
+      // window.opener 直接通信の受信
+      window.addEventListener('message', (event) => {
+        handleParentMessage(event.data);
+      });
+    }
+
+    // 親画面へメッセージ送信
+    function sendToParent(msg) {
+      if (channel) {
+        try { channel.postMessage(msg); } catch (_) {}
+      }
+      if (window.opener && !window.opener.closed) {
+        try { window.opener.postMessage(msg, '*'); } catch (_) {}
+      }
+    }
+
+    // 親画面からのメッセージ処理
+    function handleParentMessage(data) {
+      if (!data || !data.type) return;
+
+      switch (data.type) {
+        case 'INIT_STATE':
+        case 'FAVORITES_UPDATED':
+          if (Array.isArray(data.favorites)) {
+            currentFavorites = data.favorites;
+            updateMarkers();
+          }
+          break;
+
+        case 'HIGHLIGHT_PIN':
+          if (data.cameraId) {
+            highlightMarker(data.cameraId, Boolean(data.isHighlight));
+          }
+          break;
+
+        case 'PING':
+          sendToParent({ type: 'PONG' });
+          break;
+      }
+    }
+
+    // ストレージから初期お気に入りを読み込み
+    function loadFavoritesFromStorage() {
+      try {
+        const saved = localStorage.getItem(FAV_STORAGE_KEY);
+        if (saved) {
+          currentFavorites = JSON.parse(saved);
+        }
+      } catch (_) {}
+      updateMarkers();
+    }
+
+    // マーカーの同期更新
+    function updateMarkers() {
+      if (!map || typeof CAMERA_DATA === 'undefined') return;
+
+      const badge = document.getElementById('fav-count-badge');
+      const favMap = new Map(CAMERA_DATA.map(c => [c.id, c]));
+      const favCameras = currentFavorites.map(id => favMap.get(id))
+        .filter(c => c && typeof c.lat === 'number' && typeof c.lng === 'number');
+
+      if (badge) {
+        badge.textContent = `${favCameras.length} 台`;
+      }
+
+      const activeIds = new Set(favCameras.map(c => c.id));
+
+      // 削除されたマーカーの撤去
+      for (const [id, marker] of markersMap.entries()) {
+        if (!activeIds.has(id)) {
+          map.removeLayer(marker);
+          markersMap.delete(id);
+        }
+      }
+
+      // 新規マーカーの追加
+      favCameras.forEach(cam => {
+        if (!markersMap.has(cam.id)) {
+          const isRiver = cam.category === 'river';
+          const icon = L.divIcon({
+            className: 'minimap-marker-wrapper',
+            html: `<div class="minimap-pin-dot ${isRiver ? 'category-river' : 'category-road'}" id="popup-dot-${cam.id}" title="${cam.name}"></div>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+          });
+
+          const marker = L.marker([cam.lat, cam.lng], {
+            icon,
+            title: cam.name
+          }).addTo(map);
+
+          // ピンクリック時：親画面の該当カードへスクロール指示
+          marker.on('click', () => {
+            sendToParent({ type: 'FOCUS_CARD', cameraId: cam.id });
+            // クリック時も一時ハイライト
+            highlightMarker(cam.id, true);
+            setTimeout(() => highlightMarker(cam.id, false), 1600);
+          });
+
+          markersMap.set(cam.id, marker);
+        }
+      });
+
+      // 初回または更新時に全ピンが収まるようズーム
+      fitMapBounds();
+    }
+
+    // ピンのハイライト（親画面のカードホバー等と連動）
+    function highlightMarker(cameraId, isHighlight) {
+      const marker = markersMap.get(cameraId);
+      if (!marker) return;
+      const el = marker.getElement();
+      if (!el) return;
+
+      const dot = el.querySelector('.minimap-pin-dot');
+      if (!dot) return;
+
+      if (isHighlight) {
+        dot.classList.add('highlighted');
+        el.style.zIndex = '9999';
+      } else {
+        dot.classList.remove('highlighted');
+        el.style.zIndex = '';
+      }
+    }
+
+    // 登録カメラ全件が収まるようズーム＆センタリング
+    function fitMapBounds() {
+      if (!map) return;
+      const latLngs = [];
+      for (const marker of markersMap.values()) {
+        latLngs.push(marker.getLatLng());
+      }
+
+      if (latLngs.length > 0) {
+        const bounds = L.latLngBounds(latLngs);
+        map.fitBounds(bounds, { padding: [30, 30], maxZoom: 14 });
+      } else {
+        map.setView([38.4344, 141.3029], 9);
+      }
+    }
+
+    // ウィンドウ位置・サイズの永続化
+    function bindWindowPositionPersistence() {
+      window.addEventListener('beforeunload', () => {
+        sendToParent({ type: 'POPUP_CLOSED' });
+        try {
+          localStorage.setItem(WIN_POS_KEY, JSON.stringify({
+            screenX: window.screenX,
+            screenY: window.screenY,
+            innerWidth: window.innerWidth,
+            innerHeight: window.innerHeight
+          }));
+        } catch (_) {}
+      });
+    }
+  </script>
+</body>
+</html>
