@@ -14,8 +14,11 @@
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+  <!-- Leaflet.js v1.9.4 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+
   <!-- メインスタイルシート（共通変数・テーマ参照） -->
-  <link rel="stylesheet" href="css/style.css?v=20260906_1020">
+  <link rel="stylesheet" href="css/style.css?v=20260907_2210">
 
   <style>
     /* ========== お気に入りダッシュボード専用スタイル ========== */
@@ -455,6 +458,170 @@
     .lightbox-close-btn:hover {
       background: rgba(255, 255, 255, 0.4);
     }
+
+    /* ========== フロート型ミニマップ（案B） ========== */
+    .floating-minimap {
+      position: fixed;
+      top: 72px;
+      right: 20px;
+      width: 280px;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      z-index: 1000;
+      overflow: hidden;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .minimap-header {
+      padding: 6px 12px;
+      background: rgba(30, 41, 59, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .minimap-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary, #f8fafc);
+    }
+
+    .minimap-title i {
+      color: #f59e0b;
+    }
+
+    .minimap-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 8px;
+    }
+
+    .minimap-toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary, #94a3b8);
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .minimap-toggle-btn:hover {
+      color: var(--text-primary, #ffffff);
+    }
+
+    .minimap-body {
+      width: 100%;
+      height: 180px;
+    }
+
+    .minimap-container {
+      width: 100%;
+      height: 100%;
+      background: #0f172a;
+    }
+
+    /* 最小化FABボタン */
+    .minimap-fab {
+      position: fixed;
+      top: 72px;
+      right: 20px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      color: #f59e0b;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .minimap-fab:hover {
+      transform: scale(1.1);
+      background: rgba(30, 41, 59, 0.95);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+    }
+
+    /* ミニマップ上のピンのスタイル */
+    .minimap-marker-icon {
+      width: 12px !important;
+      height: 12px !important;
+      background: #3b82f6;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s;
+      cursor: pointer;
+    }
+
+    .minimap-marker-icon.category-river {
+      background: #3b82f6;
+    }
+    .minimap-marker-icon.category-road {
+      background: #0284c7;
+    }
+
+    /* カードホバー時の強調ピン（拡大 + ゴールド発光） */
+    .minimap-marker-icon.highlighted {
+      transform: scale(1.8) !important;
+      background: #f59e0b !important;
+      border-color: #ffffff !important;
+      box-shadow: 0 0 10px #f59e0b, 0 0 18px rgba(245, 158, 11, 0.8) !important;
+      z-index: 9999 !important;
+    }
+
+    /* ピンクリック時のカード点滅ハイライトアニメーション */
+    @keyframes cardFocusPulse {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.8); }
+      50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.4); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+    .card-focus-highlight {
+      animation: cardFocusPulse 1.6s ease-out;
+      border-color: #f59e0b !important;
+    }
+
+    /* スマホ配慮（768px以下） */
+    @media (max-width: 768px) {
+      .floating-minimap {
+        top: auto;
+        bottom: 20px;
+        right: 16px;
+        width: 240px;
+      }
+      .minimap-body {
+        height: 150px;
+      }
+      .minimap-fab {
+        top: auto;
+        bottom: 20px;
+        right: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -516,6 +683,28 @@
     </div>
   </main>
 
+  <!-- ========== フロート型ミニマップ（案B） ========== -->
+  <div id="floating-minimap" class="floating-minimap">
+    <div class="minimap-header" id="minimap-header" title="クリックで折りたたみ／展開">
+      <div class="minimap-title">
+        <i class="fa-solid fa-map-location-dot"></i>
+        <span>現在地マップ</span>
+        <span class="minimap-badge" id="minimap-count">0</span>
+      </div>
+      <button type="button" class="minimap-toggle-btn" id="minimap-toggle-btn" title="マップを折りたたむ">
+        <i class="fa-solid fa-minus" id="minimap-toggle-icon"></i>
+      </button>
+    </div>
+    <div class="minimap-body" id="minimap-body">
+      <div id="minimap-container" class="minimap-container"></div>
+    </div>
+  </div>
+
+  <!-- 最小化時に表示されるフローティングボタン（FAB） -->
+  <button type="button" id="minimap-fab" class="minimap-fab" title="ミニマップを展開" style="display: none;">
+    <i class="fa-solid fa-map-location-dot"></i>
+  </button>
+
   <!-- ========== 画像拡大ライトボックス ========== -->
   <div class="lightbox-modal" id="lightbox-modal" onclick="closeLightbox(event)">
     <div class="lightbox-header" onclick="event.stopPropagation()">
@@ -529,16 +718,22 @@
 
   <!-- カメラデータ読み込み -->
   <script src="js/cameras.js?v=20260907_1940"></script>
+  <!-- Leaflet.js -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <script>
     const FAV_STORAGE_KEY = 'ishinomaki_fav_cameras';
+    const MINIMAP_STORAGE_KEY = 'miyagi_minimap_minimized';
     let favorites = new Set();
     let countdownSec = 600; // 10分 (600秒)
     let countdownTimer = null;
+    let miniMap = null;
+    const miniMapMarkers = new Map();
 
     // 初期化
     document.addEventListener('DOMContentLoaded', () => {
       loadFavorites();
+      initMiniMap();
       renderBoard();
       initEvents();
       startCountdown();
@@ -599,6 +794,7 @@
       if (favCameras.length === 0) {
         grid.style.display = 'none';
         emptyState.style.display = 'block';
+        updateMiniMapMarkers();
         return;
       }
 
@@ -681,6 +877,8 @@
       }).join('');
 
       bindBoardDragAndDrop(grid);
+      updateMiniMapMarkers();
+      bindCardMiniMapInteractions();
     }
 
     // お気に入りボードのドラッグ＆ドロップ並べ替え
@@ -804,6 +1002,184 @@
         closeLightbox();
       }
     });
+
+    // ========== フロート型ミニマップ（案B）制御ロジック ==========
+    function initMiniMap() {
+      const container = document.getElementById('minimap-container');
+      if (!container || miniMap || typeof L === 'undefined') return;
+
+      // Leafletマップ初期化
+      miniMap = L.map('minimap-container', {
+        zoomControl: false,
+        attributionControl: false
+      }).setView([38.4344, 141.3029], 9);
+
+      // 国土地理院淡色地図タイル
+      L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
+        maxZoom: 16,
+        minZoom: 7
+      }).addTo(miniMap);
+
+      // ヘッダー・トグルボタン・FABボタンのクリックイベント
+      const header = document.getElementById('minimap-header');
+      const toggleBtn = document.getElementById('minimap-toggle-btn');
+      const fab = document.getElementById('minimap-fab');
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setMiniMapMinimized(true);
+        });
+      }
+
+      if (header) {
+        header.addEventListener('click', () => {
+          setMiniMapMinimized(true);
+        });
+      }
+
+      if (fab) {
+        fab.addEventListener('click', () => {
+          setMiniMapMinimized(false);
+        });
+      }
+
+      // 保存状態または画面幅に応じた初期折りたたみ判定（スマホ幅768px以下はデフォルト最小化）
+      const isMobile = window.innerWidth <= 768;
+      const savedMinimized = localStorage.getItem(MINIMAP_STORAGE_KEY);
+      if (savedMinimized !== null) {
+        setMiniMapMinimized(savedMinimized === 'true', false);
+      } else if (isMobile) {
+        setMiniMapMinimized(true, false);
+      } else {
+        setMiniMapMinimized(false, false);
+      }
+    }
+
+    function setMiniMapMinimized(minimized, saveStorage = true) {
+      const panel = document.getElementById('floating-minimap');
+      const fab = document.getElementById('minimap-fab');
+      if (!panel || !fab) return;
+
+      if (minimized) {
+        panel.style.display = 'none';
+        fab.style.display = 'flex';
+      } else {
+        panel.style.display = 'block';
+        fab.style.display = 'none';
+        if (miniMap) {
+          setTimeout(() => {
+            miniMap.invalidateSize();
+          }, 100);
+        }
+      }
+
+      if (saveStorage) {
+        try {
+          localStorage.setItem(MINIMAP_STORAGE_KEY, minimized ? 'true' : 'false');
+        } catch (e) {
+          console.warn('ミニマップ状態の保存に失敗:', e);
+        }
+      }
+    }
+
+    function updateMiniMapMarkers() {
+      if (!miniMap || typeof CAMERA_DATA === 'undefined' || typeof L === 'undefined') return;
+
+      const countBadge = document.getElementById('minimap-count');
+      const favOrder = Array.from(favorites);
+      const favMap = new Map(CAMERA_DATA.map(c => [c.id, c]));
+      const currentFavCameras = favOrder.map(id => favMap.get(id))
+        .filter(c => c && typeof c.lat === 'number' && typeof c.lng === 'number');
+
+      if (countBadge) {
+        countBadge.textContent = currentFavCameras.length;
+      }
+
+      const currentIds = new Set(currentFavCameras.map(c => c.id));
+
+      // 削除されたカメラのマーカーを撤去
+      for (const [id, marker] of miniMapMarkers.entries()) {
+        if (!currentIds.has(id)) {
+          miniMap.removeLayer(marker);
+          miniMapMarkers.delete(id);
+        }
+      }
+
+      // マーカーの追加・配置
+      const latLngs = [];
+      currentFavCameras.forEach(cam => {
+        latLngs.push([cam.lat, cam.lng]);
+        if (!miniMapMarkers.has(cam.id)) {
+          const isRiver = cam.category === 'river';
+          const markerIcon = L.divIcon({
+            className: `minimap-marker-icon ${isRiver ? 'category-river' : 'category-road'}`,
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+          });
+
+          const marker = L.marker([cam.lat, cam.lng], {
+            icon: markerIcon,
+            title: cam.name
+          }).addTo(miniMap);
+
+          marker.on('click', () => {
+            focusCard(cam.id);
+          });
+
+          miniMapMarkers.set(cam.id, marker);
+        }
+      });
+
+      // ズーム・センタリングの自動調整
+      if (latLngs.length > 0) {
+        const bounds = L.latLngBounds(latLngs);
+        miniMap.fitBounds(bounds, { padding: [24, 24], maxZoom: 13 });
+      } else {
+        miniMap.setView([38.4344, 141.3029], 9);
+      }
+    }
+
+    function focusCard(cameraId) {
+      const card = document.getElementById(`card-${cameraId}`);
+      if (!card) return;
+
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.remove('card-focus-highlight');
+      void card.offsetWidth; // アニメーション再発火のためのリフロー
+      card.classList.add('card-focus-highlight');
+      setTimeout(() => {
+        card.classList.remove('card-focus-highlight');
+      }, 1600);
+    }
+
+    function highlightMiniMapPin(cameraId, isHighlight) {
+      const marker = miniMapMarkers.get(cameraId);
+      if (!marker) return;
+      const el = marker.getElement();
+      if (!el) return;
+
+      if (isHighlight) {
+        el.classList.add('highlighted');
+      } else {
+        el.classList.remove('highlighted');
+      }
+    }
+
+    function bindCardMiniMapInteractions() {
+      const cards = document.querySelectorAll('.fav-card');
+      cards.forEach(card => {
+        const cameraId = card.getAttribute('data-camera-id');
+        if (!cameraId) return;
+
+        card.addEventListener('mouseenter', () => highlightMiniMapPin(cameraId, true));
+        card.addEventListener('mouseleave', () => highlightMiniMapPin(cameraId, false));
+        card.addEventListener('touchstart', () => highlightMiniMapPin(cameraId, true), { passive: true });
+        card.addEventListener('touchend', () => {
+          setTimeout(() => highlightMiniMapPin(cameraId, false), 1200);
+        }, { passive: true });
+      });
+    }
   </script>
 </body>
 </html>
