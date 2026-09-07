@@ -49,7 +49,7 @@
     }
 
     // 石巻圏：旧北上川水系
-    if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('脇谷') || name.includes('石巻大橋') || name.includes('真野川') || name.includes('大森')) {
+    if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('脇谷') || name.includes('石巻大橋') || name.includes('真野川')) {
       return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 2, defaultOpen: true };
     }
 
@@ -184,7 +184,10 @@
   }
 
   function toggleFavorite(cameraId, event) {
-    if (event) event.stopPropagation();
+    if (event) {
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      if (typeof event.stopPropagation === 'function') event.stopPropagation();
+    }
     if (state.favorites.has(cameraId)) {
       state.favorites.delete(cameraId);
     } else {
@@ -192,8 +195,19 @@
     }
     saveFavorites();
     updateFavoriteUI(cameraId);
-    renderSidebarList();
+
+    // お気に入り専用タブ表示中の場合のみ、解除されたカードの除去のためリストを再描画
+    // その場合でもスクロール位置を退避・復元して画面が動くのを完全に防止
+    if (state.favoriteOnlyFilter) {
+      const listContainer = document.getElementById('camera-list');
+      const savedScrollTop = listContainer ? listContainer.scrollTop : 0;
+      renderSidebarList();
+      if (listContainer) {
+        listContainer.scrollTop = savedScrollTop;
+      }
+    }
   }
+
 
   function updateFavoriteUI(cameraId) {
     const isFav = state.favorites.has(cameraId);
@@ -663,7 +677,7 @@
         <div class="camera-card camera-card-compact ${isFavMode ? 'fav-sortable-card' : ''}" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" ${draggableAttr} style="padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
           <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1;">
             ${dragHandleHtml}
-            <button class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.stopPropagation();" style="flex-shrink: 0;">
+            <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();" style="flex-shrink: 0;">
               <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
             </button>
             <span class="card-name" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${camera.name}</span>
@@ -699,7 +713,7 @@
             ${dragHandleHtml}
             <span class="card-name">${camera.name}</span>
           </div>
-          <button class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録">
+          <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();">
             <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
           </button>
           <span class="category-badge badge-${category}">${categoryLabel}</span>
@@ -791,6 +805,8 @@
   function bindCameraListEvents(container) {
     container.querySelectorAll('.fav-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const id = btn.getAttribute('data-camera-id');
         toggleFavorite(id, e);
       });
@@ -1151,7 +1167,7 @@
     if (title) {
       title.innerHTML = `
         <span>${camera.name}</span>
-        <button class="fav-btn modal-fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.stopPropagation();">
+        <button type="button" class="fav-btn modal-fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();">
           <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
         </button>
       `;
