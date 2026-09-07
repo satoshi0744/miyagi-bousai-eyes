@@ -86,6 +86,105 @@
     return { id: 'group_other_river', title: '🌊 その他河川・観測所', icon: 'fa-water', order: 11, defaultOpen: false };
   }
 
+  // ■ 川の流れ順（上流→下流）ソート用ヘルパー関数群
+  // カメラ名からキロ程（km, kR, kL, k, キロ, KP等）を抽出
+  function extractKmFromCameraName(name) {
+    if (!name) return null;
+    const normalized = name.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+                           .replace(/[Ａ-Ｚａ-ｚ]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+    
+    // パターン1: -0.6km, 130.9キロ, 14.3km, 8.6km, 21.0kR, 12.4kL, 5.2k, 15.0K, 0.4kＲ, etc.
+    const m1 = normalized.match(/(-?[0-9]+(?:\.[0-9]+)?)\s*(?:km|k[rl]|k|キロ(?:メートル)?)/i);
+    if (m1) {
+      const val = parseFloat(m1[1]);
+      if (!isNaN(val)) return val;
+    }
+
+    // パターン2: KP12.4, kp 5.0
+    const m2 = normalized.match(/kp\s*(-?[0-9]+(?:\.[0-9]+)?)/i);
+    if (m2) {
+      const val = parseFloat(m2[1]);
+      if (!isNaN(val)) return val;
+    }
+
+    return null;
+  }
+
+  // 2点間の直線距離（km）を計算（ヒュベニの公式）
+  function calculateDistanceKm(lat1, lng1, lat2, lng2) {
+    const rad = Math.PI / 180;
+    const dLat = (lat2 - lat1) * rad;
+    const dLng = (lng2 - lng1) * rad;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * rad) * Math.cos(lat2 * rad) *
+              Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return 6371 * c;
+  }
+
+  // 各水系の河口・最下流基準点座標（キロ程0km相当）
+  const RIVER_REFERENCE_POINTS = {
+    group_kitakami: { lat: 38.5658, lng: 141.4437 }, // 新北上川河口（釜谷水門・河口付近: 0.8km）
+    group_kyu_kitakami: { lat: 38.4150, lng: 141.3125 }, // 旧北上川河口（0.7km付近）
+    group_naruse: { lat: 38.3756, lng: 141.1728 }, // 鳴瀬川河口（0.0km付近）
+    group_osaki_kami: { lat: 38.5372, lng: 141.2111 }, // 江合川下流（1.2km付近）
+    group_tome_kurihara: { lat: 38.5973, lng: 141.1693 }, // 迫川下流合流付近
+    group_sendai: { lat: 38.1761, lng: 140.9564 }, // 名取川河口付近
+    group_kesennuma: { lat: 38.7857, lng: 141.4981 }, // 津谷川下流
+    group_iwate: { lat: 39.0208, lng: 141.1313 } // 岩手県北上川最下流（38.0km付近）
+  };
+
+  // 上流度スコア算出（数値降順で上流→下流）
+  function getCameraUpstreamScore(camera, groupId) {
+    const km = extractKmFromCameraName(camera.name);
+    if (km !== null) {
+      return km;
+    }
+
+    // キロ程がない場合の補間: 河口からの直線距離（km）
+    const refPoint = RIVER_REFERENCE_POINTS[groupId];
+    if (refPoint && typeof camera.lat === 'number' && typeof camera.lng === 'number') {
+      return calculateDistanceKm(camera.lat, camera.lng, refPoint.lat, refPoint.lng);
+    }
+
+    // 基準点がない場合は緯度（北にあるほど上流/起点側として高スコア）
+    if (typeof camera.lat === 'number') {
+      return camera.lat * 10;
+    }
+
+    return 0;
+  }
+
+  // カメラ配列を「川の流れ順（上流→下流）」にソート
+  function sortCamerasByRiverFlow(cameras, groupId) {
+    if (!cameras || cameras.length <= 1) return cameras;
+
+    // お気に入りグループはユーザー順序を保持するためソート対象外
+    if (groupId === 'group_fav') {
+      return cameras;
+    }
+
+    // 道路・その他河川グループは北から南へ緯度降順
+    if (groupId === 'group_road' || groupId === 'group_other_river') {
+      return [...cameras].sort((a, b) => {
+        const latA = typeof a.lat === 'number' ? a.lat : 0;
+        const latB = typeof b.lat === 'number' ? b.lat : 0;
+        if (latB !== latA) return latB - latA;
+        return (a.name || '').localeCompare(b.name || '', 'ja');
+      });
+    }
+
+    // 水系グループ: 上流度スコアの降順（上流→下流）
+    return [...cameras].sort((a, b) => {
+      const scoreA = getCameraUpstreamScore(a, groupId);
+      const scoreB = getCameraUpstreamScore(b, groupId);
+      if (scoreB !== scoreA) {
+        return scoreB - scoreA;
+      }
+      return (a.name || '').localeCompare(b.name || '', 'ja');
+    });
+  }
+
   // ■ 状態管理
   const state = {
     cameras: [],
@@ -1022,6 +1121,7 @@
       if (group.cameras.length === 0) return;
 
       if (group.id !== 'group_fav') {
+        group.cameras = sortCamerasByRiverFlow(group.cameras, group.id);
         totalVisible += group.cameras.length;
       }
 
