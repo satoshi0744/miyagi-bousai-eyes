@@ -130,6 +130,7 @@
     initSidebarAccordion();
     initSidebarResizer();
     initFavoriteFilterBar(); // お気に入り切り替えバーの初期化
+    initHazardMapControl(); // ハザードマップ重ね合わせコントロールの初期化
     initMapToggle();
     initBottomTabs();
     initAreaFilter();
@@ -230,6 +231,10 @@
     }).addTo(state.map);
 
     L.control.zoom({ position: 'topright' }).addTo(state.map);
+
+    // ハザードマップ用専用ペインの作成（ベース地図の上、マーカーピンの下に配置）
+    state.map.createPane('hazardPane');
+    state.map.getPane('hazardPane').style.zIndex = 350;
 
     // カテゴリ別レイヤーグループの作成
     state.layers = {
@@ -1836,6 +1841,248 @@
           state.map.invalidateSize();
         }
       }
+    });
+  }
+
+  // ■ 国土地理院ハザードマップ重ね合わせコントロールの初期化
+  function initHazardMapControl() {
+    const toggleBtn = document.getElementById('hazard-toggle-btn');
+    const dropdown = document.getElementById('hazard-menu-dropdown');
+    const container = document.getElementById('hazard-floating-control');
+    const btnLabel = document.getElementById('hazard-btn-label');
+    const legendPanel = document.getElementById('hazard-legend-panel');
+    const refreshBtn = document.getElementById('hazard-refresh-btn');
+    const infoBtn = document.getElementById('hazard-info-btn');
+    const infoModal = document.getElementById('hazard-info-modal-overlay');
+    const infoCloseBtn = document.getElementById('hazard-info-modal-close');
+    const localFetchDateEl = document.getElementById('hazard-local-fetch-date');
+
+    if (!toggleBtn || !dropdown || !state.map) return;
+
+    let currentHazardLayer = null;
+    let activeHazardType = 'none';
+
+    // 手元取得日の更新と表示
+    function updateFetchDateDisplay(newDateStr) {
+      if (!localFetchDateEl) return;
+      let dateStr = newDateStr || localStorage.getItem('ishinomaki_hazard_fetch_date');
+      if (!dateStr) {
+        const now = new Date();
+        dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+        localStorage.setItem('ishinomaki_hazard_fetch_date', dateStr);
+      }
+      localFetchDateEl.textContent = dateStr;
+    }
+    updateFetchDateDisplay();
+
+    // 開閉トグル
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = dropdown.style.display === 'flex';
+      dropdown.style.display = isOpen ? 'none' : 'flex';
+      container.classList.toggle('open', !isOpen);
+    });
+
+    // 画面外クリックでドロップダウンを閉じる
+    document.addEventListener('click', () => {
+      dropdown.style.display = 'none';
+      container.classList.remove('open');
+    });
+
+    dropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // 利用規約・免責事項モーダルの開閉
+    if (infoBtn && infoModal) {
+      infoBtn.addEventListener('click', () => {
+        dropdown.style.display = 'none';
+        container.classList.remove('open');
+        infoModal.classList.add('active');
+      });
+    }
+
+    if (infoCloseBtn && infoModal) {
+      infoCloseBtn.addEventListener('click', () => {
+        infoModal.classList.remove('active');
+      });
+    }
+
+    if (infoModal) {
+      infoModal.addEventListener('click', (e) => {
+        if (e.target === infoModal) {
+          infoModal.classList.remove('active');
+        }
+      });
+    }
+
+    // ハザード情報の最新化（リフレッシュ）
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+        localStorage.setItem('ishinomaki_hazard_fetch_date', dateStr);
+        updateFetchDateDisplay(dateStr);
+
+        if (currentHazardLayer) {
+          // タイル再描画の実行
+          if (currentHazardLayer.redraw) {
+            currentHazardLayer.redraw();
+          } else if (currentHazardLayer.eachLayer) {
+            currentHazardLayer.eachLayer(l => { if (l.redraw) l.redraw(); });
+          }
+          const origText = refreshBtn.innerHTML;
+          refreshBtn.innerHTML = '<i class="fa-solid fa-check" style="color: #10b981;"></i> 更新完了';
+          setTimeout(() => {
+            refreshBtn.innerHTML = origText;
+            dropdown.style.display = 'none';
+            container.classList.remove('open');
+          }, 600);
+        } else {
+          dropdown.style.display = 'none';
+          container.classList.remove('open');
+        }
+      });
+    }
+
+    // 凡例およびレイヤー定義
+    const HAZARD_CONFIG = {
+      none: {
+        label: 'ハザード',
+        active: false,
+        legendHtml: ''
+      },
+      flood: {
+        label: 'ハザード: 洪水',
+        active: true,
+        createLayer: () => L.tileLayer('https://disaportaldata.gsi.go.jp/raster/01_flood_l2_shinsuishin_data/{z}/{x}/{y}.png', {
+          minZoom: 2,
+          maxZoom: 17,
+          opacity: 0.65,
+          pane: 'hazardPane',
+          attribution: '&copy; <a href="https://disaportal.gsi.go.jp/hazardmap/copyright/opendata.html" target="_blank">国土地理院(洪水)</a>'
+        }),
+        legendHtml: `
+          <div class="hazard-legend-title">
+            <span>🌊 洪水浸水想定区域（想定最大規模）</span>
+            <span class="hazard-legend-credit-link" title="利用規約・免責事項を確認">国土地理院 ℹ️</span>
+          </div>
+          <div class="hazard-legend-items">
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fef08a;"></span> 0.5m未満 (床下)</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fed7aa;"></span> 0.5〜3m (1階床上)</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fb923c;"></span> 3〜5m (2階床上)</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #c084fc;"></span> 5〜10m (水没)</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #7e22ce;"></span> 10m以上</span>
+          </div>
+        `
+      },
+      debris: {
+        label: 'ハザード: 土砂',
+        active: true,
+        createLayer: () => {
+          const doseki = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/05_dosekiryukeikaikuiki/{z}/{x}/{y}.png', {
+            minZoom: 2,
+            maxZoom: 17,
+            opacity: 0.7,
+            pane: 'hazardPane'
+          });
+          const kyukeisha = L.tileLayer('https://disaportaldata.gsi.go.jp/raster/05_kyukeishakeikaikuiki/{z}/{x}/{y}.png', {
+            minZoom: 2,
+            maxZoom: 17,
+            opacity: 0.7,
+            pane: 'hazardPane',
+            attribution: '&copy; <a href="https://disaportal.gsi.go.jp/hazardmap/copyright/opendata.html" target="_blank">国土地理院(土砂)</a>'
+          });
+          return L.layerGroup([doseki, kyukeisha]);
+        },
+        legendHtml: `
+          <div class="hazard-legend-title">
+            <span>⛰️ 土砂災害警戒区域（土石流・急傾斜地）</span>
+            <span class="hazard-legend-credit-link" title="利用規約・免責事項を確認">国土地理院 ℹ️</span>
+          </div>
+          <div class="hazard-legend-items">
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #facc15;"></span> 警戒区域 (イエローゾーン)</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #ef4444;"></span> 特別警戒区域 (レッドゾーン)</span>
+          </div>
+        `
+      },
+      tsunami: {
+        label: 'ハザード: 津波',
+        active: true,
+        createLayer: () => L.tileLayer('https://disaportaldata.gsi.go.jp/raster/04_tsunami_newlegend_data/{z}/{x}/{y}.png', {
+          minZoom: 2,
+          maxZoom: 17,
+          opacity: 0.65,
+          pane: 'hazardPane',
+          attribution: '&copy; <a href="https://disaportal.gsi.go.jp/hazardmap/copyright/opendata.html" target="_blank">国土地理院(津波)</a>'
+        }),
+        legendHtml: `
+          <div class="hazard-legend-title">
+            <span>🌊 津波浸水想定区域</span>
+            <span class="hazard-legend-credit-link" title="利用規約・免責事項を確認">国土地理院 ℹ️</span>
+          </div>
+          <div class="hazard-legend-items">
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fef08a;"></span> 0.3m未満</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fed7aa;"></span> 0.3〜1m</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #fb923c;"></span> 1〜3m</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #f43f5e;"></span> 3〜5m</span>
+            <span class="hazard-legend-item"><span class="hazard-color-box" style="background: #9333ea;"></span> 5m以上</span>
+          </div>
+        `
+      }
+    };
+
+    // メニュー項目クリックイベント
+    dropdown.querySelectorAll('.hazard-menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const hazardType = item.getAttribute('data-hazard');
+        const conf = HAZARD_CONFIG[hazardType];
+        if (!conf) return;
+
+        activeHazardType = hazardType;
+
+        // アクティブ表示の切り替え
+        dropdown.querySelectorAll('.hazard-menu-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+
+        // ボタン表示更新
+        btnLabel.textContent = conf.label;
+        if (conf.active) {
+          toggleBtn.classList.add('active');
+        } else {
+          toggleBtn.classList.remove('active');
+        }
+
+        // 既存レイヤーの削除
+        if (currentHazardLayer) {
+          state.map.removeLayer(currentHazardLayer);
+          currentHazardLayer = null;
+        }
+
+        // 新規レイヤーの追加と凡例更新
+        if (conf.active && conf.createLayer) {
+          currentHazardLayer = conf.createLayer();
+          currentHazardLayer.addTo(state.map);
+          legendPanel.innerHTML = conf.legendHtml;
+          legendPanel.style.display = 'block';
+
+          // 凡例内のクレジットクリックでモーダルを開く
+          const creditLink = legendPanel.querySelector('.hazard-legend-credit-link');
+          if (creditLink && infoModal) {
+            creditLink.addEventListener('click', (ev) => {
+              ev.stopPropagation();
+              infoModal.classList.add('active');
+            });
+          }
+        } else {
+          legendPanel.style.display = 'none';
+          legendPanel.innerHTML = '';
+        }
+
+        // ドロップダウンを閉じる
+        dropdown.style.display = 'none';
+        container.classList.remove('open');
+      });
     });
   }
 

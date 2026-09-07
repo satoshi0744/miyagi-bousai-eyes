@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- スタイルシート -->
-  <link rel="stylesheet" href="css/style.css?v=20260906_1315">
+  <link rel="stylesheet" href="css/style.css?v=20260907_0840">
 </head>
 <body>
   <div class="app-container">
@@ -103,6 +103,50 @@
       <!-- 地図エリア -->
       <div class="map-wrapper" id="map-wrapper">
         <div id="map"></div>
+
+        <!-- ハザードマップ重ね合わせコントロール -->
+        <div class="hazard-floating-control" id="hazard-floating-control">
+          <button class="hazard-toggle-btn" id="hazard-toggle-btn" title="国土地理院ハザードマップ（浸水・土砂・津波）を地図に重ねる">
+            <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>
+            <span class="hazard-btn-label" id="hazard-btn-label">ハザード</span>
+            <i class="fa-solid fa-chevron-down hazard-arrow-icon" id="hazard-arrow-icon"></i>
+          </button>
+          <div class="hazard-menu-dropdown" id="hazard-menu-dropdown" style="display: none;">
+            <div class="hazard-menu-item active" data-hazard="none">
+              <i class="fa-solid fa-ban"></i> 重ね合わせなし（通常）
+            </div>
+            <div class="hazard-menu-item" data-hazard="flood">
+              <i class="fa-solid fa-water" style="color: #38bdf8;"></i> 🌊 洪水浸水想定（最大規模）
+            </div>
+            <div class="hazard-menu-item" data-hazard="debris">
+              <i class="fa-solid fa-mountain" style="color: #f59e0b;"></i> ⛰️ 土砂災害警戒区域
+            </div>
+            <div class="hazard-menu-item" data-hazard="tsunami">
+              <i class="fa-solid fa-water-ladder" style="color: #ec4899;"></i> 🌊 津波浸水想定
+            </div>
+            <div class="hazard-menu-divider"></div>
+            <div class="hazard-menu-action-item" id="hazard-refresh-btn" title="端末の一時保存をクリアして最新のハザードデータを再取得します">
+              <i class="fa-solid fa-rotate-right"></i> 🔄 ハザード情報を最新に更新
+            </div>
+            <div class="hazard-update-meta-box">
+              <div class="hazard-update-meta-row">
+                <span>📅 手元取得日:</span>
+                <strong id="hazard-local-fetch-date" style="color: var(--text-primary);">--/--/--</strong>
+              </div>
+              <div class="hazard-update-meta-row">
+                <span>🏛️ 国の改訂: 2026年2月</span>
+                <a href="https://disaportal.gsi.go.jp/hazardmap/update/update.html" target="_blank" class="hazard-meta-link" title="国土地理院の更新履歴を別タブで開く">詳細 ↗</a>
+              </div>
+            </div>
+            <div class="hazard-menu-action-item" id="hazard-info-btn" title="国土地理院ハザードマップの利用規約・免責事項を確認">
+              <i class="fa-solid fa-circle-info"></i> ℹ️ 利用規約・出典情報
+            </div>
+          </div>
+        </div>
+
+        <!-- ハザードマップ凡例パネル -->
+        <div class="hazard-legend-panel" id="hazard-legend-panel" style="display: none;"></div>
+
         <button class="sidebar-toggle" id="sidebar-toggle" title="カメラリストの開閉">
           <i class="fa-solid fa-chevron-right" id="toggle-icon"></i>
         </button>
@@ -250,6 +294,7 @@
         <p style="margin-bottom: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.5;">
           本ポータルで表示されるカメラ画像・動画・水位情報等の著作権は、各情報提供元（国土交通省、宮城県、気象庁 等）に帰属します。本システムは以下の公開サイトおよびオープンデータを参照（リンク）し、利便性向上のために集約・可視化しています。<br>
           ・国土交通省「川の防災情報」 / 北上川下流河川事務所 / 仙台河川国道事務所<br>
+          ・国土交通省・国土地理院「ハザードマップポータルサイト」（洪水・土砂・津波オープンデータ加工・重畳表示）<br>
           ・宮城県 公式ウェブサイト<br>
           ・気象庁 防災情報
         </p>
@@ -258,6 +303,53 @@
           本システムは各機関の公開情報を元に<strong>独自にデータの集約・加工（UI/カラー判定等）を行って表示している非公式ポータル</strong>であり、国や自治体が監修したものではありません。<br>
           配信元の仕様変更やメンテナンスにより、予告なく画像が取得できなくなる場合があります。災害時の最終的な避難判断等は、必ず各自治体の公式な避難指示や一次情報をご確認ください。
         </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 国土地理院ハザードマップ利用規約・免責事項モーダル ========== -->
+  <div class="modal-overlay" id="hazard-info-modal-overlay">
+    <div class="modal-content area-modal-content" style="max-width: 520px;">
+      <div class="modal-header">
+        <h2 class="modal-title"><i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i> ハザードマップ利用規約・出典</h2>
+        <button class="modal-close" id="hazard-info-modal-close" aria-label="閉じる">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body area-modal-body" style="font-size: 13px; line-height: 1.6;">
+        
+        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--accent);">■ データ出典・ライセンス</h3>
+        <p style="margin-bottom: 8px;">
+          本機能で重ね合わせて表示しているハザードマップタイル（洪水・土砂・津波）は、<strong>国土交通省・国土地理院「ハザードマップポータルサイト」</strong>のオープンデータを加工・重畳して表示しています。
+        </p>
+        <p style="margin-bottom: 12px; font-size: 12px; color: var(--text-secondary);">
+          本コンテンツには、<a href="https://www.digital.go.jp/resources/open_data/public_data_license_v1.0" target="_blank" style="color: var(--accent); text-decoration: underline;">公共データ利用規約（第1.0版）（PDL1.0）</a>が適用されています。
+        </p>
+
+        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: #ef4444;">■ 重要事項説明での使用不可（宅建業法）</h3>
+        <p style="margin-bottom: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #fca5a5;">
+          本機能で提供するハザード情報は、水防法や土砂災害防止法に基づき各市町村が正式に作成・配布する水害・土砂災害ハザードマップとは異なるため、<strong>宅地建物取引業法における重要事項説明等には一切ご利用いただけません。</strong>
+        </p>
+
+        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">■ 利用上の注意・免責事項</h3>
+        <p style="margin-bottom: 8px; font-size: 12px;">
+          ・全国のデータを統一的な表現で表示しているため、各自治体が公表しているハザードマップと同一の表示でない場合や、災害リスク情報が未整備の場所があります。<br>
+          ・背景地図やメッシュ位置には誤差が生じる場合があります。<br>
+          ・<strong>実際の災害時や避難判断にあたっては、必ずお住まいの市町村が公表する公式ハザードマップおよび最新の避難指示・一次情報をご確認ください。</strong>
+        </p>
+
+        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--text-secondary);">■ 公式一次情報リンク</h3>
+        <ul style="list-style: none; padding-left: 0; margin-bottom: 8px; font-size: 12px;">
+          <li style="margin-bottom: 6px;">
+            🔗 <a href="https://disaportal.gsi.go.jp/" target="_blank" style="color: var(--accent); text-decoration: underline;">ハザードマップポータルサイト（国土交通省・国土地理院）</a>
+          </li>
+          <li style="margin-bottom: 6px;">
+            🔗 <a href="https://disaportal.gsi.go.jp/hazardmap/copyright/opendata.html" target="_blank" style="color: var(--accent); text-decoration: underline;">オープンデータ配信・利用規約</a>
+          </li>
+          <li style="margin-bottom: 6px;">
+            🔗 <a href="https://disaportal.gsi.go.jp/hazardmap/update/update.html" target="_blank" style="color: var(--accent); text-decoration: underline;">各種データの更新情報・最新掲載状況</a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -273,7 +365,7 @@
   <script src="js/cameras.js?v=20260813_1407"></script>
   <!-- メインアプリケーション -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/app.js?v=20260906_1315"></script>
+  <script src="js/app.js?v=20260907_0840"></script>
 
 </body>
 </html>
