@@ -566,32 +566,40 @@
       box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
     }
 
-    /* ミニマップ上のピンのスタイル */
-    .minimap-marker-icon {
-      width: 12px !important;
-      height: 12px !important;
+    /* ミニマップ上のピンのスタイル（Leafletのtranslate3dを破壊しない設計） */
+    .minimap-marker-wrapper {
+      background: transparent !important;
+      border: none !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      overflow: visible !important;
+    }
+
+    .minimap-pin-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
       background: #3b82f6;
       border: 2px solid #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s, box-shadow 0.2s;
       cursor: pointer;
     }
 
-    .minimap-marker-icon.category-river {
+    .minimap-pin-dot.category-river {
       background: #3b82f6;
     }
-    .minimap-marker-icon.category-road {
+    .minimap-pin-dot.category-road {
       background: #0284c7;
     }
 
-    /* カードホバー時の強調ピン（拡大 + ゴールド発光） */
-    .minimap-marker-icon.highlighted {
-      transform: scale(1.8) !important;
+    /* カードホバー時の強調ピン（内側ドットのみを拡大 + ゴールド発光） */
+    .minimap-pin-dot.highlighted {
+      transform: scale(2.2) !important;
       background: #f59e0b !important;
       border-color: #ffffff !important;
-      box-shadow: 0 0 10px #f59e0b, 0 0 18px rgba(245, 158, 11, 0.8) !important;
-      z-index: 9999 !important;
+      box-shadow: 0 0 12px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.9) !important;
     }
 
     /* ピンクリック時のカード点滅ハイライトアニメーション */
@@ -1113,9 +1121,10 @@
         if (!miniMapMarkers.has(cam.id)) {
           const isRiver = cam.category === 'river';
           const markerIcon = L.divIcon({
-            className: `minimap-marker-icon ${isRiver ? 'category-river' : 'category-road'}`,
-            iconSize: [12, 12],
-            iconAnchor: [6, 6]
+            className: 'minimap-marker-wrapper',
+            html: `<div class="minimap-pin-dot ${isRiver ? 'category-river' : 'category-road'}" id="pin-dot-${cam.id}"></div>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
           });
 
           const marker = L.marker([cam.lat, cam.lng], {
@@ -1159,10 +1168,15 @@
       const el = marker.getElement();
       if (!el) return;
 
+      const dot = el.querySelector('.minimap-pin-dot');
+      if (!dot) return;
+
       if (isHighlight) {
-        el.classList.add('highlighted');
+        dot.classList.add('highlighted');
+        el.style.zIndex = '9999';
       } else {
-        el.classList.remove('highlighted');
+        dot.classList.remove('highlighted');
+        el.style.zIndex = '';
       }
     }
 
@@ -1174,9 +1188,13 @@
 
         card.addEventListener('mouseenter', () => highlightMiniMapPin(cameraId, true));
         card.addEventListener('mouseleave', () => highlightMiniMapPin(cameraId, false));
+        card.addEventListener('click', () => {
+          highlightMiniMapPin(cameraId, true);
+          setTimeout(() => highlightMiniMapPin(cameraId, false), 1500);
+        });
         card.addEventListener('touchstart', () => highlightMiniMapPin(cameraId, true), { passive: true });
         card.addEventListener('touchend', () => {
-          setTimeout(() => highlightMiniMapPin(cameraId, false), 1200);
+          setTimeout(() => highlightMiniMapPin(cameraId, false), 1500);
         }, { passive: true });
       });
     }
