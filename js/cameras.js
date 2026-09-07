@@ -436,7 +436,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "東松島市野蒜",
-    operator: "北上川下流河川事務所",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -452,7 +452,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "東松島市小野",
-    operator: "北上川下流河川事務所",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -468,7 +468,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "東松島市川下",
-    operator: "北上川下流河川事務所",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -484,7 +484,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "桃生郡鳴瀬町根古",
-    operator: "北上川下流河川事務所",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -516,7 +516,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "東松島市川下",
-    operator: "北上川下流河川事務所",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -532,7 +532,7 @@ const CAMERA_DATA = [
     streamType: "stream",
     youtubeId: "",
     description: "宮城県東松島市西福田鞍坪流",
-    operator: "北上川下流河川事務所",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "不明"
   },
@@ -710,7 +710,7 @@ const CAMERA_DATA = [
     streamType: "static",
     youtubeId: "",
     description: "大森（WGS84正確座標）",
-    operator: "国土交通省",
+    operator: "国土交通省 北上川下流河川事務所",
     heading: 0,
     headingName: "各種"
   },
