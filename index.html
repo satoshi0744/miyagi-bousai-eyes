@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- スタイルシート -->
-  <link rel="stylesheet" href="css/style.css?v=20260907_0830">
+  <link rel="stylesheet" href="css/style.css?v=20260907_0840">
 </head>
 <body>
   <div class="app-container">
@@ -125,8 +125,18 @@
               <i class="fa-solid fa-water-ladder" style="color: #ec4899;"></i> 🌊 津波浸水想定
             </div>
             <div class="hazard-menu-divider"></div>
-            <div class="hazard-menu-action-item" id="hazard-refresh-btn" title="最新のハザードタイルを再取得します">
-              <i class="fa-solid fa-rotate-right"></i> 🔄 最新タイル再取得
+            <div class="hazard-menu-action-item" id="hazard-refresh-btn" title="端末の一時保存をクリアして最新のハザードデータを再取得します">
+              <i class="fa-solid fa-rotate-right"></i> 🔄 ハザード情報を最新に更新
+            </div>
+            <div class="hazard-update-meta-box">
+              <div class="hazard-update-meta-row">
+                <span>📅 手元取得日:</span>
+                <strong id="hazard-local-fetch-date" style="color: var(--text-primary);">--/--/--</strong>
+              </div>
+              <div class="hazard-update-meta-row">
+                <span>🏛️ 国の改訂: 2026年2月</span>
+                <a href="https://disaportal.gsi.go.jp/hazardmap/update/update.html" target="_blank" class="hazard-meta-link" title="国土地理院の更新履歴を別タブで開く">詳細 ↗</a>
+              </div>
             </div>
             <div class="hazard-menu-action-item" id="hazard-info-btn" title="国土地理院ハザードマップの利用規約・免責事項を確認">
               <i class="fa-solid fa-circle-info"></i> ℹ️ 利用規約・出典情報
@@ -355,7 +365,7 @@
   <script src="js/cameras.js?v=20260813_1407"></script>
   <!-- メインアプリケーション -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/app.js?v=20260907_0830"></script>
+  <script src="js/app.js?v=20260907_0840"></script>
 
 </body>
 </html>

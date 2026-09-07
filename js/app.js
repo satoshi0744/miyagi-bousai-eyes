@@ -1855,11 +1855,25 @@
     const infoBtn = document.getElementById('hazard-info-btn');
     const infoModal = document.getElementById('hazard-info-modal-overlay');
     const infoCloseBtn = document.getElementById('hazard-info-modal-close');
+    const localFetchDateEl = document.getElementById('hazard-local-fetch-date');
 
     if (!toggleBtn || !dropdown || !state.map) return;
 
     let currentHazardLayer = null;
     let activeHazardType = 'none';
+
+    // 手元取得日の更新と表示
+    function updateFetchDateDisplay(newDateStr) {
+      if (!localFetchDateEl) return;
+      let dateStr = newDateStr || localStorage.getItem('ishinomaki_hazard_fetch_date');
+      if (!dateStr) {
+        const now = new Date();
+        dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+        localStorage.setItem('ishinomaki_hazard_fetch_date', dateStr);
+      }
+      localFetchDateEl.textContent = dateStr;
+    }
+    updateFetchDateDisplay();
 
     // 開閉トグル
     toggleBtn.addEventListener('click', (e) => {
@@ -1902,9 +1916,14 @@
       });
     }
 
-    // 最新タイルの再取得（リフレッシュ）
+    // ハザード情報の最新化（リフレッシュ）
     if (refreshBtn) {
       refreshBtn.addEventListener('click', () => {
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+        localStorage.setItem('ishinomaki_hazard_fetch_date', dateStr);
+        updateFetchDateDisplay(dateStr);
+
         if (currentHazardLayer) {
           // タイル再描画の実行
           if (currentHazardLayer.redraw) {
@@ -1913,7 +1932,7 @@
             currentHazardLayer.eachLayer(l => { if (l.redraw) l.redraw(); });
           }
           const origText = refreshBtn.innerHTML;
-          refreshBtn.innerHTML = '<i class="fa-solid fa-check" style="color: #10b981;"></i> 最新化完了';
+          refreshBtn.innerHTML = '<i class="fa-solid fa-check" style="color: #10b981;"></i> 更新完了';
           setTimeout(() => {
             refreshBtn.innerHTML = origText;
             dropdown.style.display = 'none';

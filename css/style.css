@@ -1814,4 +1814,38 @@ body {
   color: var(--accent);
 }
 
+.hazard-update-meta-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin: 2px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10.5px;
+  color: var(--text-secondary);
+}
+
+.hazard-update-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.hazard-meta-link {
+  color: var(--accent);
+  text-decoration: underline;
+  font-size: 10px;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.hazard-meta-link:hover {
+  opacity: 1;
+  color: #38bdf8;
+}
+
+
 
