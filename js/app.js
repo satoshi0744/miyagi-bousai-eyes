@@ -548,6 +548,7 @@
         title: camera.name
       });
       
+      const categoryLabel = CONFIG.CATEGORY_LABELS[category] || 'その他';
       const hasImgPreview = Boolean(camera.imageUrl);
       const isStream = camera.streamType === 'youtube' || camera.streamType === 'stream';
       let popupImgHtml = '';
