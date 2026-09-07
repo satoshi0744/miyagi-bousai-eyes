@@ -307,6 +307,60 @@
     }
   }
 
+  // ■ 水系ごとの一括お気に入り登録/解除
+  function toggleBatchFavorite(groupId, event) {
+    if (event) {
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      if (typeof event.stopPropagation === 'function') event.stopPropagation();
+    }
+
+    // 該当グループの全カメラを抽出
+    const groupCameras = CAMERA_DATA.filter(c => {
+      const g = getGroupForCamera(c);
+      return g && g.id === groupId;
+    });
+
+    if (groupCameras.length === 0) return;
+
+    // 全て登録済みか判定
+    const isAllFav = groupCameras.every(c => state.favorites.has(c.id));
+
+    if (isAllFav) {
+      // 一括解除
+      groupCameras.forEach(c => state.favorites.delete(c.id));
+    } else {
+      // 一括登録
+      groupCameras.forEach(c => state.favorites.add(c.id));
+    }
+
+    saveFavorites();
+    updateFavoriteBadge();
+
+    // スクロール位置を保持したままリストを再描画（一括ボタン、各カードの星、最上部のお気に入りグループを完全同期）
+    const listContainer = document.getElementById('camera-list');
+    const savedScrollTop = listContainer ? listContainer.scrollTop : 0;
+    renderSidebarList();
+    if (listContainer) {
+      listContainer.scrollTop = savedScrollTop;
+    }
+
+    // 地図上のピンもお気に入りスタイルに連動
+    groupCameras.forEach(c => {
+      const isFav = state.favorites.has(c.id);
+      const marker = state.markers[c.id];
+      if (marker) {
+        const el = marker.getElement();
+        if (el) {
+          if (isFav) {
+            el.classList.add('marker-favorite');
+          } else {
+            el.classList.remove('marker-favorite');
+          }
+        }
+      }
+    });
+  }
+  window.__toggleBatchFavorite = toggleBatchFavorite;
 
   function updateFavoriteUI(cameraId) {
     const isFav = state.favorites.has(cameraId);
@@ -1129,6 +1183,14 @@
         ? state.accordionStates[group.id]
         : (group.defaultOpen !== false);
 
+      const isAllFav = group.cameras.length > 0 && group.cameras.every(c => state.favorites.has(c.id));
+      const batchFavBtnHtml = group.id !== 'group_fav' ? `
+        <button type="button" class="batch-fav-btn ${isAllFav ? 'active' : ''}" data-group-id="${group.id}" title="${isAllFav ? '水系のカメラをお気に入りから一括解除' : '水系のカメラをお気に入りに一括登録'}" onclick="event.stopPropagation(); window.__toggleBatchFavorite('${group.id}', event);">
+          <i class="fa-${isAllFav ? 'solid' : 'regular'} fa-star"></i>
+          <span>一括</span>
+        </button>
+      ` : '';
+
       html += `
         <div class="accordion-group ${isOpen ? 'open' : ''}" data-group-id="${group.id}">
           <div class="accordion-header" onclick="document.dispatchEvent(new CustomEvent('toggle-accordion', {detail: '${group.id}'}))">
@@ -1137,7 +1199,10 @@
               <span>${group.title}</span>
               <span class="group-count-badge">${group.cameras.length}台</span>
             </div>
-            <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            <div class="accordion-header-actions" style="display: flex; align-items: center; gap: 6px;">
+              ${batchFavBtnHtml}
+              <i class="fa-solid fa-chevron-down accordion-arrow"></i>
+            </div>
           </div>
           <div class="accordion-body">
             ${group.cameras.map(c => renderCameraCard(c)).join('')}
