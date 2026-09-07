@@ -548,12 +548,24 @@
         title: camera.name
       });
       
-      const categoryLabel = CONFIG.CATEGORY_LABELS[category] || 'その他';
-      const isTypeB = camera.streamType === 'youtube' || camera.streamType === 'stream' || !camera.imageUrl;
+      const hasImgPreview = Boolean(camera.imageUrl);
+      const isStream = camera.streamType === 'youtube' || camera.streamType === 'stream';
       let popupImgHtml = '';
 
-      if (isTypeB) {
-        // ① ビデオ（動画カメラ）UI
+      if (hasImgPreview) {
+        // ① 最新静止画像プレビュー（静止画およびハイブリッド動画カメラ）
+        const streamBadge = isStream ? `<span style="position: absolute; top: 4px; right: 4px; background: rgba(139, 92, 246, 0.9); color: #ffffff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"><i class="fa-solid fa-video"></i> 動画配信中</span>` : '';
+        popupImgHtml = `
+          <div style="position: relative; margin-bottom: 6px;">
+            <img src="${camera.imageUrl}" class="hover-popup-img" alt="${camera.name}" onerror="this.src='https://via.placeholder.com/210x115/1e293b/475569?text=Camera+Preview'">
+            ${streamBadge}
+            <div style="font-size: 11px; color: ${isStream ? '#c4b5fd' : '#38bdf8'}; margin-top: 5px; text-align: center; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <i class="fa-solid ${isStream ? 'fa-video' : 'fa-camera'}"></i> タップ／クリックで詳細・${isStream ? '動画案内' : '拡大'}
+            </div>
+          </div>
+        `;
+      } else {
+        // ② 画像なし動画カメラ（完全動画専用型）
         popupImgHtml = `
           <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 6px; padding: 10px 8px; text-align: center; margin: 4px 0 6px 0;">
             <div style="font-size: 12px; color: #c4b5fd; font-weight: bold; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 5px;">
@@ -561,16 +573,6 @@
             </div>
             <div style="font-size: 11px; color: #e2e8f0; line-height: 1.4; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
               <i class="fa-solid fa-video"></i> タップ／クリックで配信元サイトで映像を表示
-            </div>
-          </div>
-        `;
-      } else if (camera.imageUrl) {
-        // ② 静止画カメラ UI
-        popupImgHtml = `
-          <div style="position: relative; margin-bottom: 6px;">
-            <img src="${camera.imageUrl}" class="hover-popup-img" alt="${camera.name}" onerror="this.src='https://via.placeholder.com/210x115/1e293b/475569?text=Camera+Preview'">
-            <div style="font-size: 11px; color: #38bdf8; margin-top: 5px; text-align: center; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
-              <i class="fa-solid fa-camera"></i> タップ／クリックで詳細・拡大
             </div>
           </div>
         `;
@@ -1135,17 +1137,6 @@
     if (!camera) return;
 
     const isStream = camera.streamType === 'stream' || camera.streamType === 'youtube';
-    // 画像が全くないカメラ（極少数の例外）のみ、モーダルを開かず直接サイトに飛ぶ
-    if (!camera.imageUrl && camera.sourceUrl) {
-      const isFav = state.favorites.has(camera.id);
-      // お気に入りカメラは独立した新タブ(_blank)、通常カメラは共通タブ(bousai_camera_preview)で開く（タブ無限増殖の防止）
-      const targetWindow = isFav ? '_blank' : 'bousai_camera_preview';
-      const previewWin = window.open(camera.sourceUrl, targetWindow);
-      if (previewWin) {
-        try { previewWin.focus(); } catch (e) {}
-      }
-      return;
-    }
 
     const overlay = document.getElementById('modal-overlay');
     if (!overlay) return;
