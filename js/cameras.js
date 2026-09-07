@@ -699,22 +699,6 @@ const CAMERA_DATA = [
     headingName: "各種"
   },
   {
-    id: "cam_oomori",
-    name: "旧北上川 大森水位観測所",
-    status: "active",
-    category: "river",
-    lat: 38.4941,
-    lng: 141.2943,
-    imageUrl: null,
-    sourceUrl: "https://www.river.go.jp/index/twninfo/pc?prefCd=401&twnCd=401202&type=obs&tm=cctv",
-    streamType: "static",
-    youtubeId: "",
-    description: "大森（WGS84正確座標）",
-    operator: "国土交通省 北上川下流河川事務所",
-    heading: 0,
-    headingName: "各種"
-  },
-  {
     id: "cam_off_1025118",
     name: "真野川",
     status: "active",
