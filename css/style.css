@@ -1881,3 +1881,429 @@ body {
   color: #38bdf8;
 }
 
+/* ==========================================================================
+   クイックガイドツアー（動く自動スライド）スタイル
+   ========================================================================== */
+.guide-modal-content {
+  max-width: 580px;
+  width: 92%;
+  background: #0f172a !important;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.15);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.guide-modal-header {
+  padding: 14px 18px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.guide-modal-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* プログレスバー（4分割インジケーター） */
+.guide-progress-container {
+  display: flex;
+  gap: 6px;
+  padding: 10px 18px;
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.guide-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.guide-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--accent, #0284c7);
+  transition: width 0.1s linear;
+}
+
+.guide-progress-bar.completed .guide-progress-fill {
+  width: 100% !important;
+  background: #38bdf8;
+}
+
+/* スライド表示領域 */
+.guide-slides-wrapper {
+  position: relative;
+  min-height: 330px;
+  padding: 16px 20px;
+}
+
+.guide-slide {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.guide-slide.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* アニメーションステージ（ミニチュアUI領域） */
+.guide-anim-stage {
+  height: 150px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.guide-text-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.guide-step-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.guide-slide-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.guide-slide-desc {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.guide-slide-desc strong {
+  color: #38bdf8;
+}
+
+/* 下部コントロールバー */
+.guide-controls {
+  padding: 12px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.guide-ctrl-btn, .guide-nav-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.guide-ctrl-btn:hover, .guide-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.guide-nav-btn.primary {
+  background: var(--accent, #0284c7);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+/* --- スライド別アニメーション演出 --- */
+/* スライド1: 水系一括アコーディオン＆星点灯 */
+@keyframes starGlow {
+  0%, 40% { color: rgba(255, 255, 255, 0.3); transform: scale(1); }
+  50% { color: #f59e0b; transform: scale(1.4); filter: drop-shadow(0 0 8px #f59e0b); }
+  100% { color: #f59e0b; transform: scale(1); filter: drop-shadow(0 0 4px #f59e0b); }
+}
+
+.slide1-mock-group {
+  width: 280px;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.slide1-mock-header {
+  padding: 8px 12px;
+  background: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.slide1-mock-star {
+  font-size: 15px;
+  animation: starGlow 3s infinite ease;
+}
+
+.slide1-mock-items {
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slide1-mock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* スライド2: ドラッグ＆ドロップ並べ替え */
+@keyframes dragCardAnim {
+  0% { transform: translate(0, 0); }
+  30% { transform: scale(1.05) rotate(-2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.5); border-color: #38bdf8; }
+  60% { transform: translate(-80px, 0) scale(1.05) rotate(-2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+  80% { transform: translate(-80px, 0) scale(1); box-shadow: none; border-color: rgba(255, 255, 255, 0.1); }
+  100% { transform: translate(0, 0); }
+}
+
+.slide2-mock-grid {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.slide2-mock-card {
+  width: 80px;
+  height: 70px;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.slide2-dragged {
+  border-color: #38bdf8;
+  animation: dragCardAnim 3.5s infinite ease-in-out;
+}
+
+/* スライド3: ミニマップ移動＆リサイズ */
+@keyframes moveMapAnim {
+  0% { transform: translate(70px, 20px) scale(0.8); }
+  35% { transform: translate(0px, 0px) scale(0.8); }
+  60% { transform: translate(0px, 0px) scale(1.15); }
+  85% { transform: translate(0px, 0px) scale(1.15); }
+  100% { transform: translate(70px, 20px) scale(0.8); }
+}
+
+.slide3-mock-map {
+  width: 140px;
+  height: 90px;
+  background: #0f172a;
+  border: 2px solid #38bdf8;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+  animation: moveMapAnim 4s infinite ease-in-out;
+}
+
+.slide3-map-pin {
+  position: absolute;
+  top: 35%;
+  left: 45%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #f59e0b;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px #f59e0b;
+  animation: pinPulse 1.5s infinite;
+}
+
+@keyframes pinPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+}
+
+/* スライド4: 独立別ウィンドウ＆マルチモニター連動 */
+@keyframes popoutAnim {
+  0% { opacity: 0; transform: translate(20px, 10px) scale(0.7); }
+  25% { opacity: 1; transform: translate(60px, -10px) scale(0.9); box-shadow: 0 12px 30px rgba(0,0,0,0.8), 0 0 15px rgba(245, 158, 11, 0.4); }
+  75% { opacity: 1; transform: translate(60px, -10px) scale(0.9); }
+  100% { opacity: 0; transform: translate(20px, 10px) scale(0.7); }
+}
+
+.slide4-parent-screen {
+  width: 120px;
+  height: 80px;
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 6px;
+  position: relative;
+}
+
+.slide4-child-window {
+  position: absolute;
+  width: 100px;
+  height: 70px;
+  background: #0f172a;
+  border: 1.5px solid #f59e0b;
+  border-radius: 6px;
+  animation: popoutAnim 4s infinite ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   クイックガイドツアー 起動導線（ヘッダーボタン ＆ モーダル内バナー）
+   ========================================================================== */
+.guide-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(37, 99, 235, 0.15));
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.guide-header-btn:hover {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(37, 99, 235, 0.3));
+  border-color: #38bdf8;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+  transform: translateY(-1px);
+}
+
+/* スマホ表示ではヘッダーの幅を圧迫しないよう非表示（モーダル内から起動可能） */
+@media (max-width: 768px) {
+  .guide-header-btn {
+    display: none !important;
+  }
+  
+  .guide-modal-content {
+    width: 95%;
+    max-height: 92vh;
+  }
+  
+  .guide-slides-wrapper {
+    min-height: 360px;
+    padding: 12px 14px;
+  }
+  
+  .guide-anim-stage {
+    height: 130px;
+  }
+  
+  .guide-slide-heading {
+    font-size: 14.5px;
+  }
+  
+  .guide-slide-desc {
+    font-size: 12px;
+  }
+}
+
+/* モーダル内の機能ツアー案内バナー */
+.modal-tour-banner {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(99, 102, 241, 0.12));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.modal-tour-banner-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-tour-banner-desc {
+  font-size: 11.5px;
+  color: var(--text-secondary, #94a3b8);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modal-tour-banner-btn {
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+  transition: all 0.2s ease;
+}
+
+.modal-tour-banner-btn:hover {
+  background: linear-gradient(135deg, #0369a1, #1d4ed8);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.6);
+  transform: translateY(-1px);
+}
+
+

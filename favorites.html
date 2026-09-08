@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
   <!-- メインスタイルシート（共通変数・テーマ参照） -->
-  <link rel="stylesheet" href="css/style.css?v=20260908_2140">
+  <link rel="stylesheet" href="css/style.css?v=20260908_2200">
   <link rel="icon" href="data:,">
 
   <style>
@@ -739,6 +739,10 @@
       <button class="board-refresh-btn" id="board-refresh-btn" title="すべての最新静止画を一括再取得">
         <i class="fa-solid fa-rotate" id="board-refresh-icon"></i> 今すぐ更新
       </button>
+      <!-- クイックガイドツアーボタン（PC用） -->
+      <button id="board-guide-btn" class="guide-header-btn" onclick="openGuideTour()" title="30秒クイックツアーを見る">
+        <i class="fa-solid fa-graduation-cap"></i> 使い方ツアー
+      </button>
       <button class="board-info-btn" id="board-info-btn" title="システム概要・免責事項">
         <i class="fa-solid fa-circle-info"></i>
       </button>
@@ -771,9 +775,14 @@
       <div class="empty-state-desc">
         地図画面やカメラ一覧のカード・ピンにある「★（星）」アイコンをクリックすると、ここにお気に入りのカメラが自動的に一覧表示されます。
       </div>
-      <a href="index.html" class="board-back-btn" style="background: var(--accent, #0284c7); border: none; padding: 8px 18px; font-size: 14px;">
-        <i class="fa-solid fa-map-location-dot"></i> 地図へ戻ってお気に入りを登録する
-      </a>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
+        <a href="index.html" class="board-back-btn" style="background: var(--accent, #0284c7); border: none; padding: 8px 18px; font-size: 14px;">
+          <i class="fa-solid fa-map-location-dot"></i> 地図へ戻ってお気に入りを登録する
+        </a>
+        <button type="button" class="board-back-btn" onclick="openGuideTour()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(56, 189, 248, 0.4); padding: 8px 18px; font-size: 14px; color: #38bdf8; cursor: pointer;">
+          <i class="fa-solid fa-graduation-cap"></i> 30秒使い方ツアーを見る
+        </button>
+      </div>
   </main>
 
   <!-- ========== システム概要・免責事項モーダル ========== -->
@@ -786,6 +795,19 @@
         </button>
       </div>
       <div class="modal-body area-modal-body" style="font-size: 13px; line-height: 1.6;">
+        <!-- クイックガイドツアー案内バナー -->
+        <div class="modal-tour-banner">
+          <div class="modal-tour-banner-title">
+            <i class="fa-solid fa-graduation-cap"></i> 30秒クイックガイドツアー
+          </div>
+          <p class="modal-tour-banner-desc">
+            水系一括登録、定点監視ボードのドラッグ並べ替え、ミニマップの自由移動、2画面マルチモニター連動など、主要機能をアニメーションで自動紹介します。
+          </p>
+          <button type="button" class="modal-tour-banner-btn" onclick="openGuideTour()">
+            <i class="fa-solid fa-play"></i> ガイドツアーを見る（自動再生）
+          </button>
+        </div>
+
         <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--accent);">■ お気に入り監視ボードについて</h3>
         <p style="margin-bottom: 8px;">登録したカメラの最新静止画を一覧でリアルタイム監視できる定点監視画面です。カードのドラッグによる自由並べ替えや、フロート型ミニマップの独立ウィンドウ化（別窓表示）に対応しています。</p>
 
@@ -1720,5 +1742,7 @@
       }
     }
   </script>
+  <!-- クイックガイドツアー -->
+  <script src="js/guide_tour.js?v=20260908_2200"></script>
 </body>
 </html>
