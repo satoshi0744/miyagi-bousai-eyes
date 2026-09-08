@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
   <!-- メインスタイルシート（共通変数・テーマ参照） -->
-  <link rel="stylesheet" href="css/style.css?v=20260908_2135">
+  <link rel="stylesheet" href="css/style.css?v=20260908_2140">
   <link rel="icon" href="data:,">
 
   <style>
@@ -132,6 +132,26 @@
     .board-refresh-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    .board-info-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-primary);
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .board-info-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--accent, #0284c7);
+      color: var(--accent, #0284c7);
     }
 
     /* メインコンテナ */
@@ -719,6 +739,9 @@
       <button class="board-refresh-btn" id="board-refresh-btn" title="すべての最新静止画を一括再取得">
         <i class="fa-solid fa-rotate" id="board-refresh-icon"></i> 今すぐ更新
       </button>
+      <button class="board-info-btn" id="board-info-btn" title="システム概要・免責事項">
+        <i class="fa-solid fa-circle-info"></i>
+      </button>
     </div>
   </header>
 
@@ -753,20 +776,36 @@
       </a>
   </main>
 
-  <!-- ========== フッター（免責事項・©表記） ========== -->
-  <footer class="app-footer">
-    <div class="footer-disclaimer">
-      <div class="footer-disclaimer-title">【免責事項】</div>
-      <div class="footer-disclaimer-text">
-        本サイトは宮城県内の防災情報閲覧の補助を目的とした非公式ポータルです。掲載映像・情報の即時性や完全性を保証するものではありません。<br>
-        実際の避難行動や災害判断にあたっては、気象庁や各自治体の公式発表に従ってください。<br>
-        各カメラ映像・水位情報の権利は各配信元機関（国土交通省・宮城県・各自治体等）に帰属します。
+  <!-- ========== システム概要・免責事項モーダル ========== -->
+  <div class="modal-overlay" id="board-info-modal-overlay">
+    <div class="modal-content area-modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2 class="modal-title"><i class="fa-solid fa-circle-info"></i> システム概要・免責事項</h2>
+        <button class="modal-close" id="board-info-modal-close" aria-label="閉じる">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body area-modal-body" style="font-size: 13px; line-height: 1.6;">
+        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--accent);">■ お気に入り監視ボードについて</h3>
+        <p style="margin-bottom: 8px;">登録したカメラの最新静止画を一覧でリアルタイム監視できる定点監視画面です。カードのドラッグによる自由並べ替えや、フロート型ミニマップの独立ウィンドウ化（別窓表示）に対応しています。</p>
+
+        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--text-secondary); margin-top: 16px;">■ データ出典・著作権について</h3>
+        <p style="margin-bottom: 6px; font-size: 11px; color: var(--text-secondary); line-height: 1.5;">
+          本ポータルで表示されるカメラ画像・動画・水位情報等の著作権は、各情報提供元（国土交通省、宮城県、各自治体等）に帰属します。
+        </p>
+
+        <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.5; margin-top: 12px; padding: 10px; background: rgba(255, 255, 255, 0.03); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">
+          <strong style="color: #e2e8f0;">【免責事項・利用上の注意】</strong><br>
+          本ポータルは宮城県内の防災情報閲覧の補助を目的とした非公式ツールであり、掲載映像・情報の即時性や完全性を保証するものではありません。<br>
+          配信元の仕様変更やメンテナンスにより、予告なく画像が取得できなくなる場合があります。災害時の最終的な避難判断等は、必ず各自治体の公式な避難指示や一次情報をご確認ください。
+        </p>
+
+        <div style="margin-top: 16px; padding-top: 10px; border-top: 1px solid var(--border); text-align: center; font-size: 11px; color: #64748b;">
+          &copy; 2026 みやぎライブEyes Project. All rights reserved.
+        </div>
       </div>
     </div>
-    <div class="footer-copyright">
-      &copy; 2026 みやぎライブEyes Project. All rights reserved.
-    </div>
-  </footer>
+  </div>
 
   <!-- ========== フロート型ミニマップ（案B） ========== -->
   <div id="floating-minimap" class="floating-minimap">
@@ -1096,12 +1135,29 @@
       if (modal) modal.classList.remove('active');
     }
 
-    // ESCキーでライトボックスを閉じる
+    // ESCキーでモーダルを閉じる
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeLightbox();
+        const infoModal = document.getElementById('board-info-modal-overlay');
+        if (infoModal) infoModal.classList.remove('active');
       }
     });
+
+    // システム概要・免責事項モーダル操作
+    function initInfoModal() {
+      const infoBtn = document.getElementById('board-info-btn');
+      const infoModal = document.getElementById('board-info-modal-overlay');
+      const infoClose = document.getElementById('board-info-modal-close');
+      if (infoBtn && infoModal) {
+        infoBtn.addEventListener('click', () => infoModal.classList.add('active'));
+        if (infoClose) infoClose.addEventListener('click', () => infoModal.classList.remove('active'));
+        infoModal.addEventListener('click', (e) => {
+          if (e.target === infoModal) infoModal.classList.remove('active');
+        });
+      }
+    }
+    initInfoModal();
 
     // ========== フロート型ミニマップ（案B）制御ロジック ==========
     function initMiniMap() {
