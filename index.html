@@ -52,11 +52,11 @@
         </button>
       </div>
       <div class="header-right">
-        <!-- クイックガイドツアーボタン（PC用） -->
-        <button id="header-guide-btn" class="guide-header-btn" onclick="openGuideTour()" title="30秒クイックツアーを見る">
-          <i class="fa-solid fa-graduation-cap"></i> 使い方ツアー
+        <!-- 総合利用ガイドボタン（PC用） -->
+        <button id="header-guide-btn" class="guide-header-btn" onclick="openSystemGuide()" title="みやぎライブEyes 総合利用ガイド（取扱説明書）">
+          <i class="fa-solid fa-book-open-reader"></i> 使い方ガイド
         </button>
-        <!-- 使い方・凡例ボタン -->
+        <!-- 使い方・凡例ボタン（スマホ・アイコン） -->
         <button id="info-btn" class="info-btn" title="使い方・凡例">
           <i class="fa-solid fa-circle-info"></i>
         </button>
@@ -270,20 +270,6 @@
         </button>
       </div>
       <div class="modal-body area-modal-body" style="font-size: 13px; line-height: 1.6;">
-        
-        <!-- クイックガイドツアー案内バナー -->
-        <div class="modal-tour-banner">
-          <div class="modal-tour-banner-title">
-            <i class="fa-solid fa-graduation-cap"></i> 30秒クイックガイドツアー
-          </div>
-          <p class="modal-tour-banner-desc">
-            川の流れ順整列、水系一括登録、定点監視ボードのドラッグ並べ替え、2画面マルチモニター連動など、主要な便利機能をアニメーションで自動紹介します。
-          </p>
-          <button type="button" class="modal-tour-banner-btn" onclick="openGuideTour()">
-            <i class="fa-solid fa-play"></i> ガイドツアーを見る（自動再生）
-          </button>
-        </div>
-
         <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--accent);">■ このシステムの特徴</h3>
         <p style="margin-bottom: 8px;"><strong>① 宮城県全域を網羅</strong><br>
         一部の地域だけでなく、県内全域の主要な河川・道路カメラと水位観測所のデータを統合して表示しています。</p>
@@ -388,8 +374,8 @@
   <!-- メインアプリケーション -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <!-- アプリケーションロジック -->
-  <script src="js/app.js?v=20260908_2140"></script>
-  <!-- クイックガイドツアー -->
-  <script src="js/guide_tour.js?v=20260908_2200"></script>
+  <script src="js/app.js?v=20260908_2300"></script>
+  <!-- 総合利用ガイド（取扱説明書） -->
+  <script src="js/system_guide.js?v=20260908_2300"></script>
 </body>
 </html>

@@ -1882,326 +1882,511 @@ body {
 }
 
 /* ==========================================================================
-   クイックガイドツアー（動く自動スライド）スタイル
+   みやぎライブEyes 総合利用ガイド（取扱説明書）スタイル
    ========================================================================== */
-.guide-modal-content {
-  max-width: 580px;
-  width: 92%;
+.system-guide-modal {
+  max-width: 800px;
+  width: 94%;
+  max-height: 88vh;
   background: #0f172a !important;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.15);
   border-radius: 14px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-.guide-modal-header {
-  padding: 14px 18px 10px;
+.system-guide-header {
+  padding: 14px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #1e293b;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.guide-modal-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* プログレスバー（4分割インジケーター） */
-.guide-progress-container {
-  display: flex;
-  gap: 6px;
-  padding: 10px 18px;
-  background: rgba(15, 23, 42, 0.8);
-}
-
-.guide-progress-bar {
-  flex: 1;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 2px;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.guide-progress-fill {
-  width: 0%;
-  height: 100%;
-  background: var(--accent, #0284c7);
-  transition: width 0.1s linear;
-}
-
-.guide-progress-bar.completed .guide-progress-fill {
-  width: 100% !important;
-  background: #38bdf8;
-}
-
-/* スライド表示領域 */
-.guide-slides-wrapper {
-  position: relative;
-  min-height: 330px;
-  padding: 16px 20px;
-}
-
-.guide-slide {
-  display: none;
-  flex-direction: column;
-  gap: 14px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.guide-slide.active {
-  display: flex;
-  opacity: 1;
-}
-
-/* アニメーションステージ（ミニチュアUI領域） */
-.guide-anim-stage {
-  height: 150px;
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.guide-text-box {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.guide-step-badge {
-  display: inline-block;
-  align-self: flex-start;
-  font-size: 10.5px;
-  font-weight: 700;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 2px 8px;
-  border-radius: 12px;
-}
-
-.guide-slide-heading {
+.system-guide-title {
   font-size: 16px;
   font-weight: 700;
   color: #ffffff;
-  margin: 0;
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+/* 4大目的別タブバー */
+.system-guide-tabs {
+  display: flex;
   gap: 6px;
+  padding: 8px 16px;
+  background: #090d16;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
 }
 
-.guide-slide-desc {
+.guide-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  padding: 8px 14px;
+  border-radius: 8px;
   font-size: 13px;
-  color: #cbd5e1;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.guide-slide-desc strong {
-  color: #38bdf8;
-}
-
-/* 下部コントロールバー */
-.guide-controls {
-  padding: 12px 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(15, 23, 42, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.guide-ctrl-btn, .guide-nav-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
-  font-size: 12px;
-  padding: 6px 12px;
-  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
-.guide-ctrl-btn:hover, .guide-nav-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: #38bdf8;
-  color: #ffffff;
+.guide-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
 }
 
-.guide-nav-btn.primary {
-  background: var(--accent, #0284c7);
-  border-color: #38bdf8;
-  color: #ffffff;
+.guide-tab-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
 }
 
-/* --- スライド別アニメーション演出 --- */
-/* スライド1: 水系一括アコーディオン＆星点灯 */
-@keyframes starGlow {
-  0%, 40% { color: rgba(255, 255, 255, 0.3); transform: scale(1); }
-  50% { color: #f59e0b; transform: scale(1.4); filter: drop-shadow(0 0 8px #f59e0b); }
-  100% { color: #f59e0b; transform: scale(1); filter: drop-shadow(0 0 4px #f59e0b); }
+/* 本文エリア */
+.system-guide-body {
+  padding: 22px 24px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #e2e8f0;
 }
 
-.slide1-mock-group {
-  width: 280px;
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  overflow: hidden;
+.guide-tab-panel {
+  display: none;
 }
 
-.slide1-mock-header {
-  padding: 8px 12px;
-  background: #334155;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
-  color: #ffffff;
+.guide-tab-panel.active {
+  display: block;
 }
 
-.slide1-mock-star {
-  font-size: 15px;
-  animation: starGlow 3s infinite ease;
-}
-
-.slide1-mock-items {
-  padding: 6px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.slide1-mock-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  color: #94a3b8;
-}
-
-/* スライド2: ドラッグ＆ドロップ並べ替え */
-@keyframes dragCardAnim {
-  0% { transform: translate(0, 0); }
-  30% { transform: scale(1.05) rotate(-2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.5); border-color: #38bdf8; }
-  60% { transform: translate(-80px, 0) scale(1.05) rotate(-2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-  80% { transform: translate(-80px, 0) scale(1); box-shadow: none; border-color: rgba(255, 255, 255, 0.1); }
-  100% { transform: translate(0, 0); }
-}
-
-.slide2-mock-grid {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.slide2-mock-card {
-  width: 80px;
-  height: 70px;
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 6px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.slide2-dragged {
-  border-color: #38bdf8;
-  animation: dragCardAnim 3.5s infinite ease-in-out;
-}
-
-/* スライド3: ミニマップ移動＆リサイズ */
-@keyframes moveMapAnim {
-  0% { transform: translate(70px, 20px) scale(0.8); }
-  35% { transform: translate(0px, 0px) scale(0.8); }
-  60% { transform: translate(0px, 0px) scale(1.15); }
-  85% { transform: translate(0px, 0px) scale(1.15); }
-  100% { transform: translate(70px, 20px) scale(0.8); }
-}
-
-.slide3-mock-map {
-  width: 140px;
-  height: 90px;
-  background: #0f172a;
-  border: 2px solid #38bdf8;
+/* 大前提・目的コールアウトカード */
+.guide-premise-card {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(30, 41, 59, 0.7));
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-left: 4px solid #0284c7;
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  position: relative;
-  overflow: hidden;
-  animation: moveMapAnim 4s infinite ease-in-out;
+  padding: 16px 18px;
+  margin-bottom: 22px;
 }
 
-.slide3-map-pin {
-  position: absolute;
-  top: 35%;
-  left: 45%;
-  width: 12px;
-  height: 12px;
+.guide-premise-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(2, 132, 199, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.guide-premise-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.guide-premise-text {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.guide-premise-text strong {
+  color: #38bdf8;
+}
+
+/* セクション見出し */
+.guide-section-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 20px 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+}
+
+.guide-p {
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.65;
+  margin: 0 0 12px 0;
+}
+
+/* 2カラムグリッド */
+.guide-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.guide-card {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.guide-card-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.guide-card-body strong {
+  display: block;
+  font-size: 13px;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.guide-card-body p {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* フロー図（初期状態 ➡ 絞り込み後） */
+.guide-flow-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+
+.guide-flow-step {
+  flex: 1;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.guide-flow-step.highlight {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.guide-flow-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  margin-bottom: 4px;
+}
+
+.guide-flow-badge.highlight {
+  background: #10b981;
+  color: #000000;
+}
+
+.guide-flow-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #e2e8f0;
+}
+
+.guide-flow-arrow {
+  color: #38bdf8;
+  font-size: 16px;
+}
+
+.guide-caption {
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+/* 凡例カードグリッド */
+.guide-legend-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.guide-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.guide-legend-item.alert-danger-item {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.guide-legend-badge {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: #f59e0b;
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 10px #f59e0b;
-  animation: pinPulse 1.5s infinite;
-}
-
-@keyframes pinPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.4); }
-}
-
-/* スライド4: 独立別ウィンドウ＆マルチモニター連動 */
-@keyframes popoutAnim {
-  0% { opacity: 0; transform: translate(20px, 10px) scale(0.7); }
-  25% { opacity: 1; transform: translate(60px, -10px) scale(0.9); box-shadow: 0 12px 30px rgba(0,0,0,0.8), 0 0 15px rgba(245, 158, 11, 0.4); }
-  75% { opacity: 1; transform: translate(60px, -10px) scale(0.9); }
-  100% { opacity: 0; transform: translate(20px, 10px) scale(0.7); }
-}
-
-.slide4-parent-screen {
-  width: 120px;
-  height: 80px;
-  background: #1e293b;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  padding: 6px;
-  position: relative;
-}
-
-.slide4-child-window {
-  position: absolute;
-  width: 100px;
-  height: 70px;
-  background: #0f172a;
-  border: 1.5px solid #f59e0b;
-  border-radius: 6px;
-  animation: popoutAnim 4s infinite ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 12px;
+  color: #ffffff;
+  flex-shrink: 0;
 }
 
-/* ==========================================================================
-   クイックガイドツアー 起動導線（ヘッダーボタン ＆ モーダル内バナー）
-   ========================================================================== */
+.badge-river { background: #0284c7; }
+.badge-road { background: #f59e0b; }
+.badge-stream { background: #8b5cf6; }
+.badge-danger {
+  background: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+  animation: pulse-danger 1.5s infinite;
+}
+
+.guide-legend-detail strong {
+  display: block;
+  font-size: 12.5px;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.guide-legend-detail span {
+  font-size: 11.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* タイムライン（川の流れ順） */
+.guide-flow-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 14px 0 16px 0;
+}
+
+.timeline-node {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.timeline-badge {
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  min-width: 60px;
+  text-align: center;
+}
+
+.timeline-box {
+  flex: 1;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.timeline-box strong {
+  display: block;
+  font-size: 12.5px;
+  color: #38bdf8;
+  margin-bottom: 2px;
+}
+
+.timeline-box p {
+  font-size: 11.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.timeline-connector {
+  font-size: 11px;
+  color: #38bdf8;
+  padding-left: 26px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.guide-callout-info {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #fde68a;
+}
+
+.guide-callout-info strong {
+  color: #f59e0b;
+}
+
+/* 特長リスト */
+.guide-feature-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0 0 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.guide-feature-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.guide-feature-list li i {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.guide-feature-list strong {
+  color: #ffffff;
+}
+
+/* 凡例テーブル */
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.guide-table th, .guide-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+}
+
+.guide-table th {
+  background: rgba(255, 255, 255, 0.04);
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.guide-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+.dot-river { background: #0284c7; }
+.dot-road { background: #f59e0b; }
+.dot-stream { background: #8b5cf6; }
+.dot-station-normal { background: #10b981; }
+.dot-station-warning { background: #f59e0b; }
+.dot-station-danger {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: pulse-danger 1.5s infinite;
+}
+.dot-offline { background: #64748b; }
+
+/* 免責事項ボックス */
+.guide-disclaimer-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 11.5px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+.guide-disclaimer-box strong {
+  color: #e2e8f0;
+}
+
+.guide-copyright {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* フッター閉じるボタン */
+.system-guide-footer {
+  padding: 12px 20px;
+  background: #1e293b;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.guide-close-btn {
+  background: linear-gradient(135deg, #0284c7, #2563eb);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+  transition: all 0.2s ease;
+}
+
+.guide-close-btn:hover {
+  background: linear-gradient(135deg, #0369a1, #1d4ed8);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.6);
+  transform: translateY(-1px);
+}
+
+/* ヘッダーのガイド起動ボタン */
 .guide-header-btn {
   display: inline-flex;
   align-items: center;
@@ -2225,85 +2410,47 @@ body {
   transform: translateY(-1px);
 }
 
-/* スマホ表示ではヘッダーの幅を圧迫しないよう非表示（モーダル内から起動可能） */
+/* レスポンシブ最適化（スマホ 768px以下） */
 @media (max-width: 768px) {
   .guide-header-btn {
     display: none !important;
   }
-  
-  .guide-modal-content {
-    width: 95%;
-    max-height: 92vh;
+
+  .system-guide-modal {
+    width: 96%;
+    max-height: 94vh;
   }
-  
-  .guide-slides-wrapper {
-    min-height: 360px;
-    padding: 12px 14px;
+
+  .system-guide-body {
+    padding: 16px 14px;
+    font-size: 12.5px;
   }
-  
-  .guide-anim-stage {
-    height: 130px;
+
+  .guide-grid-2col {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
-  
-  .guide-slide-heading {
-    font-size: 14.5px;
+
+  .guide-flow-box {
+    flex-direction: column;
+    align-items: stretch;
   }
-  
-  .guide-slide-desc {
-    font-size: 12px;
+
+  .guide-flow-arrow {
+    text-align: center;
+    transform: rotate(90deg);
+  }
+
+  .system-guide-tabs {
+    padding: 6px 10px;
+    gap: 4px;
+  }
+
+  .guide-tab-btn {
+    padding: 6px 10px;
+    font-size: 11.5px;
   }
 }
 
-/* モーダル内の機能ツアー案内バナー */
-.modal-tour-banner {
-  margin-bottom: 16px;
-  padding: 12px 14px;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(99, 102, 241, 0.12));
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-}
-
-.modal-tour-banner-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #38bdf8;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.modal-tour-banner-desc {
-  font-size: 11.5px;
-  color: var(--text-secondary, #94a3b8);
-  line-height: 1.5;
-  margin: 0;
-}
-
-.modal-tour-banner-btn {
-  background: linear-gradient(135deg, #0284c7, #2563eb);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 7px 18px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
-  transition: all 0.2s ease;
-}
-
-.modal-tour-banner-btn:hover {
-  background: linear-gradient(135deg, #0369a1, #1d4ed8);
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.6);
-  transform: translateY(-1px);
-}
 
 

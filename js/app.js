@@ -1783,15 +1783,21 @@
     const modal = document.getElementById('info-modal-overlay');
     const closeBtn = document.getElementById('info-modal-close');
     
-    if (!btn || !modal) return;
+    if (!btn) return;
     
     btn.addEventListener('click', () => {
-      modal.classList.add('active');
+      if (window.openSystemGuide) {
+        window.openSystemGuide();
+      } else if (modal) {
+        modal.classList.add('active');
+      }
     });
     
-    closeBtn.addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
+    if (closeBtn && modal) {
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+    }
     
     modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.classList.remove('active');
