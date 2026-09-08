@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
   <!-- メインスタイルシート -->
-  <link rel="stylesheet" href="css/style.css?v=20260907_2330">
+  <link rel="stylesheet" href="css/style.css?v=20260908_1615">
 
   <style>
     * {
@@ -149,7 +149,7 @@
       background: #0f172a;
     }
 
-    /* ピンのスタイル（内部ドット2層構造） */
+    /* ピンのスタイル（Leafletのtranslate3dを破壊しない外枠設計） */
     .minimap-marker-wrapper {
       background: transparent !important;
       border: none !important;
@@ -159,30 +159,31 @@
       overflow: visible !important;
     }
 
-    .minimap-pin-dot {
-      width: 12px;
-      height: 12px;
+    /* ホーム画面と統一したカメラアイコン付き丸型カラーバッジ */
+    .minimap-marker-icon {
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: #3b82f6;
       border: 2px solid #ffffff;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
       cursor: pointer;
     }
 
-    .minimap-pin-dot.category-river {
-      background: #3b82f6;
-    }
-    .minimap-pin-dot.category-road {
-      background: #0284c7;
+    .minimap-marker-icon i {
+      color: #ffffff;
+      font-size: 10px;
     }
 
-    /* カードホバー時の強調ピン（内部ドット拡大 + ゴールド発光） */
-    .minimap-pin-dot.highlighted {
-      transform: scale(2.4) !important;
-      background: #f59e0b !important;
+    /* カードホバー時の強調ピン（内部バッジ拡大 + 左45度傾き + ゴールド発光） */
+    .minimap-marker-icon.highlighted {
+      transform: scale(1.6) rotate(-45deg) !important;
+      background-color: #f59e0b !important;
       border-color: #ffffff !important;
-      box-shadow: 0 0 14px #f59e0b, 0 0 24px rgba(245, 158, 11, 0.95) !important;
+      box-shadow: 0 0 14px #f59e0b, 0 0 22px rgba(245, 158, 11, 0.9) !important;
     }
 
     /* 下部ヒントバー */
@@ -268,9 +269,10 @@
         attributionControl: false
       }).setView([38.4344, 141.3029], 9);
 
-      // 国土地理院淡色地図
-      L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
-        maxZoom: 16,
+      // OpenStreetMap標準タイル（ホーム画面と統一）
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
         minZoom: 7
       }).addTo(map);
 
@@ -376,12 +378,25 @@
       // 新規マーカーの追加
       favCameras.forEach(cam => {
         if (!markersMap.has(cam.id)) {
-          const isRiver = cam.category === 'river';
+          const category = cam.category || 'other';
+          const isTypeB = cam.streamType === 'youtube' || cam.streamType === 'stream' || !cam.imageUrl;
+          const categoryColors = {
+            river: '#3b82f6',
+            road: '#0284c7',
+            coast: '#06b6d4',
+            city: '#10b981',
+            other: '#a78bfa'
+          };
+          const color = isTypeB ? '#8b5cf6' : (categoryColors[category] || categoryColors.other);
+          const iconClass = isTypeB ? 'fa-video' : 'fa-camera';
+
           const icon = L.divIcon({
             className: 'minimap-marker-wrapper',
-            html: `<div class="minimap-pin-dot ${isRiver ? 'category-river' : 'category-road'}" id="popup-dot-${cam.id}" title="${cam.name}"></div>`,
-            iconSize: [16, 16],
-            iconAnchor: [8, 8]
+            html: `<div class="minimap-marker-icon marker-${category}" id="popup-icon-${cam.id}" style="background-color: ${color};" title="${cam.name}">
+                     <i class="fa-solid ${iconClass}"></i>
+                   </div>`,
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
           });
 
           const marker = L.marker([cam.lat, cam.lng], {
@@ -412,14 +427,14 @@
       const el = marker.getElement();
       if (!el) return;
 
-      const dot = el.querySelector('.minimap-pin-dot');
-      if (!dot) return;
+      const iconEl = el.querySelector('.minimap-marker-icon');
+      if (!iconEl) return;
 
       if (isHighlight) {
-        dot.classList.add('highlighted');
+        iconEl.classList.add('highlighted');
         el.style.zIndex = '9999';
       } else {
-        dot.classList.remove('highlighted');
+        iconEl.classList.remove('highlighted');
         el.style.zIndex = '';
       }
     }
