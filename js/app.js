@@ -820,76 +820,48 @@
     });
   }
 
-  // ■ サイドバーカードHTML生成
+  // ■ サイドバーカードHTML生成（全カメラ統一テキスト1行表示）
+  // Phase 1改修: 静止画プレビューを廃止しホーム画面を軽量化。地図ピンポップアップの画像は変更なし。
   function renderCameraCard(camera, isFavMode = false) {
     const category = camera.category || 'other';
     const categoryLabel = CONFIG.CATEGORY_LABELS[category] || 'その他';
-    const categoryIcon = CONFIG.CATEGORY_ICONS[category] || 'fa-video';
     const isFav = state.favorites.has(camera.id);
-    const dragHandleHtml = isFavMode ? `<span class="fav-drag-handle" title="ドラッグして並べ替え" onclick="event.stopPropagation();"><i class="fa-solid fa-grip-vertical"></i></span>` : '';
+    const dragHandleHtml = isFavMode
+      ? `<span class="fav-drag-handle" title="ドラッグして並べ替え" onclick="event.stopPropagation();"><i class="fa-solid fa-grip-vertical"></i></span>`
+      : '';
     const draggableAttr = isFavMode ? 'draggable="true"' : '';
-    
-    let previewHtml = '';
-    const isTypeB = camera.streamType === 'youtube' || camera.streamType === 'stream' || !camera.imageUrl;
-    
-    // ビデオ（動画配信型）カメラは画像がないため、1行のコンパクトなリンクカードとして表示（無駄なスペースを削減）
-    if (isTypeB && camera.status !== 'maintenance') {
-      return `
-        <div class="camera-card camera-card-compact ${isFavMode ? 'fav-sortable-card' : ''}" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" ${draggableAttr} style="padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-          <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1;">
-            ${dragHandleHtml}
-            <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();" style="flex-shrink: 0;">
-              <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
-            </button>
-            <span class="card-name" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${camera.name}</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-            <span class="category-badge badge-${category}" style="font-size: 10px; padding: 2px 6px;">${categoryLabel}</span>
-            <span style="font-size: 11px; color: #c4b5fd; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 4px; padding: 2px 6px;">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> 動画
-            </span>
-          </div>
-        </div>
-      `;
-    }
 
+    // 右端バッジ: maintenance / 動画 / 静止画（配信元リンク）で表示を分ける
+    let rightBadgeHtml = '';
     if (camera.status === 'maintenance') {
-      previewHtml = `<div class="card-placeholder" style="color: #9ca3af;">
-        <i class="fa-solid fa-wrench"></i>
-        <span>現在調整中・休止中</span>
-      </div>`;
-    } else if (camera.imageUrl) {
-      previewHtml = `<img src="${camera.imageUrl}" class="live-image" data-base-src="${camera.imageUrl}" alt="${camera.name}" onerror="this.onerror=null; this.outerHTML='<div class=\\'card-placeholder\\' style=\\'color: #ef4444;\\'><i class=\\'fa-solid fa-triangle-exclamation\\'></i><span>画像取得エラー</span></div>';">`;
+      rightBadgeHtml = `<span style="font-size: 11px; color: #9ca3af; display: inline-flex; align-items: center; gap: 3px; background: rgba(156,163,175,0.15); border: 1px solid rgba(156,163,175,0.3); border-radius: 4px; padding: 2px 6px;">
+        <i class="fa-solid fa-wrench"></i> 調整中
+      </span>`;
+    } else if (camera.streamType === 'youtube' || camera.streamType === 'stream') {
+      rightBadgeHtml = `<a href="${camera.sourceUrl}" target="_blank" onclick="event.stopPropagation();" style="font-size: 11px; color: #c4b5fd; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); border-radius: 4px; padding: 2px 6px; text-decoration: none;">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> 動画
+      </a>`;
     } else {
-      previewHtml = `<div class="card-placeholder">
-        <i class="fa-solid ${categoryIcon}"></i>
-        <span>配信元で確認</span>
-      </div>`;
+      rightBadgeHtml = `<a href="${camera.sourceUrl}" target="_blank" onclick="event.stopPropagation();" style="font-size: 11px; color: #7dd3fc; font-weight: 500; display: inline-flex; align-items: center; gap: 3px; background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.3); border-radius: 4px; padding: 2px 6px; text-decoration: none;">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> 配信元
+      </a>`;
     }
 
     return `
-      <div class="camera-card ${camera.status === 'maintenance' ? 'maintenance' : ''} ${isFavMode ? 'fav-sortable-card' : ''}" data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" ${draggableAttr}>
-        <div class="card-header">
-          <div style="display: flex; align-items: center; gap: 4px; overflow: hidden; flex: 1;">
-            ${dragHandleHtml}
-            <span class="card-name">${camera.name}</span>
-          </div>
-          <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();">
+      <div class="camera-card camera-card-compact ${isFavMode ? 'fav-sortable-card' : ''} ${camera.status === 'maintenance' ? 'maintenance' : ''}"
+           data-camera-id="${camera.id}" data-category="${category}" data-operator="${camera.operator || ''}" ${draggableAttr}
+           style="padding: 8px 12px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1;">
+          ${dragHandleHtml}
+          <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}"
+                  title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();" style="flex-shrink: 0;">
             <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
           </button>
-          <span class="category-badge badge-${category}">${categoryLabel}</span>
+          <span class="card-name" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${camera.name}</span>
         </div>
-        <div class="card-preview">
-          ${previewHtml}
-        </div>
-        <div class="card-info">
-          <span class="card-operator"><i class="fa-solid fa-user-shield"></i> ${camera.operator || '管理者不明'}</span>
-          ${camera.description ? `<span class="card-desc">${camera.description}</span>` : ''}
-        </div>
-        <div class="card-actions">
-          <a href="${camera.sourceUrl}" target="${isFav ? '_blank' : 'bousai_camera_preview'}" class="btn-source" onclick="event.stopPropagation();">
-            配信元を開く <i class="fa-solid fa-external-link"></i>
-          </a>
+        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+          <span class="category-badge badge-${category}" style="font-size: 10px; padding: 2px 6px;">${categoryLabel}</span>
+          ${rightBadgeHtml}
         </div>
       </div>
     `;
