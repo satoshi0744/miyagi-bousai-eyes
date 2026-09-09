@@ -736,6 +736,9 @@
         <span style="opacity: 0.6; margin: 0 4px;">|</span>
         <span id="board-countdown">次回更新: 10:00</span>
       </div>
+      <button class="board-refresh-btn" id="board-auto-fav-btn" onclick="autoRegisterIshinomakiCameras()" title="石巻圏の3水系を系統順・上流→下流でお気に入り一括整列" style="background: #d97706;">
+        <i class="fa-solid fa-arrows-up-down"></i> 石巻圏 系統整列
+      </button>
       <button class="board-refresh-btn" id="board-refresh-btn" title="すべての最新静止画を一括再取得">
         <i class="fa-solid fa-rotate" id="board-refresh-icon"></i> 今すぐ更新
       </button>
@@ -1178,7 +1181,133 @@
     }
     initInfoModal();
 
-    // ========== フロート型ミニマップ（案B）制御ロジック ==========
+    // ========== 石巻圏 系統別・上流→下流 一括整列登録 ==========
+    function autoRegisterIshinomakiCameras() {
+      if (typeof CAMERA_DATA === 'undefined') {
+        alert('カメラデータが読み込まれていません');
+        return;
+      }
+
+      // 石巻圏3水系の定義（app.jsのgetGroupForCamera・ソートロジックと同一）
+      const ISHINOMAKI_GROUPS = [
+        {
+          id: 'group_kyu_kitakami',
+          label: '旧北上川水系',
+          order: 1,
+          refPoint: { lat: 38.4150, lng: 141.3125 }, // 旧北上川河口（0.7km付近）
+          match: (name) =>
+            name.includes('旧北上川') || name.includes('日和山') ||
+            name.includes('住吉') || name.includes('神取橋') ||
+            name.includes('内海橋') || name.includes('脇谷') ||
+            name.includes('石巻大橋') || name.includes('真野川')
+        },
+        {
+          id: 'group_kitakami',
+          label: '北上川下流',
+          order: 2,
+          refPoint: { lat: 38.5658, lng: 141.4437 }, // 新北上川河口（釜谷水門付近）
+          // ※「北上川」を名前に含まないカメラ（飯野川橋・福地水門・釜谷水門・新北上大橋・樫崎地区・橋浦地区）も北上川下流事務所管轄のため明示的に含める
+          match: (name) =>
+            (name.includes('北上川') || name.includes('飯野川橋') || name.includes('福地水門') ||
+             name.includes('釜谷水門') || name.includes('新北上大橋') || name.includes('樫崎地区') ||
+             name.includes('橋浦地区')) &&
+            !name.includes('旧北上川') && !name.includes('[岩手県]') && !name.includes('入釜谷')
+        },
+
+        {
+          id: 'group_naruse',
+          label: '鳴瀬川・吉田川・運河',
+          order: 3,
+          refPoint: { lat: 38.3756, lng: 141.1728 }, // 鳴瀬川河口（0.0km付近）
+          match: (name) =>
+            name.includes('鳴瀬') || name.includes('吉田川') ||
+            name.includes('東名運河') || name.includes('鞍坪') ||
+            name.includes('小野橋') || name.includes('入釜谷') ||
+            name.includes('出来川') || name.includes('中島川') ||
+            name.includes('加茂川') || name.includes('内の原') ||
+            name.includes('高木川') || name.includes('大沢川') ||
+            name.includes('皿貝川')
+        }
+      ];
+
+      // カメラ名からキロ程数値を抽出（全角→半角変換込み）
+      function extractKm(name) {
+        if (!name) return null;
+        const n = name
+          .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+          .replace(/[Ａ-Ｚａ-ｚ]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+        const m1 = n.match(/(-?[0-9]+(?:\.[0-9]+)?)\s*(?:km|k[rl]|k|キロ(?:メートル)?)/i);
+        if (m1) return parseFloat(m1[1]);
+        const m2 = n.match(/kp\s*(-?[0-9]+(?:\.[0-9]+)?)/i);
+        if (m2) return parseFloat(m2[1]);
+        return null;
+      }
+
+      // ヒュベニの公式による2点間距離（km）
+      function distKm(lat1, lng1, lat2, lng2) {
+        const rad = Math.PI / 180;
+        const dLat = (lat2 - lat1) * rad;
+        const dLng = (lng2 - lng1) * rad;
+        const a = Math.sin(dLat / 2) ** 2 +
+                  Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLng / 2) ** 2;
+        return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      }
+
+      // 上流スコア（大きいほど上流）
+      function upstreamScore(camera, refPoint) {
+        const km = extractKm(camera.name);
+        if (km !== null) return km;
+        if (refPoint && typeof camera.lat === 'number' && typeof camera.lng === 'number') {
+          return distKm(camera.lat, camera.lng, refPoint.lat, refPoint.lng);
+        }
+        return (typeof camera.lat === 'number') ? camera.lat * 10 : 0;
+      }
+
+      // 各グループにカメラを分類
+      const grouped = ISHINOMAKI_GROUPS.map(g => ({ ...g, cameras: [] }));
+      const assignedIds = new Set();
+
+      CAMERA_DATA.forEach(camera => {
+        const name = camera.name || '';
+        for (const g of grouped) {
+          if (g.match(name)) {
+            g.cameras.push(camera);
+            assignedIds.add(camera.id);
+            return;
+          }
+        }
+      });
+
+      // 各グループ内を上流→下流ソート（スコア降順）
+      grouped.forEach(g => {
+        g.cameras.sort((a, b) => upstreamScore(b, g.refPoint) - upstreamScore(a, g.refPoint));
+      });
+
+      // 新お気に入り順序を構築
+      // 1. 石巻圏3水系（系統順・上流→下流）
+      const newOrder = [];
+      grouped.forEach(g => {
+        g.cameras.forEach(c => newOrder.push(c.id));
+      });
+
+      // 2. 既存お気に入りで石巻圏外のものを末尾に保持
+      Array.from(favorites).forEach(id => {
+        if (!assignedIds.has(id)) newOrder.push(id);
+      });
+
+      // localStorageに書き込み・再描画
+      favorites = new Set(newOrder);
+      saveFavorites();
+      renderBoard();
+
+      // 完了サマリーを表示
+      const counts = grouped.map(g => `${g.label}: ${g.cameras.length}台`).join(' / ');
+      const extraCount = newOrder.length - assignedIds.size;
+      const extraMsg = extraCount > 0 ? ` + 石巻圏外 ${extraCount}台（末尾）` : '';
+      alert(`✅ 石巻圏 系統整列完了\n${counts}${extraMsg}\n合計 ${newOrder.length} 台 を上流→下流順で登録しました`);
+    }
+
+
     function initMiniMap() {
       const container = document.getElementById('minimap-container');
       if (!container || miniMap || typeof L === 'undefined') return;

@@ -54,9 +54,17 @@
     }
 
     // 石巻圏：北上川下流
-    if (name.includes('北上川') && (name.includes('飯野川') || name.includes('福地') || name.includes('釜谷') || name.includes('新北上') || name.includes('下流') || name.includes('樫崎') || name.includes('橋浦'))) {
-      return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流', icon: 'fa-water', order: 3, defaultOpen: true };
+    // ※「北上川」を名前に含まないカメラ（飯野川橋・福地水門・釜谷水門・新北上大橋・樫崎地区・橋浦地区）も北上川下流事務所管轄のため明示的に含める
+    if (name.includes('北上川') || name.includes('飯野川橋') || name.includes('福地水門') ||
+        name.includes('釜谷水門') || name.includes('新北上大橋') || name.includes('樫崎地区') ||
+        name.includes('橋浦地区')) {
+      // 旧北上川系カメラとの誤混入を防ぐため旧北上川・その他水系キーワードを除外
+      if (!name.includes('旧北上川') && !name.includes('[岩手県]') && !name.includes('鳴瀬') &&
+          !name.includes('入釜谷')) {
+        return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流', icon: 'fa-water', order: 3, defaultOpen: true };
+      }
     }
+
 
     // 石巻圏・東松島：鳴瀬・吉田川下流
     if (name.includes('鳴瀬') || name.includes('吉田川') || name.includes('東名運河') || name.includes('鞍坪') || name.includes('小野橋') || name.includes('入釜谷') || name.includes('出来川') || name.includes('中島川') || name.includes('加茂川') || name.includes('内の原') || name.includes('高木川') || name.includes('大沢川') || name.includes('皿貝川')) {
