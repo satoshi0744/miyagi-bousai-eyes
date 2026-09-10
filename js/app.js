@@ -2155,7 +2155,7 @@
       }
     };
 
-    // クリック・タップ時の挙動: ピンをクリックした瞬間にサイドバーの該当カメラを開いてフォーカス
+    // クリック・タップ時の挙動: カメラはサイドバー連動、水位観測所は新タブで水位・断面図を表示
     marker.on('click', (e) => {
       if (e && e.originalEvent) {
         L.DomEvent.stopPropagation(e.originalEvent);
@@ -2164,8 +2164,13 @@
       state.activeMarkerId = markerId;
       smartOpenTooltip();
 
-      // ピンをクリックした時にサイドバーのアコーディオンを開き、該当カメラへスムーズスクロール＆ハイライト
-      syncSidebar();
+      if (station) {
+        // 水位観測所の場合: カメラと異なりサイドバーにリストがないため、新タブでリアルタイム水位経過表・断面図を開く
+        openWaterLevelModal(station);
+      } else {
+        // カメラの場合: サイドバーのアコーディオンを開き、該当カメラへスムーズスクロール＆ハイライト
+        syncSidebar();
+      }
     });
 
     // マウスホバー時（PC）: 地図上に小さなプレビューを表示するのみ（サイドバーは勝手に開かない）
@@ -2178,7 +2183,7 @@
       smartOpenTooltip();
     });
 
-    // ポップアップカード自体がタップ/クリックされた時も遷移を実行
+    // ポップアップカード自体がタップ/クリックされた時も新タブまたはモーダルを開く
     marker.on('tooltipopen', () => {
       const tooltip = marker.getTooltip();
       if (!tooltip) return;
@@ -2192,7 +2197,11 @@
             e.stopPropagation();
             if (e.preventDefault) e.preventDefault();
           }
-          window.__triggerMarkerAction(markerId);
+          if (station) {
+            openWaterLevelModal(station);
+          } else {
+            window.__triggerMarkerAction(markerId);
+          }
         };
 
         tooltipEl.onclick = handleTooltipTap;
