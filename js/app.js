@@ -67,43 +67,47 @@
 
     // 5. 登米圏（県北東部：北上川登米・迫川下流・東和町等）
     if (lat >= 38.58 && lng >= 141.18 && (lat >= 38.68 || lng < 141.38) &&
-        !text.includes('石巻') && !name.includes('大沢川') && !name.includes('植立山') && !name.includes('月浜')) {
+        !text.includes('石巻') && !name.includes('大沢川') && !name.includes('植立山') && !name.includes('月浜') &&
+        !name.includes('江合川') && !name.includes('出来川') && !text.includes('美里') && !text.includes('涌谷') &&
+        !name.includes('神取橋') && !name.includes('佳景山')) {
       return { id: 'group_tome', title: '🌊 登米圏：迫川下流・北上川登米水系', icon: 'fa-water', order: 4, defaultOpen: false };
     }
 
-    // 6. 大崎・加美圏（県中西部：lat >= 38.45 かつ lat < 38.68 かつ lng < 141.18、吉田川・大郷域を除く）
-    if (lat >= 38.45 && lat < 38.68 && lng < 141.18 &&
-        !name.includes('吉田川') && !name.includes('善川') && !name.includes('竹林川') && !name.includes('粕川') && !text.includes('大郷')) {
+    // 6. 石巻圏：旧北上川水系（神取橋・佳景山・鹿又・開北橋・日和大橋）
+    if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('石巻大橋') || name.includes('鹿又') || name.includes('佳景山') || name.includes('真野川')) {
+      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 8, defaultOpen: false };
+    }
+
+    // 7. 石巻圏：北上川下流・東部沿岸水系（新北上川本流＋大沢川、加茂川、皿貝川、中島川、高木川、月浜沢川、植立山など）
+    if (text.includes('石巻') || (text.includes('女川') && !name.includes('美女川')) || name.includes('北上川') || name.includes('飯野川') || name.includes('釜谷') || name.includes('福地') ||
+        name.includes('大沢川') || name.includes('皿貝川') || name.includes('中島川') || name.includes('加茂川') || name.includes('高木川') || name.includes('馬鞍川') || name.includes('内の原') || name.includes('月浜') || name.includes('植立山') ||
+        (lng >= 141.22 && lat >= 38.40)) {
+      return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流・東部沿岸水系', icon: 'fa-water', order: 9, defaultOpen: false };
+    }
+
+    // 8. 東松島：鳴瀬川下流・河口沿岸水系（中東部河口域：lng >= 141.12 かつ lng < 141.22）
+    if (text.includes('東松島') || (text.includes('鳴瀬') && lat < 38.45 && lng >= 141.12) || name.includes('東名運河') || name.includes('鞍坪') || name.includes('小野橋') || name.includes('若針') || name.includes('竹谷') ||
+        (lng >= 141.12 && lng < 141.22 && lat >= 38.36 && lat < 38.46)) {
+      return { id: 'group_naruse_east', title: '🌊 東松島：鳴瀬川下流・河口沿岸水系', icon: 'fa-water', order: 7, defaultOpen: false };
+    }
+
+    // 9. 大崎・加美圏（県中西部：江合川・鳴瀬川上流水系、美里町・涌谷町域を含む）
+    if (text.includes('江合川') || text.includes('多田川') || text.includes('大江川') || text.includes('新江合') || text.includes('出来川') || text.includes('田尻川') || text.includes('美女川') || text.includes('名鰭') || text.includes('鶴田川') || text.includes('新堀川') ||
+        text.includes('美里') || text.includes('小牛田') || text.includes('涌谷') || text.includes('古川') || text.includes('岩出山') || text.includes('加美') || text.includes('色麻') ||
+        (lat >= 38.45 && lat < 38.68 && lng >= 140.70 && lng < 141.25 &&
+         !text.includes('大郷') && !text.includes('石巻') && !text.includes('登米') && !name.includes('吉田川') && !name.includes('善川') && !name.includes('竹林川'))) {
       return { id: 'group_osaki_kami', title: '🌊 大崎・加美圏：江合川・鳴瀬川上流水系', icon: 'fa-water', order: 5, defaultOpen: false };
     }
 
-    // 7. 吉田川水系（黒川・大和・大郷：内陸西部）
+    // 10. 吉田川水系（黒川・大和・大郷：内陸西部）
     if (name.includes('吉田川') || name.includes('善川') || name.includes('竹林川') || name.includes('粕川') ||
         text.includes('大郷') || text.includes('大和') ||
         (lat >= 38.38 && lat < 38.48 && lng >= 140.85 && lng < 141.12 && !text.includes('松島'))) {
       return { id: 'group_yoshida', title: '🌊 吉田川中上流：黒川・大和・大郷水系', icon: 'fa-water', order: 6, defaultOpen: false };
     }
 
-    // 8. 東松島：鳴瀬川下流・河口沿岸水系（中東部河口域：lng >= 141.12 かつ lng < 141.22）
-    if (text.includes('東松島') || name.includes('鳴瀬') || name.includes('東名運河') || name.includes('鞍坪') || name.includes('小野橋') || name.includes('若針') ||
-        (lng >= 141.12 && lng < 141.22 && lat >= 38.36 && lat < 38.46)) {
-      return { id: 'group_naruse_east', title: '🌊 東松島：鳴瀬川下流・河口沿岸水系', icon: 'fa-water', order: 7, defaultOpen: false };
-    }
-
-    // 9. 石巻圏：旧北上川水系
-    if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('石巻大橋') || name.includes('鹿又') || name.includes('佳景山') || name.includes('真野川')) {
-      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 8, defaultOpen: false };
-    }
-
-    // 10. 石巻圏：北上川下流・東部沿岸水系（新北上川本流＋大沢川、加茂川、皿貝川、中島川、月浜沢川など）
-    if (text.includes('石巻') || text.includes('女川') || name.includes('北上川') || name.includes('飯野川') || name.includes('釜谷') || name.includes('福地') ||
-        name.includes('大沢川') || name.includes('皿貝川') || name.includes('中島川') || name.includes('加茂川') || name.includes('高木川') || name.includes('馬鞍川') || name.includes('内の原') || name.includes('月浜') || name.includes('植立山') ||
-        (lng >= 141.22 && lat >= 38.40)) {
-      return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流・東部沿岸水系', icon: 'fa-water', order: 9, defaultOpen: false };
-    }
-
-    // 11. 仙南圏（県南部：lat < 38.12、白石川・阿武隈川水系、亘理、岩沼河口）
-    if (lat < 38.12 || text.includes('白石') || text.includes('角田') || text.includes('大河原') || text.includes('柴田') || text.includes('丸森') || text.includes('七ヶ宿') || text.includes('阿武隈') || text.includes('亘理')) {
+    // 11. 仙南圏（県南部：lat < 38.12、白石川・阿武隈川水系、亘理、岩沼河口、遠刈田・蔵王）
+    if (lat < 38.12 || text.includes('白石') || text.includes('角田') || text.includes('大河原') || text.includes('柴田') || text.includes('丸森') || text.includes('七ヶ宿') || text.includes('阿武隈') || text.includes('亘理') || text.includes('遠刈田') || text.includes('蔵王')) {
       return { id: 'group_sennan', title: '🌊 仙南圏：白石川・阿武隈川水系', icon: 'fa-water', order: 11, defaultOpen: false };
     }
 
@@ -112,31 +116,9 @@
   }
 
   // ■ 川の流れ順（上流→下流）ソート用ヘルパー関数群
-  // カメラ名からキロ程（km, kR, kL, k, キロ, KP等）を抽出
-  function extractKmFromCameraName(name) {
-    if (!name) return null;
-    const normalized = name.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
-                           .replace(/[Ａ-Ｚａ-ｚ]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
-    
-    // パターン1: -0.6km, 130.9キロ, 14.3km, 8.6km, 21.0kR, 12.4kL, 5.2k, 15.0K, 0.4kＲ, etc.
-    const m1 = normalized.match(/(-?[0-9]+(?:\.[0-9]+)?)\s*(?:km|k[rl]|k|キロ(?:メートル)?)/i);
-    if (m1) {
-      const val = parseFloat(m1[1]);
-      if (!isNaN(val)) return val;
-    }
-
-    // パターン2: KP12.4, kp 5.0
-    const m2 = normalized.match(/kp\s*(-?[0-9]+(?:\.[0-9]+)?)/i);
-    if (m2) {
-      const val = parseFloat(m2[1]);
-      if (!isNaN(val)) return val;
-    }
-
-    return null;
-  }
-
   // 2点間の直線距離（km）を計算（ヒュベニの公式）
   function calculateDistanceKm(lat1, lng1, lat2, lng2) {
+    if (typeof lat1 !== 'number' || typeof lng1 !== 'number' || typeof lat2 !== 'number' || typeof lng2 !== 'number') return 0;
     const rad = Math.PI / 180;
     const dLat = (lat2 - lat1) * rad;
     const dLng = (lng2 - lng1) * rad;
@@ -147,43 +129,7 @@
     return 6371 * c;
   }
 
-  // 各水系の河口・最下流基準点座標（キロ程0km相当）
-  const RIVER_REFERENCE_POINTS = {
-    group_kitakami: { lat: 38.5658, lng: 141.4437 }, // 新北上川河口（釜谷水門・河口付近: 0.8km）
-    group_kyu_kitakami: { lat: 38.4150, lng: 141.3125 }, // 旧北上川河口（0.7km付近）
-    group_naruse_east: { lat: 38.3756, lng: 141.1728 }, // 鳴瀬川河口（0.0km付近）
-    group_yoshida: { lat: 38.4403, lng: 141.1122 }, // 吉田川下流（合流部9.4km付近）
-    group_osaki_kami: { lat: 38.5372, lng: 141.2111 }, // 江合川下流（1.2km付近）
-    group_tome: { lat: 38.5973, lng: 141.1693 }, // 迫川下流合流付近
-    group_kurihara: { lat: 38.6800, lng: 141.2000 }, // 迫川中流・若柳下流付近
-    group_sennan: { lat: 38.0520, lng: 140.9220 }, // 阿武隈川河口付近（亘理・岩沼）
-    group_sendai: { lat: 38.1761, lng: 140.9564 }, // 名取川河口付近
-    group_kesennuma: { lat: 38.7857, lng: 141.4981 }, // 津谷川下流
-    group_iwate: { lat: 39.0208, lng: 141.1313 } // 岩手県北上川最下流（38.0km付近）
-  };
-
-  // 上流度スコア算出（数値降順で上流→下流）
-  function getCameraUpstreamScore(camera, groupId) {
-    const km = extractKmFromCameraName(camera.name);
-    if (km !== null) {
-      return km;
-    }
-
-    // キロ程がない場合の補間: 河口からの直線距離（km）
-    const refPoint = RIVER_REFERENCE_POINTS[groupId];
-    if (refPoint && typeof camera.lat === 'number' && typeof camera.lng === 'number') {
-      return calculateDistanceKm(camera.lat, camera.lng, refPoint.lat, refPoint.lng);
-    }
-
-    // 基準点がない場合は緯度（北にあるほど上流/起点側として高スコア）
-    if (typeof camera.lat === 'number') {
-      return camera.lat * 10;
-    }
-
-    return 0;
-  }
-
-  // カメラ配列を「川の流れ順（上流→下流）」にソート
+  // カメラ配列を「物理ピン座標基準（上流→下流・河口から遠い順）」にソート
   function sortCamerasByRiverFlow(cameras, groupId) {
     if (!cameras || cameras.length <= 1) return cameras;
 
@@ -192,25 +138,164 @@
       return cameras;
     }
 
-    // 道路・その他河川グループは北から南へ緯度降順
-    if (groupId === 'group_road' || groupId === 'group_other_river') {
-      return [...cameras].sort((a, b) => {
-        const latA = typeof a.lat === 'number' ? a.lat : 0;
-        const latB = typeof b.lat === 'number' ? b.lat : 0;
-        if (latB !== latA) return latB - latA;
-        return (a.name || '').localeCompare(b.name || '', 'ja');
-      });
+    // 1. 岩手県：北上川本流（盛岡→花巻→奥州→平泉→一関：北から南へ緯度降順）
+    if (groupId === 'group_iwate') {
+      return [...cameras].sort((a, b) => (b.lat || 0) - (a.lat || 0));
     }
 
-    // 水系グループ: 上流度スコアの降順（上流→下流）
-    return [...cameras].sort((a, b) => {
-      const scoreA = getCameraUpstreamScore(a, groupId);
-      const scoreB = getCameraUpstreamScore(b, groupId);
-      if (scoreB !== scoreA) {
-        return scoreB - scoreA;
-      }
-      return (a.name || '').localeCompare(b.name || '', 'ja');
-    });
+    // 2. 気仙沼・南三陸圏：北から南へ緯度降順（八瀬川→鹿折川→松川→面瀬川→津谷川）
+    if (groupId === 'group_kesennuma') {
+      return [...cameras].sort((a, b) => (b.lat || 0) - (a.lat || 0));
+    }
+
+    // 3. 栗原圏：鳴子ダム水系 ➡ 迫川・栗原支流水系
+    if (groupId === 'group_kurihara') {
+      const damCams = [];
+      const riverCams = [];
+      cameras.forEach(c => {
+        const n = c.name || '';
+        if (n.includes('ダム') || n.includes('鳴子') || n.includes('轟') || n.includes('中野') || n.includes('川渡')) {
+          damCams.push(c);
+        } else {
+          riverCams.push(c);
+        }
+      });
+      // ダム水系：西から東（経度昇順）
+      damCams.sort((a, b) => (a.lng || 0) - (b.lng || 0));
+      // 迫川支流水系：下流合流点（若柳方面: 38.730, 141.150）から遠い順（上流→下流）
+      const refKurihara = { lat: 38.7300, lng: 141.1500 };
+      riverCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refKurihara.lat, refKurihara.lng) - calculateDistanceKm(a.lat, a.lng, refKurihara.lat, refKurihara.lng));
+      return [...damCams, ...riverCams];
+    }
+
+    // 4. 登米圏：北上川本流（岩之沢〜登米〜豊里） ➡ 迫川・登米支流水系
+    if (groupId === 'group_tome') {
+      const mainCams = [];
+      const branchCams = [];
+      cameras.forEach(c => {
+        const n = c.name || '';
+        if (n.includes('北上川') || n.includes('登米大橋') || n.includes('米谷') || n.includes('錦桜橋') || n.includes('岩之沢樋門') || n.includes('脇谷水門') || n.includes('豊里大橋')) {
+          mainCams.push(c);
+        } else {
+          branchCams.push(c);
+        }
+      });
+      // 本流：北から南へ緯度降順（上流→下流）
+      mainCams.sort((a, b) => (b.lat || 0) - (a.lat || 0));
+      // 支流：合流点（38.5973, 141.1693）から遠い順（上流→下流）
+      const refTome = { lat: 38.5973, lng: 141.1693 };
+      branchCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refTome.lat, refTome.lng) - calculateDistanceKm(a.lat, a.lng, refTome.lat, refTome.lng));
+      return [...mainCams, ...branchCams];
+    }
+
+    // 5. 大崎・加美圏：江合川水系 ➡ 鳴瀬川上流水系
+    if (groupId === 'group_osaki_kami') {
+      const eaiCams = [];
+      const naruseCams = [];
+      cameras.forEach(c => {
+        const n = c.name || '';
+        if (n.includes('鳴瀬川') || n.includes('桜舘') || n.includes('百間堀') || n.includes('志田橋') || n.includes('野田橋') || n.includes('中流堰') || n.includes('木間塚') || n.includes('上地')) {
+          naruseCams.push(c);
+        } else {
+          eaiCams.push(c);
+        }
+      });
+      // 江合川系：下流合流部（美里・涌谷: 38.5244, 141.1772）から遠い順（鳴子・岩出山上流 ➡ 古川 ➡ 美里・涌谷）
+      const refEai = { lat: 38.5244, lng: 141.1772 };
+      eaiCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refEai.lat, refEai.lng) - calculateDistanceKm(a.lat, a.lng, refEai.lat, refEai.lng));
+      // 鳴瀬川系：下流合流部（上地・松山: 38.4403, 141.1122）から遠い順（加美町上流 ➡ 色麻 ➡ 三本木 ➡ 松山）
+      const refNaruse = { lat: 38.4403, lng: 141.1122 };
+      naruseCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refNaruse.lat, refNaruse.lng) - calculateDistanceKm(a.lat, a.lng, refNaruse.lat, refNaruse.lng));
+      return [...eaiCams, ...naruseCams];
+    }
+
+    // 6. 吉田川中上流：吉田川本流 ➡ 善川・竹林川等支流
+    if (groupId === 'group_yoshida') {
+      const mainCams = [];
+      const branchCams = [];
+      cameras.forEach(c => {
+        const n = c.name || '';
+        if (n.includes('吉田川') || n.includes('三川合流') || n.includes('粕川') || n.includes('桧和田') || n.includes('身洗川水門') || n.includes('大郷大橋') || n.includes('品井沼') || n.includes('内浦')) {
+          mainCams.push(c);
+        } else {
+          branchCams.push(c);
+        }
+      });
+      const refYoshida = { lat: 38.4403, lng: 141.1122 };
+      mainCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refYoshida.lat, refYoshida.lng) - calculateDistanceKm(a.lat, a.lng, refYoshida.lat, refYoshida.lng));
+      branchCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refYoshida.lat, refYoshida.lng) - calculateDistanceKm(a.lat, a.lng, refYoshida.lat, refYoshida.lng));
+      return [...mainCams, ...branchCams];
+    }
+
+    // 7. 東松島：鳴瀬川河口（38.3756, 141.1728）から遠い順（上流→下流）
+    if (groupId === 'group_naruse_east') {
+      const refNaruseEast = { lat: 38.3756, lng: 141.1728 };
+      return [...cameras].sort((a, b) => calculateDistanceKm(b.lat, b.lng, refNaruseEast.lat, refNaruseEast.lng) - calculateDistanceKm(a.lat, a.lng, refNaruseEast.lat, refNaruseEast.lng));
+    }
+
+    // 8. 石巻圏：旧北上川水系（河口 38.4150, 141.3125 から遠い順＝上流神取橋 ➡ 下流河口）
+    if (groupId === 'group_kyu_kitakami') {
+      const refKyu = { lat: 38.4150, lng: 141.3125 };
+      return [...cameras].sort((a, b) => calculateDistanceKm(b.lat, b.lng, refKyu.lat, refKyu.lng) - calculateDistanceKm(a.lat, a.lng, refKyu.lat, refKyu.lng));
+    }
+
+    // 9. 石巻圏：北上川下流・東部沿岸水系（本流 ➡ 沿岸・支流）
+    if (groupId === 'group_kitakami') {
+      const mainCams = [];
+      const coastCams = [];
+      cameras.forEach(c => {
+        const n = c.name || '';
+        if (n.includes('北上川') || n.includes('飯野川') || n.includes('福地') || n.includes('新北上') || n.includes('釜谷') || n.includes('樫崎') || n.includes('植立山')) {
+          mainCams.push(c);
+        } else {
+          coastCams.push(c);
+        }
+      });
+      // 本流：河口（38.5658, 141.4437）から遠い順（上流→下流）
+      const refKitakami = { lat: 38.5658, lng: 141.4437 };
+      mainCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refKitakami.lat, refKitakami.lng) - calculateDistanceKm(a.lat, a.lng, refKitakami.lat, refKitakami.lng));
+      // 沿岸・支流：北から南へ緯度降順
+      coastCams.sort((a, b) => (b.lat || 0) - (a.lat || 0));
+      return [...mainCams, ...coastCams];
+    }
+
+    // 10. 仙台・仙塩圏：西（山側上流）から東（海側河口）へ経度昇順
+    if (groupId === 'group_sendai') {
+      return [...cameras].sort((a, b) => (a.lng || 0) - (b.lng || 0));
+    }
+
+    // 11. 仙南圏：白石川水系 ➡ 阿武隈川本流
+    if (groupId === 'group_sennan') {
+      const shiroishiCams = [];
+      const abukumaCams = [];
+      cameras.forEach(c => {
+        const n = c.name || '';
+        const lat = c.lat;
+        const lng = c.lng;
+        // 七ヶ宿町全域（lat < 38.02 && lng < 140.56）や白石川流域キーワード
+        if ((typeof lat === 'number' && typeof lng === 'number' && lat < 38.02 && lng < 140.60) ||
+            n.includes('七ヶ宿') || n.includes('白石') || n.includes('材木岩') || n.includes('小原') || n.includes('大河原') || n.includes('柴田') ||
+            n.includes('遠刈田') || n.includes('蔵王') || n.includes('松川') || n.includes('ダム') || (c.operator && c.operator.includes('七ヶ宿'))) {
+          shiroishiCams.push(c);
+        } else {
+          abukumaCams.push(c);
+        }
+      });
+      // 白石川：合流点（柴田町槻木: 38.0667, 140.8250）から遠い順（七ヶ宿上流 ➡ 柴田下流）
+      const refShiroishi = { lat: 38.0667, lng: 140.8250 };
+      shiroishiCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refShiroishi.lat, refShiroishi.lng) - calculateDistanceKm(a.lat, a.lng, refShiroishi.lat, refShiroishi.lng));
+      // 阿武隈川：河口（岩沼・亘理: 38.0520, 140.9220）から遠い順（丸森上流 ➡ 亘理河口下流）
+      const refAbukuma = { lat: 38.0520, lng: 140.9220 };
+      abukumaCams.sort((a, b) => calculateDistanceKm(b.lat, b.lng, refAbukuma.lat, refAbukuma.lng) - calculateDistanceKm(a.lat, a.lng, refAbukuma.lat, refAbukuma.lng));
+      return [...shiroishiCams, ...abukumaCams];
+    }
+
+    // 12. 道路：北から南へ緯度降順
+    if (groupId === 'group_road') {
+      return [...cameras].sort((a, b) => (b.lat || 0) - (a.lat || 0));
+    }
+
+    return cameras;
   }
 
   // ■ 状態管理
@@ -344,12 +429,15 @@
     }
 
     // 該当グループの全カメラを抽出
-    const groupCameras = CAMERA_DATA.filter(c => {
+    let groupCameras = CAMERA_DATA.filter(c => {
       const g = getGroupForCamera(c);
       return g && g.id === groupId;
     });
 
     if (groupCameras.length === 0) return;
+
+    // 川の流れ・座標順（上流→下流）に整列
+    groupCameras = sortCamerasByRiverFlow(groupCameras, groupId);
 
     // 全て登録済みか判定
     const isAllFav = groupCameras.every(c => state.favorites.has(c.id));
@@ -358,7 +446,7 @@
       // 一括解除
       groupCameras.forEach(c => state.favorites.delete(c.id));
     } else {
-      // 一括登録
+      // 一括登録（川の流れ順で確実に追加）
       groupCameras.forEach(c => state.favorites.add(c.id));
     }
 
