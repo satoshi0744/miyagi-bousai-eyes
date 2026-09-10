@@ -2149,21 +2149,17 @@
       }
     };
 
-    // クリック・タップ時の挙動（スマホ：1回目でポップアップ展開、2回目で遷移 / PC：即遷移）
+    // クリック・タップ時の挙動: ピンをクリックした瞬間にサイドバーの該当カメラを開いてフォーカス
     marker.on('click', (e) => {
       if (e && e.originalEvent) {
         L.DomEvent.stopPropagation(e.originalEvent);
       }
 
-      // すでにこのマーカーがアクティブ（ポップアップ表示中）だった場合 -> 2回目タップで遷移
-      if (state.activeMarkerId === markerId) {
-        window.__triggerMarkerAction(markerId);
-      } else {
-        // 初回タップ時 -> アクティブ状態にセットし、ポップアップを開く
-        state.activeMarkerId = markerId;
-        smartOpenTooltip();
-        syncSidebar();
-      }
+      state.activeMarkerId = markerId;
+      smartOpenTooltip();
+
+      // ピンをクリックした時にサイドバーのアコーディオンを開き、該当カメラへスムーズスクロール＆ハイライト
+      syncSidebar();
     });
 
     // マウスホバー時（PC）: 地図上に小さなプレビューを表示するのみ（サイドバーは勝手に開かない）
