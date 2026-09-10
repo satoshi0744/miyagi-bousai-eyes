@@ -1146,9 +1146,218 @@ body {
   border: none;
 }
 
+/* ==========================================================================
+   お気に入りサブ操作バー（案A）＆圏域別一括登録モーダル スタイル
+   ========================================================================== */
+.fav-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(245, 158, 11, 0.08);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+  animation: fadeInDown 0.2s ease-out;
+}
 
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
+.fav-action-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
 
+.fav-action-add {
+  background: rgba(245, 158, 11, 0.18);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+.fav-action-add:hover {
+  background: rgba(245, 158, 11, 0.28);
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+}
+
+.fav-action-open {
+  background: rgba(14, 165, 233, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(14, 165, 233, 0.35);
+}
+.fav-action-open:hover {
+  background: rgba(14, 165, 233, 0.25);
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+/* 圏域登録モーダル */
+.fav-reg-modal-content {
+  background: var(--bg-card, #1e293b);
+  border: 1px solid var(--border, #334155);
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 88vh;
+}
+
+.fav-reg-modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.fav-reg-area-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border, #334155);
+  border-radius: 8px;
+}
+
+.fav-reg-select {
+  flex: 1;
+  background: var(--bg-main, #0f172a);
+  color: var(--text-primary, #f8fafc);
+  border: 1px solid var(--border, #334155);
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.fav-reg-select:focus {
+  border-color: var(--accent, #0284c7);
+}
+
+.fav-reg-groups-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fav-reg-group-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border, #334155);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.fav-reg-group-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.fav-reg-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fav-reg-group-label-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fav-reg-group-header input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #f59e0b;
+  cursor: pointer;
+}
+
+.fav-reg-group-count {
+  font-size: 11px;
+  color: var(--text-secondary, #94a3b8);
+  font-weight: normal;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.fav-reg-expand-btn {
+  background: transparent;
+  border: none;
+  color: var(--accent, #0284c7);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s;
+}
+.fav-reg-expand-btn:hover {
+  background: rgba(2, 132, 199, 0.15);
+}
+
+.fav-reg-camera-list {
+  display: none;
+  padding: 8px 14px 10px 36px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.15);
+  flex-direction: column;
+  gap: 6px;
+}
+.fav-reg-camera-list.open {
+  display: flex;
+}
+
+.fav-reg-camera-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  padding: 3px 0;
+  color: var(--text-secondary, #cbd5e1);
+  cursor: pointer;
+}
+.fav-reg-camera-item:hover {
+  color: #ffffff;
+}
+
+.fav-reg-camera-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: #f59e0b;
+  cursor: pointer;
+}
+
+.fav-reg-modal-footer {
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--border, #334155);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
 
 /* ==========================================================================
    スマートフォン対応（レスポンシブ化）

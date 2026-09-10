@@ -237,6 +237,7 @@
     initSidebarAccordion();
     initSidebarResizer();
     initFavoriteFilterBar(); // お気に入り切り替えバーの初期化
+    initFavRegistrationModal(); // 圏域別お気に入り一括登録モーダルの初期化
     initHazardMapControl(); // ハザードマップ重ね合わせコントロールの初期化
     initMapToggle();
     initBottomTabs();
@@ -898,6 +899,7 @@
   function initFavoriteFilterBar() {
     const btnAll = document.getElementById('fav-filter-all');
     const btnOnly = document.getElementById('fav-filter-only');
+    const actionsBar = document.getElementById('fav-actions-bar');
 
     if (btnAll) {
       btnAll.addEventListener('click', () => {
@@ -905,6 +907,7 @@
         state.favoriteOnlyFilter = false;
         btnAll.classList.add('active');
         if (btnOnly) btnOnly.classList.remove('active');
+        if (actionsBar) actionsBar.style.display = 'none';
         renderSidebarList();
       });
     }
@@ -915,6 +918,7 @@
         state.favoriteOnlyFilter = true;
         btnOnly.classList.add('active');
         if (btnAll) btnAll.classList.remove('active');
+        if (actionsBar) actionsBar.style.display = 'flex';
         renderSidebarList();
       });
     }
@@ -930,8 +934,239 @@
           CAMERA_DATA.forEach(camera => updateFavoriteUI(camera.id));
         }
         renderSidebarList();
+        updateFavRegModalCounts();
       }
     });
+  }
+
+  // ■ 圏域別お気に入り一括登録モーダルの初期化＆リアルタイム同期
+  function initFavRegistrationModal() {
+    const modal = document.getElementById('fav-reg-modal-overlay');
+    const openBtn = document.getElementById('btn-open-fav-reg-modal');
+    const closeBtn = document.getElementById('fav-reg-modal-close');
+    const doneBtn = document.getElementById('fav-reg-btn-close');
+    const selectArea = document.getElementById('fav-reg-area-select');
+    const container = document.getElementById('fav-reg-groups-container');
+
+    if (!modal || !openBtn) return;
+
+    // モーダルを開く
+    openBtn.addEventListener('click', () => {
+      renderFavRegGroups(selectArea ? selectArea.value : 'ishinomaki');
+      updateFavRegModalCounts();
+      modal.classList.add('active');
+    });
+
+    // モーダルを閉じる
+    const closeModal = () => modal.classList.remove('active');
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (doneBtn) doneBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // 圏域プルダウン切り替え
+    if (selectArea) {
+      selectArea.addEventListener('change', () => {
+        renderFavRegGroups(selectArea.value);
+      });
+    }
+
+    // 圏域から対象水系グループを取得する定義
+    const AREA_GROUP_MAP = {
+      ishinomaki: ['group_kyu_kitakami', 'group_kitakami', 'group_naruse'],
+      osaki: ['group_osaki_kami'],
+      tome_kurihara: ['group_tome_kurihara'],
+      kesennuma: ['group_kesennuma'],
+      sendai: ['group_sendai'],
+      iwate: ['group_iwate'],
+      road: ['group_road']
+    };
+
+    // モーダル内の水系グループ＆カメラリスト動的生成
+    function renderFavRegGroups(selectedArea) {
+      if (!container || typeof CAMERA_DATA === 'undefined') return;
+
+      // カメラを全グループに分類
+      const allGroups = {};
+      CAMERA_DATA.forEach(camera => {
+        const g = getGroupForCamera(camera);
+        if (!allGroups[g.id]) {
+          allGroups[g.id] = { ...g, cameras: [] };
+        }
+        allGroups[g.id].cameras.push(camera);
+      });
+
+      // 各水系内を上流→下流順にソート
+      Object.keys(allGroups).forEach(gid => {
+        allGroups[gid].cameras = sortCamerasByRiverFlow(allGroups[gid].cameras, gid);
+      });
+
+      // 選択圏域に応じた表示グループの決定
+      let targetGroupIds = [];
+      if (selectedArea === 'all') {
+        targetGroupIds = Object.keys(allGroups).sort((a, b) => allGroups[a].order - allGroups[b].order);
+      } else {
+        targetGroupIds = AREA_GROUP_MAP[selectedArea] || [];
+      }
+
+      if (targetGroupIds.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 24px;">該当する水系・カメラがありません</div>`;
+        return;
+      }
+
+      let html = '';
+      targetGroupIds.forEach(gid => {
+        const group = allGroups[gid];
+        if (!group || group.cameras.length === 0) return;
+
+        const totalCams = group.cameras.length;
+        const favCams = group.cameras.filter(c => state.favorites.has(c.id)).length;
+        const isAllChecked = totalCams > 0 && favCams === totalCams;
+
+        html += `
+          <div class="fav-reg-group-card" data-group-id="${group.id}">
+            <div class="fav-reg-group-header">
+              <label class="fav-reg-group-label-wrap">
+                <input type="checkbox" class="group-master-chk" data-group-id="${group.id}" ${isAllChecked ? 'checked' : ''}>
+                <span>${group.title}</span>
+                <span class="fav-reg-group-count">${favCams} / ${totalCams} 台</span>
+              </label>
+              <button type="button" class="fav-reg-expand-btn" data-group-id="${group.id}" title="個別カメラ一覧を展開">
+                <span class="expand-text">個別展開</span>
+                <i class="fa-solid fa-chevron-down expand-icon"></i>
+              </button>
+            </div>
+            <div class="fav-reg-camera-list" id="fav-reg-cam-list-${group.id}">
+              ${group.cameras.map(c => `
+                <label class="fav-reg-camera-item">
+                  <input type="checkbox" class="cam-single-chk" data-group-id="${group.id}" data-camera-id="${c.id}" ${state.favorites.has(c.id) ? 'checked' : ''}>
+                  <span style="font-weight: 500;">${c.name}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // 一部選択（indeterminate）状態の初期反映
+      targetGroupIds.forEach(gid => {
+        const group = allGroups[gid];
+        if (!group) return;
+        const totalCams = group.cameras.length;
+        const favCams = group.cameras.filter(c => state.favorites.has(c.id)).length;
+        const masterChk = container.querySelector(`.group-master-chk[data-group-id="${gid}"]`);
+        if (masterChk) {
+          masterChk.indeterminate = (favCams > 0 && favCams < totalCams);
+        }
+      });
+
+      bindFavRegEvents(allGroups);
+    }
+
+    // イベントバインド
+    function bindFavRegEvents(allGroups) {
+      // 個別カメラ一覧の展開・折りたたみ
+      container.querySelectorAll('.fav-reg-expand-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const gid = btn.getAttribute('data-group-id');
+          const list = document.getElementById(`fav-reg-cam-list-${gid}`);
+          const icon = btn.querySelector('.expand-icon');
+          const text = btn.querySelector('.expand-text');
+          if (list) {
+            list.classList.toggle('open');
+            const isOpen = list.classList.contains('open');
+            if (icon) {
+              icon.classList.toggle('fa-chevron-down', !isOpen);
+              icon.classList.toggle('fa-chevron-up', isOpen);
+            }
+            if (text) text.textContent = isOpen ? '閉じる' : '個別展開';
+          }
+        });
+      });
+
+      // 親水系一括チェック操作
+      container.querySelectorAll('.group-master-chk').forEach(chk => {
+        chk.addEventListener('change', () => {
+          const gid = chk.getAttribute('data-group-id');
+          const group = allGroups[gid];
+          if (!group) return;
+
+          const isChecked = chk.checked;
+          group.cameras.forEach(c => {
+            if (isChecked) {
+              state.favorites.add(c.id);
+            } else {
+              state.favorites.delete(c.id);
+            }
+            updateFavoriteUI(c.id);
+          });
+
+          // 子チェックボックスも同期
+          const childChks = container.querySelectorAll(`.cam-single-chk[data-group-id="${gid}"]`);
+          childChks.forEach(child => {
+            child.checked = isChecked;
+          });
+          chk.indeterminate = false;
+
+          saveFavorites();
+          renderSidebarList();
+          updateGroupHeaderCount(gid, group.cameras);
+          updateFavRegModalCounts();
+        });
+      });
+
+      // 個別カメラチェック操作
+      container.querySelectorAll('.cam-single-chk').forEach(chk => {
+        chk.addEventListener('change', () => {
+          const cid = chk.getAttribute('data-camera-id');
+          const gid = chk.getAttribute('data-group-id');
+          const group = allGroups[gid];
+
+          if (chk.checked) {
+            state.favorites.add(cid);
+          } else {
+            state.favorites.delete(cid);
+          }
+          updateFavoriteUI(cid);
+
+          // 親水系チェックボックスの判定（全選択/半選択/未選択）
+          if (group) {
+            const masterChk = container.querySelector(`.group-master-chk[data-group-id="${gid}"]`);
+            const favCams = group.cameras.filter(c => state.favorites.has(c.id)).length;
+            const totalCams = group.cameras.length;
+
+            if (masterChk) {
+              masterChk.checked = (favCams === totalCams);
+              masterChk.indeterminate = (favCams > 0 && favCams < totalCams);
+            }
+            updateGroupHeaderCount(gid, group.cameras);
+          }
+
+          saveFavorites();
+          renderSidebarList();
+          updateFavRegModalCounts();
+        });
+      });
+    }
+
+    function updateGroupHeaderCount(gid, cameras) {
+      const card = container.querySelector(`.fav-reg-group-card[data-group-id="${gid}"]`);
+      if (!card) return;
+      const countEl = card.querySelector('.fav-reg-group-count');
+      if (countEl) {
+        const favCount = cameras.filter(c => state.favorites.has(c.id)).length;
+        countEl.textContent = `${favCount} / ${cameras.length} 台`;
+      }
+    }
+  }
+
+  function updateFavRegModalCounts() {
+    const countEl = document.getElementById('fav-reg-count');
+    if (countEl) countEl.textContent = state.favorites.size;
   }
 
   // ■ カメラカード・お気に入りボタンの共通イベントバインド

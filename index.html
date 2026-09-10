@@ -176,7 +176,7 @@
             <input type="text" id="search-input" placeholder="カメラ名・場所で検索...">
           </div>
         </div>
-        <!-- お気に入り切り替え＆新タブ一覧起動バー -->
+        <!-- お気に入り切り替えバー（メインタブ） -->
         <div class="sidebar-fav-filter-bar">
           <button class="fav-tab-btn active" id="fav-filter-all" title="全カメラを水系別に表示">
             <i class="fa-solid fa-list-ul"></i> すべて
@@ -184,8 +184,14 @@
           <button class="fav-tab-btn" id="fav-filter-only" title="お気に入り登録カメラのみ表示">
             <i class="fa-solid fa-star"></i> お気に入り <span class="fav-count-badge" id="fav-badge-count">0</span>
           </button>
-          <a href="favorites.html" target="_blank" class="fav-open-dashboard-btn" id="fav-open-dashboard" title="お気に入り静止画一覧を新タブで開く">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> 一覧新タブ
+        </div>
+        <!-- お気に入りタブ選択時のみ表示されるサブ操作バー（案A） -->
+        <div class="fav-actions-bar" id="fav-actions-bar" style="display: none;">
+          <button type="button" class="fav-action-btn fav-action-add" id="btn-open-fav-reg-modal" title="圏域・水系を選んでお気に入りに一括追加・個別管理">
+            <i class="fa-solid fa-plus-circle"></i> 圏域から一括登録
+          </button>
+          <a href="favorites.html" target="_blank" class="fav-action-btn fav-action-open" id="fav-open-dashboard" title="お気に入り静止画監視ボードを新タブで開く">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 監視ボード
           </a>
         </div>
         <div class="camera-list" id="camera-list">
@@ -311,6 +317,56 @@
         <div style="margin-top: 16px; padding-top: 10px; border-top: 1px solid var(--border); text-align: center; font-size: 11px; color: #64748b;">
           &copy; 2026 みやぎライブEyes Project. All rights reserved.
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 圏域別お気に入り一括登録モーダル ========== -->
+  <div class="modal-overlay" id="fav-reg-modal-overlay">
+    <div class="modal-content fav-reg-modal-content" style="max-width: 580px;">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <i class="fa-solid fa-star" style="color: #f59e0b;"></i> 圏域からお気に入りを一括登録
+        </h2>
+        <button class="modal-close" id="fav-reg-modal-close" aria-label="閉じる">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body fav-reg-modal-body">
+        <p style="margin-bottom: 12px; font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+          監視したい圏域を選択し、水系単位または個別カメラ単位でチェックをON/OFFできます。<br>
+          <span style="color: var(--accent); font-weight: 500;">※チェックの変更はリアルタイムに反映・保存されます。</span>
+        </p>
+
+        <!-- 圏域セレクター -->
+        <div class="fav-reg-area-selector">
+          <label for="fav-reg-area-select" style="font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-map-location-dot" style="color: var(--accent);"></i> 圏域を選択:
+          </label>
+          <select id="fav-reg-area-select" class="fav-reg-select">
+            <option value="all">全県域（すべての水系）</option>
+            <option value="ishinomaki" selected>石巻圏域（旧北上・北上・鳴瀬）</option>
+            <option value="osaki">大崎・加美（江合川水系）</option>
+            <option value="tome_kurihara">登米・栗原（迫川水系）</option>
+            <option value="kesennuma">気仙沼圏（気仙沼・南三陸）</option>
+            <option value="sendai">仙台・仙塩・県南エリア</option>
+            <option value="iwate">岩手県（北上川上流・中流域）</option>
+            <option value="road">道路・三陸沿岸道路IC</option>
+          </select>
+        </div>
+
+        <!-- 水系・カメラチェックボックスリストコンテナ -->
+        <div class="fav-reg-groups-container" id="fav-reg-groups-container">
+          <!-- JSで動的に水系アコーディオン＋チェックボックスを生成 -->
+        </div>
+      </div>
+      <div class="modal-footer fav-reg-modal-footer">
+        <div class="fav-reg-summary" id="fav-reg-summary">
+          お気に入り登録中: <strong id="fav-reg-count" style="color: #f59e0b;">0</strong> 台
+        </div>
+        <button type="button" class="btn-primary" id="fav-reg-btn-close" style="padding: 6px 16px; font-size: 13px;">
+          完了（閉じる）
+        </button>
       </div>
     </div>
   </div>
