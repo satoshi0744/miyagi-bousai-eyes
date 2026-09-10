@@ -950,9 +950,19 @@
 
     if (!modal || !openBtn) return;
 
-    // モーダルを開く
+    // モーダルを開く（現在選択中の管内エリアと自動連動）
     openBtn.addEventListener('click', () => {
-      renderFavRegGroups(selectArea ? selectArea.value : 'ishinomaki');
+      let defaultArea = state.activeAreaFilter || 'all';
+      if (defaultArea === 'kurihara' || defaultArea === 'tome') {
+        defaultArea = 'tome_kurihara';
+      } else if (defaultArea === 'sennan') {
+        defaultArea = 'all';
+      }
+
+      if (selectArea) {
+        selectArea.value = defaultArea;
+      }
+      renderFavRegGroups(defaultArea);
       updateFavRegModalCounts();
       modal.classList.add('active');
     });
