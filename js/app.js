@@ -871,7 +871,7 @@
             <img src="${camera.imageUrl}" class="hover-popup-img" alt="${camera.name}" onerror="this.src='https://via.placeholder.com/210x115/1e293b/475569?text=Camera+Preview'">
             ${streamBadge}
             <div style="font-size: 11px; color: ${isStream ? '#c4b5fd' : '#38bdf8'}; margin-top: 5px; text-align: center; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
-              <i class="fa-solid ${isStream ? 'fa-video' : 'fa-camera'}"></i> タップ／クリックで詳細・${isStream ? '動画案内' : '拡大'}
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> クリックで右列カメラをハイライト
             </div>
           </div>
         `;
@@ -883,7 +883,7 @@
               <i class="fa-solid fa-video"></i> ライブ動画配信中
             </div>
             <div style="font-size: 11px; color: #e2e8f0; line-height: 1.4; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 4px;">
-              <i class="fa-solid fa-video"></i> タップ／クリックで配信元サイトで映像を表示
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> クリックで右列カメラをハイライト
             </div>
           </div>
         `;
@@ -2288,7 +2288,7 @@
           if (station) {
             openWaterLevelModal(station);
           } else {
-            window.__triggerMarkerAction(markerId);
+            syncSidebar();
           }
         };
 
