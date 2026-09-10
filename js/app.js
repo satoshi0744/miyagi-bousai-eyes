@@ -2135,10 +2135,11 @@
           if (card && listContainer) {
             const listRect = listContainer.getBoundingClientRect();
             const cardRect = card.getBoundingClientRect();
-            const isVisible = (cardRect.top >= listRect.top) && (cardRect.bottom <= listRect.bottom);
+            const headerOffset = 50; // スティッキーヘッダー吸着分のオフセット
+            const isVisible = (cardRect.top >= listRect.top + headerOffset) && (cardRect.bottom <= listRect.bottom);
             if (!isVisible) {
               listContainer.scrollBy({
-                top: cardRect.top - listRect.top - 20,
+                top: cardRect.top - listRect.top - headerOffset,
                 behavior: 'smooth'
               });
             }

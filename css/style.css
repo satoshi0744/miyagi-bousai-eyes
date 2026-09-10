@@ -420,7 +420,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   background: rgba(15, 23, 42, 0.4);
-  overflow: hidden;
+  overflow: visible;
   transition: border-color 0.2s;
   flex-shrink: 0;
 }
@@ -435,18 +435,36 @@ body {
 }
 
 .accordion-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   padding: 10px 14px;
-  background: rgba(30, 41, 59, 0.6);
+  background: #1e293b;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   user-select: none;
+  border-radius: 9px 9px 0 0;
   transition: background 0.2s;
 }
 
+.accordion-group:not(.open) .accordion-header {
+  border-radius: 9px;
+}
+
+.accordion-group.open .accordion-header {
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.accordion-group[data-group-id="group_fav"] .accordion-header {
+  background: #1e2638;
+  border-bottom-color: rgba(251, 191, 36, 0.3);
+}
+
 .accordion-header:hover {
-  background: rgba(30, 41, 59, 0.9);
+  background: #27354f;
 }
 
 .accordion-title {
