@@ -45,61 +45,66 @@
 
     // 1. 道路
     if (category === 'road' || name.includes('IC') || name.includes('三陸沿岸')) {
-      return { id: 'group_road', title: '🚗 道路・三陸沿岸道路IC', icon: 'fa-road', order: 10, defaultOpen: false };
+      return { id: 'group_road', title: '🚗 道路・三陸沿岸道路IC', icon: 'fa-road', order: 11, defaultOpen: false };
     }
 
-    // 2. 岩手県
+    // 2. 岩手県（最北部・北上川最上流）
     if (text.includes('[岩手県]') || (typeof lat === 'number' && lat > 39.0)) {
-      return { id: 'group_iwate', title: '🏔️ 岩手県：北上川上流・中流域', icon: 'fa-mountain-sun', order: 9, defaultOpen: false };
+      return { id: 'group_iwate', title: '🏔️ 岩手県：北上川上流・中流域', icon: 'fa-mountain-sun', order: 1, defaultOpen: false };
     }
 
-    // 3. 気仙沼圏（北緯38.75以上、東経141.35以上、または地名）
+    // 3. 気仙沼圏（三陸北部）
     if (text.includes('気仙沼') || text.includes('南三陸') || text.includes('本吉') || text.includes('志津川') || text.includes('津谷') ||
         (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.75 && lng >= 141.35)) {
-      return { id: 'group_kesennuma', title: '🌊 気仙沼圏：津谷川・八瀬川・南三陸水系', icon: 'fa-fish', order: 8, defaultOpen: false };
+      return { id: 'group_kesennuma', title: '🌊 気仙沼圏：津谷川・八瀬川・南三陸水系', icon: 'fa-fish', order: 2, defaultOpen: false };
     }
 
-    // 4. 栗原圏（北緯38.70以上かつ東経141.18未満、または地名）
+    // 4. 栗原圏（県北西部・迫川上流）
     if (text.includes('栗原') || text.includes('若柳') || text.includes('築館') || text.includes('志波姫') || text.includes('金成') ||
         text.includes('二迫川') || text.includes('三迫川') || text.includes('夏川') || text.includes('花山') ||
         (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.70 && lng < 141.18)) {
-      return { id: 'group_kurihara', title: '🌊 栗原圏：迫川上流・二迫川水系', icon: 'fa-water', order: 5, defaultOpen: false };
+      return { id: 'group_kurihara', title: '🌊 栗原圏：迫川上流・二迫川水系', icon: 'fa-water', order: 3, defaultOpen: false };
     }
 
-    // 5. 登米圏（北緯38.58〜38.74かつ東経141.18以上、または地名）
+    // 5. 登米圏（県北東部・迫川下流）
     if (text.includes('登米') || text.includes('津山') || text.includes('豊里') || text.includes('米山') || text.includes('中田') ||
         text.includes('迫川') || text.includes('錦桜') || text.includes('長沼') || text.includes('南沢') ||
         (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.58 && lat < 38.74 && lng >= 141.18)) {
       return { id: 'group_tome', title: '🌊 登米圏：迫川下流・北上川登米水系', icon: 'fa-water', order: 4, defaultOpen: false };
     }
 
-    // 6. 仙南圏（北緯38.10未満、または地名）
-    if (text.includes('大河原') || text.includes('白石') || text.includes('角田') || text.includes('蔵王') || text.includes('七ヶ宿') ||
-        text.includes('柴田') || text.includes('丸森') || text.includes('村田') || text.includes('川崎') ||
-        (typeof lat === 'number' && lat < 38.10)) {
-      return { id: 'group_sennan', title: '🌊 仙南圏：白石川・阿武隈川水系', icon: 'fa-water', order: 7, defaultOpen: false };
-    }
-
-    // 7. 大崎圏（北緯38.45〜38.70かつ東経141.18未満、または地名）
+    // 6. 大崎圏（県中西部・江合川・鳴瀬川上流）
     if (text.includes('大崎') || text.includes('加美') || text.includes('古川') || text.includes('美里') || text.includes('涌谷') ||
         text.includes('江合川') || text.includes('三本木') || text.includes('鳴子') || text.includes('岩出山') || text.includes('色麻') ||
         (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.45 && lat < 38.70 && lng < 141.18)) {
-      return { id: 'group_osaki_kami', title: '🌊 大崎・加美圏：江合川・鳴瀬川上流水系', icon: 'fa-water', order: 6, defaultOpen: false };
+      return { id: 'group_osaki_kami', title: '🌊 大崎・加美圏：江合川・鳴瀬川上流水系', icon: 'fa-water', order: 5, defaultOpen: false };
     }
 
-    // 8. 石巻圏（旧北上川、北上川下流、鳴瀬川・吉田川・運河、または東経141.10以上で石巻管内）
+    // 7. 石巻圏（県東部・北上川下流・河口域）
     if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('石巻大橋') || name.includes('真野川')) {
-      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 1, defaultOpen: false };
+      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 6, defaultOpen: false };
     }
     if (name.includes('北上川') || name.includes('飯野川橋') || name.includes('福地水門') || name.includes('釜谷水門') || name.includes('新北上大橋') || name.includes('樫崎地区') || name.includes('橋浦地区')) {
-      return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流', icon: 'fa-water', order: 2, defaultOpen: false };
+      return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流', icon: 'fa-water', order: 7, defaultOpen: false };
     }
     if (name.includes('鳴瀬') || name.includes('吉田川') || name.includes('東名運河') || name.includes('鞍坪') || name.includes('小野橋') || name.includes('入釜谷') || name.includes('出来川') || name.includes('中島川') || name.includes('加茂川') || name.includes('内の原') || name.includes('高木川') || name.includes('大沢川') || name.includes('皿貝川') || text.includes('東松島') || text.includes('女川') || text.includes('石巻')) {
-      return { id: 'group_naruse', title: '🌊 石巻圏・東松島：鳴瀬川・吉田川・沿岸水系', icon: 'fa-water', order: 3, defaultOpen: false };
+      return { id: 'group_naruse', title: '🌊 石巻圏・東松島：鳴瀬川・吉田川・沿岸水系', icon: 'fa-water', order: 8, defaultOpen: false };
     }
 
-    // 9. 仙台・仙塩圏（残りはすべて仙台・仙塩・名取川・七北田川）
-    return { id: 'group_sendai', title: '🌊 仙台・仙塩圏：名取川・七北田川水系', icon: 'fa-building-flag', order: 8, defaultOpen: false };
+    // 8. 仙台・仙塩圏（県中部・名取川・七北田川）
+    if (text.includes('仙台') || text.includes('名取') || text.includes('塩竈') || text.includes('松島') || text.includes('七北田') || text.includes('阿武隈') || text.includes('岩沼') || text.includes('亘理')) {
+      return { id: 'group_sendai', title: '🌊 仙台・仙塩圏：名取川・七北田川水系', icon: 'fa-building-flag', order: 9, defaultOpen: false };
+    }
+
+    // 9. 仙南圏（県南部・白石川・阿武隈川最南域）
+    if (text.includes('大河原') || text.includes('白石') || text.includes('角田') || text.includes('蔵王') || text.includes('七ヶ宿') ||
+        text.includes('柴田') || text.includes('丸森') || text.includes('村田') || text.includes('川崎') ||
+        (typeof lat === 'number' && lat < 38.10)) {
+      return { id: 'group_sennan', title: '🌊 仙南圏：白石川・阿武隈川水系', icon: 'fa-water', order: 10, defaultOpen: false };
+    }
+
+    // その他残余は仙台・仙塩圏へ
+    return { id: 'group_sendai', title: '🌊 仙台・仙塩圏：名取川・七北田川水系', icon: 'fa-building-flag', order: 9, defaultOpen: false };
   }
 
   // ■ 川の流れ順（上流→下流）ソート用ヘルパー関数群
