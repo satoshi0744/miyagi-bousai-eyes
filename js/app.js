@@ -552,49 +552,80 @@
   }
 
 
-  // ■ 選択管内のフォーカスとアコーディオン展開
+  // ■ 選択管内のフォーカスとアコーディオン展開（全圏域カメラ自動フィット＆先頭スクロール）
   function applyAreaFocusAndExpand(area) {
     if (!state.map) return;
-    
-    // 1. 地図の中心を合同庁舎へ移動
-    const areaCoords = {
-      'sennan': [38.0495, 140.7307],
-      'sendai': [38.2784, 140.8673],
-      'osaki': [38.5665, 140.9745],
-      'kurihara': [38.7381, 141.0194],
-      'tome': [38.6578, 141.2764],
-      'ishinomaki': [38.4407, 141.2573],
-      'kesennuma': [38.8881, 141.5698]
+
+    const areaGroupMap = {
+      'sennan': [], // 仙南圏は現状河川カメラなし
+      'sendai': ['group_sendai'],
+      'osaki': ['group_osaki_kami'],
+      'kurihara': ['group_tome_kurihara'],
+      'tome': ['group_tome_kurihara'],
+      'ishinomaki': ['group_kyu_kitakami', 'group_kitakami', 'group_naruse'],
+      'kesennuma': ['group_kesennuma']
     };
-    
-    if (areaCoords[area]) {
-      state.map.flyTo(areaCoords[area], 11.5, { animate: true, duration: 1.0 });
-    } else if (area === 'all') {
+
+    const targetGroups = areaGroupMap[area] || [];
+
+    // 1. 地図のカメラ群への最適フォーカス（fitBounds）
+    if (area === 'all') {
       state.map.flyTo(CONFIG.MAP_CENTER, CONFIG.MAP_ZOOM, { animate: true, duration: 1.0 });
-    }
-    
-    // 2. 該当エリアのグループ（アコーディオン）を自動展開
-    if (area !== 'all') {
-      const areaGroupMap = {
-        'sennan': [], // 仙南圏は現状河川カメラなし
-        'sendai': ['group_sendai'],
-        'osaki': ['group_osaki_kami'],
-        'kurihara': ['group_tome_kurihara'],
-        'tome': ['group_tome_kurihara'],
-        'ishinomaki': ['group_kyu_kitakami', 'group_kitakami', 'group_naruse'],
-        'kesennuma': ['group_kesennuma']
-      };
-      const targetGroups = areaGroupMap[area] || [];
-      if (targetGroups.length > 0) {
-        // 他のグループは閉じ、対象グループのみ開く
-        Object.keys(state.accordionStates).forEach(groupId => {
-           state.accordionStates[groupId] = targetGroups.includes(groupId);
-        });
-        targetGroups.forEach(groupId => {
-           state.accordionStates[groupId] = true;
-        });
-        renderSidebarList(); // サイドバーの再描画（アコーディオン状態反映）
+    } else if (targetGroups.length > 0 && typeof CAMERA_DATA !== 'undefined' && typeof L !== 'undefined') {
+      // 該当エリアのグループに属するカメラの座標を収集
+      const targetCams = CAMERA_DATA.filter(c => {
+        const g = getGroupForCamera(c);
+        return targetGroups.includes(g.id) && typeof c.lat === 'number' && typeof c.lng === 'number';
+      });
+
+      if (targetCams.length > 0) {
+        const bounds = L.latLngBounds(targetCams.map(c => [c.lat, c.lng]));
+        state.map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12, animate: true, duration: 1.0 });
+      } else {
+        const areaCoords = {
+          'sennan': [38.0495, 140.7307],
+          'sendai': [38.1208, 140.9141],
+          'osaki': [38.5611, 141.0796],
+          'kurihara': [38.7002, 141.1183],
+          'tome': [38.7002, 141.1183],
+          'ishinomaki': [38.5464, 141.1688],
+          'kesennuma': [38.7932, 141.4951]
+        };
+        if (areaCoords[area]) {
+          state.map.flyTo(areaCoords[area], 11.5, { animate: true, duration: 1.0 });
+        }
       }
+    } else {
+      const areaCoords = {
+        'sennan': [38.0495, 140.7307]
+      };
+      if (areaCoords[area]) {
+        state.map.flyTo(areaCoords[area], 11.5, { animate: true, duration: 1.0 });
+      }
+    }
+
+    // 2. 該当エリアのグループ（アコーディオン）を自動展開し、先頭にピタッとスクロール
+    if (area !== 'all' && targetGroups.length > 0) {
+      // 他のグループは閉じ、対象グループのみ開く
+      Object.keys(state.accordionStates).forEach(groupId => {
+        state.accordionStates[groupId] = targetGroups.includes(groupId);
+      });
+      targetGroups.forEach(groupId => {
+        state.accordionStates[groupId] = true;
+      });
+      renderSidebarList(); // サイドバーの再描画（アコーディオン状態反映）
+
+      // スクロール位置を一番上（展開グループのヘッダー先頭）に確実にリセット
+      setTimeout(() => {
+        const listEl = document.getElementById('camera-list');
+        if (listEl) {
+          listEl.scrollTop = 0;
+        }
+        const firstGroupEl = document.querySelector(`.accordion-group[data-group-id="${targetGroups[0]}"]`);
+        if (firstGroupEl) {
+          firstGroupEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
     }
 
     // 選択されたエリアに連動して気象警報バーも更新
