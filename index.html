@@ -176,22 +176,22 @@
             <input type="text" id="search-input" placeholder="カメラ名・場所で検索...">
           </div>
         </div>
-        <!-- お気に入り切り替えバー（メインタブ） -->
+        <!-- 登録カメラ切り替えバー（メインタブ） -->
         <div class="sidebar-fav-filter-bar">
           <button class="fav-tab-btn active" id="fav-filter-all" title="全カメラを水系別に表示">
             <i class="fa-solid fa-list-ul"></i> すべて
           </button>
-          <button class="fav-tab-btn" id="fav-filter-only" title="お気に入り登録カメラのみ表示">
-            <i class="fa-solid fa-star"></i> お気に入り <span class="fav-count-badge" id="fav-badge-count">0</span>
+          <button class="fav-tab-btn" id="fav-filter-only" title="登録カメラのみ表示">
+            <i class="fa-solid fa-star"></i> 登録カメラ <span class="fav-count-badge" id="fav-badge-count">0</span>
           </button>
         </div>
-        <!-- お気に入りタブ選択時のみ表示されるサブ操作バー（案A） -->
+        <!-- 登録カメラタブ選択時のみ表示されるサブ操作バー（案A） -->
         <div class="fav-actions-bar" id="fav-actions-bar" style="display: none;">
-          <button type="button" class="fav-action-btn fav-action-add" id="btn-open-fav-reg-modal" title="圏域・水系を選んでお気に入りに一括追加・個別管理">
+          <button type="button" class="fav-action-btn fav-action-add" id="btn-open-fav-reg-modal" title="圏域・水系を選んで登録カメラに一括追加・個別管理">
             <i class="fa-solid fa-plus-circle"></i> 圏域から一括登録
           </button>
-          <a href="favorites.html" target="_blank" class="fav-action-btn fav-action-open" id="fav-open-dashboard" title="お気に入り静止画一覧を新タブで開く">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> お気に入りカメラ一覧
+          <a href="favorites.html" target="_blank" class="fav-action-btn fav-action-open" id="fav-open-dashboard" title="登録カメラ静止画一覧を新タブで開く">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 登録カメラ一覧
           </a>
         </div>
         <div class="camera-list" id="camera-list">
@@ -296,7 +296,7 @@
         </ul>
         <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">■ 使い方・便利機能</h3>
         <p style="margin-bottom: 8px;">・地図上のピンをクリックすると、カメラの最新画像または配信元映像が表示されます。</p>
-        <p style="margin-bottom: 8px;">・<strong>スマートタブ機能</strong>：お気に入り（★）カメラは独立した新タブで開き、通常カメラは同一のプレビュータブ内で画面が切り替わるため、タブが増殖しません。</p>
+        <p style="margin-bottom: 8px;">・<strong>スマートタブ機能</strong>：登録カメラ（★）は独立した新タブで開き、通常カメラは同一のプレビュータブ内で画面が切り替わるため、タブが増殖しません。</p>
         <p style="margin-bottom: 8px;">・画面上部の「エリア選択」から監視したい管内を選ぶと、対象のカメラだけが表示され、動作が軽くなります。</p>
         <p style="margin-bottom: 16px;">・スマホの場合は、下の「カメラ一覧」タブからリスト形式でも確認できます。</p>
 
@@ -321,12 +321,12 @@
     </div>
   </div>
 
-  <!-- ========== 圏域別お気に入り一括登録モーダル ========== -->
+  <!-- ========== 圏域別登録カメラ一括登録モーダル ========== -->
   <div class="modal-overlay" id="fav-reg-modal-overlay">
     <div class="modal-content fav-reg-modal-content" style="max-width: 580px;">
       <div class="modal-header">
         <h2 class="modal-title">
-          <i class="fa-solid fa-star" style="color: #f59e0b;"></i> 圏域からお気に入りを一括登録
+          <i class="fa-solid fa-star" style="color: #f59e0b;"></i> 圏域から登録カメラを一括設定
         </h2>
         <button class="modal-close" id="fav-reg-modal-close" aria-label="閉じる">
           <i class="fa-solid fa-xmark"></i>
@@ -364,7 +364,7 @@
       </div>
       <div class="modal-footer fav-reg-modal-footer">
         <div class="fav-reg-summary" id="fav-reg-summary">
-          お気に入り登録中: <strong id="fav-reg-count" style="color: #f59e0b;">0</strong> 台
+          登録カメラ: <strong id="fav-reg-count" style="color: #f59e0b;">0</strong> 台
         </div>
         <button type="button" class="btn-primary" id="fav-reg-btn-close" style="padding: 6px 16px; font-size: 13px;">
           完了（閉じる）

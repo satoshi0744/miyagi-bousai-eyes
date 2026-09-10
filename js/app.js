@@ -896,7 +896,7 @@
         <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; flex: 1;">
           ${dragHandleHtml}
           <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}"
-                  title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();" style="flex-shrink: 0;">
+                  title="${isFav ? '登録解除（★）' : 'カメラ登録（★）'}" onclick="event.preventDefault(); event.stopPropagation();" style="flex-shrink: 0;">
             <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
           </button>
           <span class="card-name" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${camera.name}</span>
@@ -1351,10 +1351,10 @@
           <div class="fav-empty-hint" style="text-align: center; padding: 40px 16px; color: var(--text-secondary);">
             <i class="fa-regular fa-star" style="font-size: 36px; color: #f59e0b; opacity: 0.6; margin-bottom: 12px; display: block;"></i>
             <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
-              お気に入りカメラがありません
+              登録カメラがありません
             </div>
             <div style="font-size: 12px; line-height: 1.6;">
-              地図上のピンやカメラカードの「★」アイコンをクリックすると、ここにお気に入りのカメラが直接表示されます。
+              地図上のピンやカメラカードの「★」アイコンをクリックすると、ここに登録カメラが直接表示されます。
             </div>
           </div>
         `;
@@ -1379,7 +1379,7 @@
     if (state.favorites.size > 0) {
       groups['group_fav'] = {
         id: 'group_fav',
-        title: '★ お気に入りカメラ',
+        title: '★ 登録カメラ',
         icon: 'fa-star',
         order: 1,
         cameras: []
@@ -1446,7 +1446,7 @@
 
       const isAllFav = group.cameras.length > 0 && group.cameras.every(c => state.favorites.has(c.id));
       const batchFavBtnHtml = group.id !== 'group_fav' ? `
-        <button type="button" class="batch-fav-btn ${isAllFav ? 'active' : ''}" data-group-id="${group.id}" title="${isAllFav ? '水系のカメラをお気に入りから一括解除' : '水系のカメラをお気に入りに一括登録'}" onclick="event.stopPropagation(); window.__toggleBatchFavorite('${group.id}', event);">
+        <button type="button" class="batch-fav-btn ${isAllFav ? 'active' : ''}" data-group-id="${group.id}" title="${isAllFav ? '水系のカメラを一括解除' : '水系のカメラを一括登録'}" onclick="event.stopPropagation(); window.__toggleBatchFavorite('${group.id}', event);">
           <i class="fa-${isAllFav ? 'solid' : 'regular'} fa-star"></i>
           <span>一括</span>
         </button>
@@ -1593,7 +1593,7 @@
     if (title) {
       title.innerHTML = `
         <span>${camera.name}</span>
-        <button type="button" class="fav-btn modal-fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="お気に入り登録" onclick="event.preventDefault(); event.stopPropagation();">
+        <button type="button" class="fav-btn modal-fav-btn ${isFav ? 'active' : ''}" data-camera-id="${camera.id}" title="${isFav ? '登録解除（★）' : 'カメラ登録（★）'}" onclick="event.preventDefault(); event.stopPropagation();">
           <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
         </button>
       `;

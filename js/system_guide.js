@@ -216,15 +216,15 @@
               <i class="fa-solid fa-star"></i> 自分専用の防災管制室
             </div>
             <h3 class="guide-premise-title">
-              お気に入りカメラだけの最新静止画を、大画面タイルで一括常時監視
+              登録カメラだけの最新静止画を、大画面タイルで一括常時監視
             </h3>
             <p class="guide-premise-text">
-              「毎回300台の中から探すのは大変」「見たいカメラだけをタブを開かずに並べたい」――その要望に応えるのが<strong>「お気に入り監視ボード（favorites.html）」</strong>です。
+              「毎回300台の中から探すのは大変」「見たいカメラだけをタブを開かずに並べたい」――その要望に応えるのが<strong>「登録カメラ監視ボード（favorites.html）」</strong>です。
             </p>
           </div>
 
           <h4 class="guide-section-title">
-            <i class="fa-solid fa-hand-pointer" style="color: #f59e0b;"></i> ① お気に入り登録はワンクリック
+            <i class="fa-solid fa-hand-pointer" style="color: #f59e0b;"></i> ① カメラ登録はワンクリック
           </h4>
           <div class="guide-grid-2col">
             <div class="guide-card">

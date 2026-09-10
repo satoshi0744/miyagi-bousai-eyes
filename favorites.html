@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>お気に入りカメラ一覧 - みやぎライブEyes</title>
-  <meta name="description" content="みやぎライブEyes お気に入り登録カメラの静止画一括監視ダッシュボード">
+  <title>登録カメラ一覧 - みやぎライブEyes</title>
+  <meta name="description" content="みやぎライブEyes 登録カメラの静止画一括監視ダッシュボード">
 
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -724,7 +724,7 @@
         <i class="fa-solid fa-arrow-left"></i> 地図へ戻る
       </a>
       <h1 class="board-title">
-        <i class="fa-solid fa-star"></i> お気に入りカメラ監視ボード
+        <i class="fa-solid fa-star"></i> 登録カメラ監視ボード
       </h1>
       <span class="board-badge" id="board-fav-count">0 台</span>
     </div>
@@ -754,7 +754,7 @@
     <div class="board-note" id="board-note">
       <div>
         <i class="fa-solid fa-circle-info" style="color: #f59e0b; margin-right: 4px;"></i>
-        登録したお気に入りカメラの最新状況を一画面でまとめて監視できます。画像クリックで拡大表示、★クリックで登録解除が可能です。
+        登録カメラの最新状況を一画面でまとめて監視できます。画像クリックで拡大表示、★クリックで登録解除が可能です。
       </div>
       <div style="font-size: 11px; opacity: 0.8; white-space: nowrap;">
         ※約10分ごとに自動更新
@@ -771,13 +771,13 @@
       <div class="empty-state-icon">
         <i class="fa-regular fa-star"></i>
       </div>
-      <div class="empty-state-title">お気に入りに登録されたカメラがありません</div>
+      <div class="empty-state-title">登録されたカメラがありません</div>
       <div class="empty-state-desc">
-        地図画面やカメラ一覧のカード・ピンにある「★（星）」アイコンをクリックすると、ここにお気に入りのカメラが自動的に一覧表示されます。
+        地図画面やカメラ一覧のカード・ピンにある「★（星）」アイコンをクリックすると、ここに登録カメラが自動的に一覧表示されます。
       </div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px;">
         <a href="index.html" class="board-back-btn" style="background: var(--accent, #0284c7); border: none; padding: 8px 18px; font-size: 14px;">
-          <i class="fa-solid fa-map-location-dot"></i> 地図へ戻ってお気に入りを登録する
+          <i class="fa-solid fa-map-location-dot"></i> 地図へ戻ってカメラを登録する
         </a>
         <button type="button" class="board-back-btn" onclick="openSystemGuide()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(56, 189, 248, 0.4); padding: 8px 18px; font-size: 14px; color: #38bdf8; cursor: pointer;">
           <i class="fa-solid fa-book-open-reader"></i> 詳しい使い方ガイドを見る
@@ -795,7 +795,7 @@
         </button>
       </div>
       <div class="modal-body area-modal-body" style="font-size: 13px; line-height: 1.6;">
-        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--accent);">■ お気に入り監視ボードについて</h3>
+        <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--accent);">■ 登録カメラ監視ボードについて</h3>
         <p style="margin-bottom: 8px;">登録したカメラの最新静止画を一覧でリアルタイム監視できる定点監視画面です。カードのドラッグによる自由並べ替えや、フロート型ミニマップの独立ウィンドウ化（別窓表示）に対応しています。</p>
 
         <h3 style="margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 4px; color: var(--text-secondary); margin-top: 16px;">■ データ出典・著作権について</h3>
@@ -1009,7 +1009,7 @@
                   <span>${camera.operator || ''}</span>
                 </div>
               </div>
-              <button class="fav-unstar-btn" onclick="removeFavorite('${camera.id}')" title="お気に入りから解除">
+              <button class="fav-unstar-btn" onclick="removeFavorite('${camera.id}')" title="登録解除">
                 <i class="fa-solid fa-star"></i>
               </button>
             </div>
