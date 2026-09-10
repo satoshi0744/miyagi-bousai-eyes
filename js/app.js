@@ -616,13 +616,8 @@
 
     // 2. アコーディオンは閉じた状態（▼）を維持し、サイドバーを先頭にスクロール（手動操作優先）
     if (area !== 'all' && targetGroups.length > 0) {
-      // 全グループを閉じた状態に統一（ユーザーが自分で開く設計）
-      Object.keys(state.accordionStates).forEach(groupId => {
-        state.accordionStates[groupId] = false;
-      });
-      targetGroups.forEach(groupId => {
-        state.accordionStates[groupId] = false;
-      });
+      // 全グループの開閉状態を完全リセット（Fail-Closedにより全11グループが例外なく閉じる）
+      state.accordionStates = {};
       renderSidebarList(); // サイドバーの再描画
 
       // スクロール位置を先頭にリセット
@@ -1441,9 +1436,8 @@
         totalVisible += group.cameras.length;
       }
 
-      const isOpen = state.accordionStates[group.id] !== undefined
-        ? state.accordionStates[group.id]
-        : (group.defaultOpen !== false);
+      // Fail-Closed設計: 明示的にユーザーがクリックして true にしたもの以外は100%閉じる（初期値・未定義による意図せぬ自動オープンを完全防止）
+      const isOpen = state.accordionStates[group.id] === true;
 
       const isAllFav = group.cameras.length > 0 && group.cameras.every(c => state.favorites.has(c.id));
       const batchFavBtnHtml = group.id !== 'group_fav' ? `
@@ -1489,10 +1483,10 @@
 
   document.addEventListener('toggle-accordion', (e) => {
     const gId = e.detail;
-    state.accordionStates[gId] = state.accordionStates[gId] === false ? true : false;
+    state.accordionStates[gId] = !state.accordionStates[gId];
     const groupEl = document.querySelector(`.accordion-group[data-group-id="${gId}"]`);
     if (groupEl) {
-      groupEl.classList.toggle('open');
+      groupEl.classList.toggle('open', !!state.accordionStates[gId]);
     }
   });
 
@@ -2167,7 +2161,7 @@
       }
     });
 
-    // マウスホバー時（PC）
+    // マウスホバー時（PC）: 地図上に小さなプレビューを表示するのみ（サイドバーは勝手に開かない）
     marker.on('mouseover', (e) => {
       // スマホのタップ時に発生する疑似mouseoverによる即時遷移を防ぐため、PCの純粋なマウス操作時のみアクティブ化する
       const isMousePointer = e && e.originalEvent && (e.originalEvent.pointerType === 'mouse' || (e.originalEvent.pointerType === undefined && e.originalEvent.type === 'mouseover'));
@@ -2175,7 +2169,6 @@
         state.activeMarkerId = markerId;
       }
       smartOpenTooltip();
-      syncSidebar();
     });
 
     // ポップアップカード自体がタップ/クリックされた時も遷移を実行
