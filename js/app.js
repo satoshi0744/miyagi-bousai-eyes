@@ -35,76 +35,80 @@
   };
 
   // ■ 水系・地域グループの完全定義判定関数（「その他河川」を完全撤廃し全294台を各圏域へ所属）
+  // ■ 水系・地域グループの完全定義判定関数（GPS座標と水系実態による厳密12グループ）
   function getGroupForCamera(camera) {
     const name = camera.name || '';
     const desc = camera.description || '';
     const op = camera.operator || '';
     const text = `${name} ${desc} ${op}`;
     const category = camera.category || 'other';
-    const lat = camera.lat, lng = camera.lng;
+    const lat = typeof camera.lat === 'number' ? camera.lat : 0;
+    const lng = typeof camera.lng === 'number' ? camera.lng : 0;
 
-    // 1. 道路
+    // 1. 道路カメラ
     if (category === 'road' || name.includes('IC') || name.includes('三陸沿岸')) {
-      return { id: 'group_road', title: '🚗 道路・三陸沿岸道路IC', icon: 'fa-road', order: 11, defaultOpen: false };
+      return { id: 'group_road', title: '🚗 道路・三陸沿岸道路IC', icon: 'fa-road', order: 12, defaultOpen: false };
     }
 
-    // 2. 岩手県（最北部・北上川最上流）
-    if (text.includes('[岩手県]') || (typeof lat === 'number' && lat > 39.0)) {
+    // 2. 岩手県（北緯39度以北、または岩手県明記）
+    if (text.includes('[岩手県]') || lat >= 39.00) {
       return { id: 'group_iwate', title: '🏔️ 岩手県：北上川上流・中流域', icon: 'fa-mountain-sun', order: 1, defaultOpen: false };
     }
 
-    // 3. 気仙沼圏（三陸北部）
-    if (text.includes('気仙沼') || text.includes('南三陸') || text.includes('本吉') || text.includes('志津川') || text.includes('津谷') ||
-        (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.75 && lng >= 141.35)) {
-      return { id: 'group_kesennuma', title: '🌊 気仙沼圏：津谷川・八瀬川・南三陸水系', icon: 'fa-fish', order: 2, defaultOpen: false };
+    // 3. 気仙沼・南三陸圏（三陸北部：lat >= 38.75 かつ lng >= 141.35）
+    if (lat >= 38.75 && lng >= 141.35) {
+      return { id: 'group_kesennuma', title: '🌊 気仙沼・南三陸圏：津谷川・八瀬川・沿岸水系', icon: 'fa-fish', order: 2, defaultOpen: false };
     }
 
-    // 4. 栗原圏（県北西部・迫川上流）
-    if (text.includes('栗原') || text.includes('若柳') || text.includes('築館') || text.includes('志波姫') || text.includes('金成') ||
-        text.includes('二迫川') || text.includes('三迫川') || text.includes('夏川') || text.includes('花山') ||
-        (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.70 && lng < 141.18)) {
+    // 4. 栗原圏（県北西部：lat >= 38.68 かつ lng < 141.18）
+    if (lat >= 38.68 && lng < 141.18) {
       return { id: 'group_kurihara', title: '🌊 栗原圏：迫川上流・二迫川水系', icon: 'fa-water', order: 3, defaultOpen: false };
     }
 
-    // 5. 登米圏（県北東部・迫川下流）
-    if (text.includes('登米') || text.includes('津山') || text.includes('豊里') || text.includes('米山') || text.includes('中田') ||
-        text.includes('迫川') || text.includes('錦桜') || text.includes('長沼') || text.includes('南沢') ||
-        (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.58 && lat < 38.74 && lng >= 141.18)) {
+    // 5. 登米圏（県北東部：北上川登米・迫川下流・東和町等）
+    if (lat >= 38.58 && lng >= 141.18 && (lat >= 38.68 || lng < 141.38) &&
+        !text.includes('石巻') && !name.includes('大沢川') && !name.includes('植立山') && !name.includes('月浜')) {
       return { id: 'group_tome', title: '🌊 登米圏：迫川下流・北上川登米水系', icon: 'fa-water', order: 4, defaultOpen: false };
     }
 
-    // 6. 大崎圏（県中西部・江合川・鳴瀬川上流）
-    if (text.includes('大崎') || text.includes('加美') || text.includes('古川') || text.includes('美里') || text.includes('涌谷') ||
-        text.includes('江合川') || text.includes('三本木') || text.includes('鳴子') || text.includes('岩出山') || text.includes('色麻') ||
-        (typeof lat === 'number' && typeof lng === 'number' && lat >= 38.45 && lat < 38.70 && lng < 141.18)) {
+    // 6. 大崎・加美圏（県中西部：lat >= 38.45 かつ lat < 38.68 かつ lng < 141.18、吉田川・大郷域を除く）
+    if (lat >= 38.45 && lat < 38.68 && lng < 141.18 &&
+        !name.includes('吉田川') && !name.includes('善川') && !name.includes('竹林川') && !name.includes('粕川') && !text.includes('大郷')) {
       return { id: 'group_osaki_kami', title: '🌊 大崎・加美圏：江合川・鳴瀬川上流水系', icon: 'fa-water', order: 5, defaultOpen: false };
     }
 
-    // 7. 石巻圏（県東部・北上川下流・河口域）
-    if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('石巻大橋') || name.includes('真野川')) {
-      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 6, defaultOpen: false };
-    }
-    if (name.includes('北上川') || name.includes('飯野川橋') || name.includes('福地水門') || name.includes('釜谷水門') || name.includes('新北上大橋') || name.includes('樫崎地区') || name.includes('橋浦地区')) {
-      return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流', icon: 'fa-water', order: 7, defaultOpen: false };
-    }
-    if (name.includes('鳴瀬') || name.includes('吉田川') || name.includes('東名運河') || name.includes('鞍坪') || name.includes('小野橋') || name.includes('入釜谷') || name.includes('出来川') || name.includes('中島川') || name.includes('加茂川') || name.includes('内の原') || name.includes('高木川') || name.includes('大沢川') || name.includes('皿貝川') || text.includes('東松島') || text.includes('女川') || text.includes('石巻')) {
-      return { id: 'group_naruse', title: '🌊 石巻圏・東松島：鳴瀬川・吉田川・沿岸水系', icon: 'fa-water', order: 8, defaultOpen: false };
+    // 7. 吉田川水系（黒川・大和・大郷：内陸西部）
+    if (name.includes('吉田川') || name.includes('善川') || name.includes('竹林川') || name.includes('粕川') ||
+        text.includes('大郷') || text.includes('大和') ||
+        (lat >= 38.38 && lat < 38.48 && lng >= 140.85 && lng < 141.12 && !text.includes('松島'))) {
+      return { id: 'group_yoshida', title: '🌊 吉田川中上流：黒川・大和・大郷水系', icon: 'fa-water', order: 6, defaultOpen: false };
     }
 
-    // 8. 仙台・仙塩圏（県中部・名取川・七北田川）
-    if (text.includes('仙台') || text.includes('名取') || text.includes('塩竈') || text.includes('松島') || text.includes('七北田') || text.includes('阿武隈') || text.includes('岩沼') || text.includes('亘理')) {
-      return { id: 'group_sendai', title: '🌊 仙台・仙塩圏：名取川・七北田川水系', icon: 'fa-building-flag', order: 9, defaultOpen: false };
+    // 8. 東松島：鳴瀬川下流・河口沿岸水系（中東部河口域：lng >= 141.12 かつ lng < 141.22）
+    if (text.includes('東松島') || name.includes('鳴瀬') || name.includes('東名運河') || name.includes('鞍坪') || name.includes('小野橋') || name.includes('若針') ||
+        (lng >= 141.12 && lng < 141.22 && lat >= 38.36 && lat < 38.46)) {
+      return { id: 'group_naruse_east', title: '🌊 東松島：鳴瀬川下流・河口沿岸水系', icon: 'fa-water', order: 7, defaultOpen: false };
     }
 
-    // 9. 仙南圏（県南部・白石川・阿武隈川最南域）
-    if (text.includes('大河原') || text.includes('白石') || text.includes('角田') || text.includes('蔵王') || text.includes('七ヶ宿') ||
-        text.includes('柴田') || text.includes('丸森') || text.includes('村田') || text.includes('川崎') ||
-        (typeof lat === 'number' && lat < 38.10)) {
-      return { id: 'group_sennan', title: '🌊 仙南圏：白石川・阿武隈川水系', icon: 'fa-water', order: 10, defaultOpen: false };
+    // 9. 石巻圏：旧北上川水系
+    if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('石巻大橋') || name.includes('鹿又') || name.includes('佳景山') || name.includes('真野川')) {
+      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 8, defaultOpen: false };
     }
 
-    // その他残余は仙台・仙塩圏へ
-    return { id: 'group_sendai', title: '🌊 仙台・仙塩圏：名取川・七北田川水系', icon: 'fa-building-flag', order: 9, defaultOpen: false };
+    // 10. 石巻圏：北上川下流・東部沿岸水系（新北上川本流＋大沢川、加茂川、皿貝川、中島川、月浜沢川など）
+    if (text.includes('石巻') || text.includes('女川') || name.includes('北上川') || name.includes('飯野川') || name.includes('釜谷') || name.includes('福地') ||
+        name.includes('大沢川') || name.includes('皿貝川') || name.includes('中島川') || name.includes('加茂川') || name.includes('高木川') || name.includes('馬鞍川') || name.includes('内の原') || name.includes('月浜') || name.includes('植立山') ||
+        (lng >= 141.22 && lat >= 38.40)) {
+      return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流・東部沿岸水系', icon: 'fa-water', order: 9, defaultOpen: false };
+    }
+
+    // 11. 仙南圏（県南部：lat < 38.12、白石川・阿武隈川水系、亘理、岩沼河口）
+    if (lat < 38.12 || text.includes('白石') || text.includes('角田') || text.includes('大河原') || text.includes('柴田') || text.includes('丸森') || text.includes('七ヶ宿') || text.includes('阿武隈') || text.includes('亘理')) {
+      return { id: 'group_sennan', title: '🌊 仙南圏：白石川・阿武隈川水系', icon: 'fa-water', order: 11, defaultOpen: false };
+    }
+
+    // 12. 仙台・仙塩圏（名取川・七北田川・砂押川・仙台市・塩竈・多賀城・松島）
+    return { id: 'group_sendai', title: '🌊 仙台・仙塩圏：名取川・七北田川水系', icon: 'fa-building-flag', order: 10, defaultOpen: false };
   }
 
   // ■ 川の流れ順（上流→下流）ソート用ヘルパー関数群
@@ -147,11 +151,12 @@
   const RIVER_REFERENCE_POINTS = {
     group_kitakami: { lat: 38.5658, lng: 141.4437 }, // 新北上川河口（釜谷水門・河口付近: 0.8km）
     group_kyu_kitakami: { lat: 38.4150, lng: 141.3125 }, // 旧北上川河口（0.7km付近）
-    group_naruse: { lat: 38.3756, lng: 141.1728 }, // 鳴瀬川河口（0.0km付近）
+    group_naruse_east: { lat: 38.3756, lng: 141.1728 }, // 鳴瀬川河口（0.0km付近）
+    group_yoshida: { lat: 38.4403, lng: 141.1122 }, // 吉田川下流（合流部9.4km付近）
     group_osaki_kami: { lat: 38.5372, lng: 141.2111 }, // 江合川下流（1.2km付近）
     group_tome: { lat: 38.5973, lng: 141.1693 }, // 迫川下流合流付近
     group_kurihara: { lat: 38.6800, lng: 141.2000 }, // 迫川中流・若柳下流付近
-    group_sennan: { lat: 38.0500, lng: 140.8500 }, // 白石川・阿武隈川合流部付近
+    group_sennan: { lat: 38.0520, lng: 140.9220 }, // 阿武隈川河口付近（亘理・岩沼）
     group_sendai: { lat: 38.1761, lng: 140.9564 }, // 名取川河口付近
     group_kesennuma: { lat: 38.7857, lng: 141.4981 }, // 津谷川下流
     group_iwate: { lat: 39.0208, lng: 141.1313 } // 岩手県北上川最下流（38.0km付近）
@@ -573,11 +578,11 @@
 
     const areaGroupMap = {
       'sennan': ['group_sennan'],
-      'sendai': ['group_sendai'],
+      'sendai': ['group_sendai', 'group_yoshida'],
       'osaki': ['group_osaki_kami'],
       'kurihara': ['group_kurihara'],
       'tome': ['group_tome'],
-      'ishinomaki': ['group_kyu_kitakami', 'group_kitakami', 'group_naruse'],
+      'ishinomaki': ['group_kyu_kitakami', 'group_kitakami', 'group_naruse_east'],
       'kesennuma': ['group_kesennuma']
     };
 
@@ -1019,12 +1024,12 @@
 
     // 圏域から対象水系グループを取得する定義（7大圏域完全対応）
     const AREA_GROUP_MAP = {
-      ishinomaki: ['group_kyu_kitakami', 'group_kitakami', 'group_naruse'],
+      ishinomaki: ['group_kyu_kitakami', 'group_kitakami', 'group_naruse_east'],
       tome: ['group_tome'],
       kurihara: ['group_kurihara'],
       osaki: ['group_osaki_kami'],
       kesennuma: ['group_kesennuma'],
-      sendai: ['group_sendai'],
+      sendai: ['group_sendai', 'group_yoshida'],
       sennan: ['group_sennan'],
       iwate: ['group_iwate'],
       road: ['group_road']
