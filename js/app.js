@@ -50,7 +50,7 @@
 
     // 石巻圏：旧北上川水系
     if (name.includes('旧北上川') || name.includes('日和山') || name.includes('住吉') || name.includes('神取橋') || name.includes('内海橋') || name.includes('脇谷') || name.includes('石巻大橋') || name.includes('真野川')) {
-      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 2, defaultOpen: true };
+      return { id: 'group_kyu_kitakami', title: '🌊 石巻圏：旧北上川水系', icon: 'fa-water', order: 2, defaultOpen: false };
     }
 
     // 石巻圏：北上川下流
@@ -61,14 +61,14 @@
       // 旧北上川系カメラとの誤混入を防ぐため旧北上川・その他水系キーワードを除外
       if (!name.includes('旧北上川') && !name.includes('[岩手県]') && !name.includes('鳴瀬') &&
           !name.includes('入釜谷')) {
-        return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流', icon: 'fa-water', order: 3, defaultOpen: true };
+        return { id: 'group_kitakami', title: '🌊 石巻圏：北上川下流', icon: 'fa-water', order: 3, defaultOpen: false };
       }
     }
 
 
     // 石巻圏・東松島：鳴瀬・吉田川下流
     if (name.includes('鳴瀬') || name.includes('吉田川') || name.includes('東名運河') || name.includes('鞍坪') || name.includes('小野橋') || name.includes('入釜谷') || name.includes('出来川') || name.includes('中島川') || name.includes('加茂川') || name.includes('内の原') || name.includes('高木川') || name.includes('大沢川') || name.includes('皿貝川')) {
-      return { id: 'group_naruse', title: '🌊 石巻圏・東松島：鳴瀬川・吉田川・運河', icon: 'fa-water', order: 4, defaultOpen: true };
+      return { id: 'group_naruse', title: '🌊 石巻圏・東松島：鳴瀬川・吉田川・運河', icon: 'fa-water', order: 4, defaultOpen: false };
     }
 
     // 登米・栗原・迫川
