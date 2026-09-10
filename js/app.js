@@ -614,18 +614,18 @@
       }
     }
 
-    // 2. 該当エリアのグループ（アコーディオン）を自動展開し、先頭にピタッとスクロール
+    // 2. アコーディオンは閉じた状態（▼）を維持し、サイドバーを先頭にスクロール（手動操作優先）
     if (area !== 'all' && targetGroups.length > 0) {
-      // 他のグループは閉じ、対象グループのみ開く
+      // 全グループを閉じた状態に統一（ユーザーが自分で開く設計）
       Object.keys(state.accordionStates).forEach(groupId => {
-        state.accordionStates[groupId] = targetGroups.includes(groupId);
+        state.accordionStates[groupId] = false;
       });
       targetGroups.forEach(groupId => {
-        state.accordionStates[groupId] = true;
+        state.accordionStates[groupId] = false;
       });
-      renderSidebarList(); // サイドバーの再描画（アコーディオン状態反映）
+      renderSidebarList(); // サイドバーの再描画
 
-      // スクロール位置を一番上（展開グループのヘッダー先頭）に確実にリセット
+      // スクロール位置を先頭にリセット
       setTimeout(() => {
         const listEl = document.getElementById('camera-list');
         if (listEl) {
