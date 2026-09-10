@@ -409,7 +409,8 @@ body {
   flex: 1;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch;
-  padding: 12px;
+  padding: 0 12px 12px 12px;
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -425,6 +426,10 @@ body {
   flex-shrink: 0;
 }
 
+.accordion-group:first-child {
+  margin-top: 2px;
+}
+
 .accordion-group:hover {
   border-color: rgba(255, 255, 255, 0.15);
 }
@@ -437,7 +442,7 @@ body {
 .accordion-header {
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 10;
   padding: 10px 14px;
   background: #1e293b;
   cursor: pointer;

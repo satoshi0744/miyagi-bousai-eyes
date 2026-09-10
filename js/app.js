@@ -66,7 +66,7 @@
     }
 
     // 5. 登米圏（県北東部：北上川登米・迫川下流・東和町等）
-    if (lat >= 38.58 && lng >= 141.18 && (lat >= 38.68 || lng < 141.38) &&
+    if (lat >= 38.58 && lng >= 141.15 && (lat >= 38.68 || lng < 141.38) &&
         !text.includes('石巻') && !name.includes('大沢川') && !name.includes('植立山') && !name.includes('月浜') &&
         !name.includes('江合川') && !name.includes('出来川') && !text.includes('美里') && !text.includes('涌谷') &&
         !name.includes('神取橋') && !name.includes('佳景山')) {
@@ -2225,21 +2225,26 @@
         setTimeout(() => {
           const card = document.querySelector(`.camera-card[data-camera-id="${camera.id}"]`);
           const listContainer = document.getElementById('camera-list');
+          const header = groupEl ? groupEl.querySelector('.accordion-header') : null;
           if (card && listContainer) {
             const listRect = listContainer.getBoundingClientRect();
             const cardRect = card.getBoundingClientRect();
-            const headerOffset = 50; // スティッキーヘッダー吸着分のオフセット
-            const isVisible = (cardRect.top >= listRect.top + headerOffset) && (cardRect.bottom <= listRect.bottom);
+            // スティッキーヘッダー実測高さ＋安全マージン（8px）で動的オフセットを算出（潜り込み完全防止）
+            const headerHeight = header ? header.getBoundingClientRect().height : 59;
+            const headerOffset = headerHeight + 8;
+            const isVisible = (cardRect.top >= listRect.top + headerOffset - 2) && (cardRect.bottom <= listRect.bottom);
             if (!isVisible) {
-              listContainer.scrollBy({
-                top: cardRect.top - listRect.top - headerOffset,
+              // スムーズスクロール進行中やアコーディオン展開直後でもズレない数学的絶対スクロール位置計算
+              const targetScrollTop = Math.max(0, listContainer.scrollTop + (cardRect.top - listRect.top) - headerOffset);
+              listContainer.scrollTo({
+                top: targetScrollTop,
                 behavior: 'smooth'
               });
             }
             card.classList.add('card-highlight');
             setTimeout(() => card.classList.remove('card-highlight'), 2000);
           }
-        }, 150);
+        }, 180);
       }
     };
 
