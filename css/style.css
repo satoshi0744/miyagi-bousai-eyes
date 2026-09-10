@@ -1118,10 +1118,12 @@ body {
 }
 
 .hover-popup-hint {
-  font-size: 10px;
+  font-size: 10.5px;
   color: var(--accent);
   margin-top: 6px;
   font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
 }
 
 /* ==========================================================================
@@ -1743,6 +1745,8 @@ body {
   padding: 8px 10px !important;
   opacity: 1 !important;
   font-family: inherit !important;
+  white-space: normal !important;
+  max-width: 280px !important;
 }
 
 .leaflet-tooltip-top.custom-smart-tooltip::before { border-top-color: #1e293b !important; }
@@ -1755,7 +1759,7 @@ body {
   text-align: left;
   padding: 0;
   min-width: 210px;
-  max-width: 240px;
+  max-width: 280px;
   background: transparent !important;
 }
 

@@ -1817,7 +1817,7 @@
           <div class="hover-popup-title" style="color: ${levelColor};">💧 ${station.name}</div>
           <div style="font-size: 11px; color: var(--text-secondary); margin: 4px 0;">${station.riverName}</div>
           <div style="margin: 4px 0;"><span class="weather-badge ${levelBadgeClass}">${levelText}</span></div>
-          <div class="hover-popup-hint" style="color: ${levelColor};"><i class="fa-solid fa-chart-line"></i> タップ／クリックで断面図・リアルタイム水位・予測を表示</div>
+          <div class="hover-popup-hint" style="color: ${levelColor};"><i class="fa-solid fa-chart-line"></i> クリックでリアルタイム水位・断面図を表示</div>
         </div>
       `;
 
