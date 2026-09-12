@@ -307,221 +307,133 @@
   function sortCamerasSatoshiStyle(cameraList) {
     if (!cameraList || cameraList.length <= 1) return cameraList;
 
-    function classify(c) {
-      const name = c.name || '';
-      const desc = c.description || '';
-      const op = c.operator || '';
-      const text = `${name} ${desc} ${op}`;
-      const cat = c.category || 'other';
+    const DISTANCE_THRESHOLD_KM = 3.5; // 本流に織り交ぜる許容距離(km)
 
-      // Tier 3: 道路カメラ
-      if (cat === 'road' || name.includes('IC') || name.includes('三陸沿岸') || name.includes('東部道路')) {
-        return { tier: 3, section: 'road', order: 99 };
-      }
-
-      // Tier 1: 主要幹線水系本流
-      if ((name.includes('北上川') && !name.includes('旧北上川')) ||
-          name.includes('飯野川') || name.includes('福地水門') || name.includes('新北上大橋') ||
-          name.includes('釜谷水門') || name.includes('樫崎') || name.includes('脇谷水門') ||
-          name.includes('豊里大橋') || name.includes('登米大橋') || name.includes('米谷大橋') ||
-          name.includes('錦桜橋') || name.includes('岩之沢樋門') || text.includes('[岩手県]') ||
-          name.includes('植立山') || name.includes('橋浦') || name.includes('入釜谷')) {
-        return { tier: 1, section: 'main_kitakami', order: 1 };
-      }
-
-      if (name.includes('旧北上川') || name.includes('神取橋') || name.includes('鹿又') ||
-          name.includes('佳景山') || name.includes('石巻大橋') || name.includes('住吉') ||
-          name.includes('日和山') || name.includes('日和大橋') || name.includes('内海橋') ||
-          name.includes('運河交流館')) {
-        return { tier: 1, section: 'main_kyu_kitakami', order: 2 };
-      }
-
-      if (name.includes('江合川') || name.includes('岩出山') || name.includes('古川') ||
-          name.includes('涌谷大橋') || name.includes('明治水門') || name.includes('江合橋')) {
-        return { tier: 1, section: 'main_eai', order: 3 };
-      }
-
-      if (name.includes('鳴瀬川') || name.includes('鳴瀬大橋') || name.includes('野田橋') ||
-          name.includes('志田橋') || name.includes('中流堰') || name.includes('上地') ||
-          name.includes('木間塚') || name.includes('小野橋') || name.includes('鳴瀬堰') ||
-          name.includes('百間堀') || name.includes('桜舘') || name.includes('遠田橋')) {
-        return { tier: 1, section: 'main_naruse', order: 4 };
-      }
-
-      if (name.includes('迫川') && !name.includes('旧迫川') && !name.includes('二迫') &&
-          !name.includes('三迫') && !name.includes('一迫')) {
-        return { tier: 1, section: 'main_hasama', order: 5 };
-      }
-
-      if (name.includes('阿武隈川') || name.includes('丸森') || name.includes('角田') ||
-          name.includes('岩沼') || name.includes('阿武隈橋') || name.includes('押分')) {
-        return { tier: 1, section: 'main_abukuma', order: 6 };
-      }
-
-      if (name.includes('白石川') || name.includes('大河原') || name.includes('柴田') ||
-          name.includes('白石') || name.includes('江尻') || name.includes('平貫') ||
-          name.includes('大坊') || name.includes('笠松') || name.includes('前原')) {
-        return { tier: 1, section: 'main_shiroishi', order: 7 };
-      }
-
-      if (name.includes('名取川') || name.includes('広瀬川')) {
-        return { tier: 1, section: 'main_natori', order: 8 };
-      }
-
-      // Tier 2: 支流・地域小河川
-      if (name.includes('真野川') || name.includes('内の原') || name.includes('高木川') || desc.includes('真野')) {
-        return { tier: 2, section: 'local_mano', order: 20 };
-      }
-      if (name.includes('皿貝川') || name.includes('大沢川') || name.includes('中島川') ||
-          name.includes('加茂川') || name.includes('馬鞍川') || name.includes('月浜') ||
-          name.includes('北北上運河')) {
-        return { tier: 2, section: 'local_ishinomaki_coast', order: 21 };
-      }
-      if (name.includes('東名運河') || name.includes('鞍坪') || name.includes('若針') || name.includes('竹谷')) {
-        return { tier: 2, section: 'local_higashimatsushima', order: 22 };
-      }
-      if (name.includes('出来川') || name.includes('田尻川') || name.includes('多田川') ||
-          name.includes('美女川') || name.includes('大江川') || name.includes('名鰭') ||
-          name.includes('鶴田川') || name.includes('新堀川') || name.includes('新江合')) {
-        return { tier: 2, section: 'local_osaki_branches', order: 23 };
-      }
-      if (name.includes('ダム') || name.includes('轟') || name.includes('川渡') || name.includes('中野')) {
-        return { tier: 2, section: 'local_naruko_dam', order: 24 };
-      }
-      if (name.includes('吉田川') || name.includes('善川') || name.includes('竹林川') ||
-          name.includes('粕川') || name.includes('桧和田') || name.includes('身洗川') ||
-          name.includes('大郷大橋') || name.includes('品井沼') || name.includes('内浦') ||
-          name.includes('三川合流') || name.includes('味明川') || name.includes('明石川') ||
-          name.includes('新田橋') || name.includes('農道')) {
-        return { tier: 2, section: 'local_yoshida', order: 25 };
-      }
-      if (name.includes('旧迫川') || name.includes('長沼') || name.includes('南沢川') ||
-          name.includes('夏川') || name.includes('二股川') || name.includes('石越') ||
-          name.includes('鱒淵') || name.includes('岩之沢川')) {
-        return { tier: 2, section: 'local_tome_branches', order: 26 };
-      }
-      if (name.includes('一迫') || name.includes('二迫') || name.includes('三迫') ||
-          name.includes('栗駒') || name.includes('三間堀') || name.includes('熊川') ||
-          name.includes('鉛川') || name.includes('荒川') || name.includes('昔川') ||
-          name.includes('有馬川') || name.includes('熊谷川') || name.includes('落堀川') ||
-          name.includes('金生川') || name.includes('瀬峰川') || name.includes('小山田川')) {
-        return { tier: 2, section: 'local_kurihara_branches', order: 27 };
-      }
-      if (name.includes('八瀬川') || name.includes('鹿折川') || name.includes('津谷川') ||
-          name.includes('面瀬川') || name.includes('気仙沼') || name.includes('南三陸')) {
-        return { tier: 2, section: 'local_kesennuma', order: 28 };
-      }
-      if (name.includes('七ヶ宿') || name.includes('松川') || name.includes('蔵王') ||
-          name.includes('遠刈田') || name.includes('薮川') || name.includes('森の川') ||
-          name.includes('宮警報所') || name.includes('管理所屋上')) {
-        return { tier: 2, section: 'local_sennan_mountain', order: 29 };
-      }
-      if (name.includes('七北田川') || name.includes('砂押川') || name.includes('梅田川') ||
-          name.includes('塩竈') || name.includes('多賀城') || name.includes('松島') ||
-          name.includes('田中川') || name.includes('新川（高城）') || name.includes('勿来川') ||
-          name.includes('砂押貞山')) {
-        return { tier: 2, section: 'local_sendai_coastal', order: 30 };
-      }
-      if (name.includes('五間堀') || name.includes('蒲崎') || name.includes('新浜') ||
-          name.includes('寺島') || name.includes('四日市場')) {
-        return { tier: 2, section: 'local_sennan_coastal', order: 31 };
-      }
-
-      if (c.lat >= 38.68) return { tier: 2, section: 'local_north_misc', order: 32 };
-      if (c.lat >= 38.45) return { tier: 2, section: 'local_central_misc', order: 33 };
-      return { tier: 2, section: 'local_south_misc', order: 34 };
-    }
-
-    const tier1Map = {};
-    const tier2Map = {};
-    const tier3Cams = [];
-
+    // 1. 圏域ごとにグループ化
+    const regionMap = {};
     cameraList.forEach(c => {
-      const cls = classify(c);
-      if (cls.tier === 1) {
-        if (!tier1Map[cls.section]) tier1Map[cls.section] = { order: cls.order, cams: [] };
-        tier1Map[cls.section].cams.push(c);
-      } else if (cls.tier === 2) {
-        if (!tier2Map[cls.section]) tier2Map[cls.section] = { order: cls.order, cams: [] };
-        tier2Map[cls.section].cams.push(c);
-      } else {
-        tier3Cams.push(c);
-      }
+      const region = getGroupForCamera(c).id; // 既存の判定を利用
+      if (!regionMap[region]) regionMap[region] = [];
+      regionMap[region].push(c);
     });
 
     const sortedResult = [];
+    // 圏域の巡回順序（北から南へ）
+    const regionOrder = [
+      'group_iwate', 'group_kesennuma', 'group_kurihara', 'group_tome',
+      'group_osaki_kami', 'group_yoshida', 'group_naruse_east',
+      'group_kyu_kitakami', 'group_kitakami', 'group_sendai', 'group_sennan', 'group_road'
+    ];
 
-    // Tier 1 本流（上流 ➡ 河口）
-    const t1Sections = Object.keys(tier1Map).sort((a, b) => tier1Map[a].order - tier1Map[b].order);
-    t1Sections.forEach(sec => {
-      const cams = tier1Map[sec].cams;
-      if (sec === 'main_kitakami') {
-        cams.sort((a, b) => {
-          const kpA = extractKp(a.name);
-          const kpB = extractKp(b.name);
-          if (kpA !== null && kpB !== null) return kpB - kpA;
-          return (b.lat || 0) - (a.lat || 0);
-        });
-      } else if (sec === 'main_kyu_kitakami') {
-        const ref = { lat: 38.4150, lng: 141.3125 };
-        cams.sort((a, b) => {
-          const kpA = extractKp(a.name);
-          const kpB = extractKp(b.name);
-          if (kpA !== null && kpB !== null) return kpB - kpA;
-          return calculateDistanceKm(b.lat, b.lng, ref.lat, ref.lng) - calculateDistanceKm(a.lat, a.lng, ref.lat, ref.lng);
-        });
-      } else if (sec === 'main_eai') {
-        const ref = { lat: 38.5244, lng: 141.1772 };
-        cams.sort((a, b) => {
-          const kpA = extractKp(a.name);
-          const kpB = extractKp(b.name);
-          if (kpA !== null && kpB !== null) return kpB - kpA;
-          return calculateDistanceKm(b.lat, b.lng, ref.lat, ref.lng) - calculateDistanceKm(a.lat, a.lng, ref.lat, ref.lng);
-        });
-      } else if (sec === 'main_naruse') {
-        const ref = { lat: 38.3756, lng: 141.1728 };
-        cams.sort((a, b) => {
-          const kpA = extractKp(a.name);
-          const kpB = extractKp(b.name);
-          if (kpA !== null && kpB !== null) return kpB - kpA;
-          return calculateDistanceKm(b.lat, b.lng, ref.lat, ref.lng) - calculateDistanceKm(a.lat, a.lng, ref.lat, ref.lng);
-        });
-      } else if (sec === 'main_abukuma') {
-        const ref = { lat: 38.0460, lng: 140.9160 };
-        cams.sort((a, b) => {
-          const kpA = extractKp(a.name);
-          const kpB = extractKp(b.name);
-          if (kpA !== null && kpB !== null) return kpB - kpA;
-          return calculateDistanceKm(b.lat, b.lng, ref.lat, ref.lng) - calculateDistanceKm(a.lat, a.lng, ref.lat, ref.lng);
-        });
-      } else if (sec === 'main_shiroishi') {
-        const ref = { lat: 38.0772, lng: 140.7877 };
-        cams.sort((a, b) => {
-          const kpA = extractKp(a.name);
-          const kpB = extractKp(b.name);
-          if (kpA !== null && kpB !== null) return kpB - kpA;
-          return calculateDistanceKm(b.lat, b.lng, ref.lat, ref.lng) - calculateDistanceKm(a.lat, a.lng, ref.lat, ref.lng);
-        });
-      } else {
-        cams.sort((a, b) => (b.lat || 0) - (a.lat || 0));
+    // --- ヘルパー関数 ---
+    function insertOneNearest(sorted, cam) {
+      if (sorted.length === 0) {
+        sorted.push(cam); return;
       }
-      sortedResult.push(...cams);
-    });
+      let bestIdx = 0, bestDist = Infinity;
+      for (let i = 0; i < sorted.length; i++) {
+        const d = calculateDistanceKm(cam.lat, cam.lng, sorted[i].lat, sorted[i].lng);
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+      }
+      const nearCam = sorted[bestIdx];
+      if (bestIdx === 0) {
+        if ((cam.lat || 0) > (nearCam.lat || 0)) sorted.splice(0, 0, cam); else sorted.splice(1, 0, cam);
+      } else if (bestIdx === sorted.length - 1) {
+        if ((cam.lat || 0) < (nearCam.lat || 0)) sorted.push(cam); else sorted.splice(bestIdx, 0, cam);
+      } else {
+        if ((cam.lat || 0) >= (nearCam.lat || 0)) sorted.splice(bestIdx, 0, cam); else sorted.splice(bestIdx + 1, 0, cam);
+      }
+    }
+    
+    function insertNearestNeighbors(sorted, unsorted) {
+      unsorted.sort((a, b) => (b.lat || 0) - (a.lat || 0)); // 安定化のため北から南へ
+      for (const cam of unsorted) insertOneNearest(sorted, cam);
+    }
 
-    // Tier 2 支流・地域小河川（地域クラスターを北から南へジグザグ巡回、クラスター内も北から南へ）
-    const t2Clusters = Object.keys(tier2Map).map(sec => {
-      const item = tier2Map[sec];
-      const avgLat = item.cams.reduce((sum, c) => sum + (c.lat || 0), 0) / item.cams.length;
-      const sortedCams = item.cams.sort((a, b) => (b.lat || 0) - (a.lat || 0));
-      return { avgLat, cams: sortedCams };
-    }).sort((a, b) => b.avgLat - a.avgLat);
+    // --- 各圏域の処理 ---
+    for (const regionId of regionOrder) {
+      const cams = regionMap[regionId];
+      if (!cams || cams.length === 0) continue;
 
-    t2Clusters.forEach(cl => sortedResult.push(...cl.cams));
+      if (regionId === 'group_road') {
+        cams.sort((a, b) => (b.lat || 0) - (a.lat || 0));
+        sortedResult.push(...cams);
+        continue;
+      }
 
-    // Tier 3 道路カメラ（北から南へ）
-    if (tier3Cams.length > 0) {
-      tier3Cams.sort((a, b) => (b.lat || 0) - (a.lat || 0));
-      sortedResult.push(...tier3Cams);
+      // 石巻・東松島エリアはハイブリッド処理（本流近くは編入、遠方は独立）
+      if (regionId === 'group_kyu_kitakami' || regionId === 'group_kitakami' || regionId === 'group_naruse_east') {
+        const mainShin = [], mainKyu = [], mainNaruse = [], others = [];
+        cams.forEach(c => {
+          const n = c.name || '';
+          if (n.includes('北上川') && !n.includes('旧北上川') || n.includes('飯野川') || n.includes('福地') || n.includes('新北上') || n.includes('釜谷') || n.includes('樫崎') || n.includes('植立山') || n.includes('橋浦') || n.includes('入釜谷')) {
+            mainShin.push(c);
+          } else if (n.includes('旧北上川') || n.includes('神取橋') || n.includes('鹿又') || n.includes('佳景山') || n.includes('石巻大橋') || n.includes('住吉') || n.includes('日和山') || n.includes('日和大橋') || n.includes('内海橋') || n.includes('運河交流館')) {
+            mainKyu.push(c);
+          } else if (n.includes('鳴瀬川') || n.includes('鳴瀬堰') || n.includes('鳴瀬大橋') || n.includes('小野橋')) {
+            mainNaruse.push(c);
+          } else {
+            others.push(c);
+          }
+        });
+
+        const refShin = { lat: 38.566, lng: 141.444 };
+        mainShin.sort((a, b) => {
+          const kpA = extractKp(a.name); const kpB = extractKp(b.name);
+          if (kpA !== null && kpB !== null) return kpB - kpA;
+          return calculateDistanceKm(b.lat, b.lng, refShin.lat, refShin.lng) - calculateDistanceKm(a.lat, a.lng, refShin.lat, refShin.lng);
+        });
+
+        const refKyu = { lat: 38.415, lng: 141.313 };
+        mainKyu.sort((a, b) => {
+          const kpA = extractKp(a.name); const kpB = extractKp(b.name);
+          if (kpA !== null && kpB !== null) return kpB - kpA;
+          return calculateDistanceKm(b.lat, b.lng, refKyu.lat, refKyu.lng) - calculateDistanceKm(a.lat, a.lng, refKyu.lat, refKyu.lng);
+        });
+
+        const refNaruse = { lat: 38.376, lng: 141.173 };
+        mainNaruse.sort((a, b) => {
+          const kpA = extractKp(a.name); const kpB = extractKp(b.name);
+          if (kpA !== null && kpB !== null) return kpB - kpA;
+          return calculateDistanceKm(b.lat, b.lng, refNaruse.lat, refNaruse.lng) - calculateDistanceKm(a.lat, a.lng, refNaruse.lat, refNaruse.lng);
+        });
+
+        const insertShin = [], insertKyu = [], insertNaruse = [], independent = [];
+        others.forEach(c => {
+          const dShin = mainShin.length > 0 ? Math.min(...mainShin.map(m => calculateDistanceKm(c.lat, c.lng, m.lat, m.lng))) : Infinity;
+          const dKyu = mainKyu.length > 0 ? Math.min(...mainKyu.map(m => calculateDistanceKm(c.lat, c.lng, m.lat, m.lng))) : Infinity;
+          const dNaruse = mainNaruse.length > 0 ? Math.min(...mainNaruse.map(m => calculateDistanceKm(c.lat, c.lng, m.lat, m.lng))) : Infinity;
+          const minDist = Math.min(dShin, dKyu, dNaruse);
+          if (minDist <= DISTANCE_THRESHOLD_KM) {
+            if (minDist === dShin) insertShin.push(c);
+            else if (minDist === dKyu) insertKyu.push(c);
+            else insertNaruse.push(c);
+          } else {
+            independent.push(c);
+          }
+        });
+
+        if (regionId === 'group_kitakami') {
+          const resShin = [...mainShin]; insertNearestNeighbors(resShin, insertShin);
+          sortedResult.push(...resShin);
+        } else if (regionId === 'group_kyu_kitakami') {
+          const resKyu = [...mainKyu]; insertNearestNeighbors(resKyu, insertKyu);
+          sortedResult.push(...resKyu);
+        } else if (regionId === 'group_naruse_east') {
+          const resNaruse = [...mainNaruse]; insertNearestNeighbors(resNaruse, insertNaruse);
+          sortedResult.push(...resNaruse);
+        }
+        
+        // 閾値を超えた独立カメラは各圏域の末尾にジグザグで配置
+        if (independent.length > 0) {
+          independent.sort((a, b) => (b.lat || 0) - (a.lat || 0));
+          sortedResult.push(...independent);
+        }
+        continue;
+      }
+
+      // それ以外の圏域は従来通りの本流ベースソート（既存のsortCamerasByRiverFlowを活用）
+      sortedResult.push(...sortCamerasByRiverFlow(cams, regionId));
     }
 
     return sortedResult;
