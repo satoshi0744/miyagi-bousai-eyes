@@ -1220,7 +1220,7 @@
 
     // モーダルを開く（現在選択中の管内エリアと完全自動連動）
     openBtn.addEventListener('click', () => {
-      const defaultArea = state.activeAreaFilter || 'all';
+      const defaultArea = state.favorites.size > 0 ? 'registered' : (state.activeAreaFilter || 'all');
       if (selectArea) {
         selectArea.value = defaultArea;
       }
@@ -1278,7 +1278,19 @@
 
       // 選択圏域に応じた表示グループの決定
       let targetGroupIds = [];
-      if (selectedArea === 'all') {
+      if (selectedArea === 'registered') {
+        const favCams = CAMERA_DATA.filter(c => state.favorites.has(c.id));
+        if (favCams.length === 0) {
+          container.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 24px;">現在登録されているカメラはありません。</div>`;
+          return;
+        }
+        allGroups['group_registered'] = {
+          id: 'group_registered',
+          name: '★ 現在登録中のカメラ',
+          cameras: sortCamerasSatoshiStyle(favCams)
+        };
+        targetGroupIds = ['group_registered'];
+      } else if (selectedArea === 'all') {
         targetGroupIds = Object.keys(allGroups).sort((a, b) => allGroups[a].order - allGroups[b].order);
       } else {
         targetGroupIds = AREA_GROUP_MAP[selectedArea] || [];
