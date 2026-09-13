@@ -1286,7 +1286,7 @@
         }
         allGroups['group_registered'] = {
           id: 'group_registered',
-          name: '★ 現在登録中のカメラ',
+          title: '★ 現在登録中のカメラ',
           cameras: sortCamerasSatoshiStyle(favCams)
         };
         targetGroupIds = ['group_registered'];
